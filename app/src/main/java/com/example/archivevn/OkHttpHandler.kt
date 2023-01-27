@@ -17,10 +17,14 @@ class OkHttpHandler(private val activity: Activity, private val url: String) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
 
-            if (!responseBody.isNullOrEmpty() && !responseBody.contains("No results")) {
+            if (!responseBody.isNullOrEmpty() && responseBody.contains("No results")) {
                 Log.d("Response Body", responseBody)
                 activity.runOnUiThread {
                     showArchiveDialog()
+                }
+            } else {
+                if (responseBody != null) {
+                    Log.d("'No results' not found in Response Body", responseBody)
                 }
             }
         }.start()
@@ -28,7 +32,7 @@ class OkHttpHandler(private val activity: Activity, private val url: String) {
 
     private fun showArchiveDialog() {
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Archive page")
+        builder.setTitle("No Archived Page Found")
         builder.setMessage("Do you want to archive this page?")
         builder.setPositiveButton("Yes") { _, _ ->
             // handle 'yes' button click
