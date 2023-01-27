@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        urlEditText = findViewById(R.id.url_edit_text)
+        // Initialize text field and button IDs.
+        urlEditText = findViewById<EditText>(R.id.url_edit_text)
         goButton = findViewById(R.id.go_button)
 
 
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.v(tag, "onStart")
+//        urlEditText = findViewById<EditText>(R.id.url_edit_text)
+        // Initialize animator object and trigger animation.
+//        val animator = ObjectAnimator.ofFloat(urlEditText, "translationY", 0.25f, -urlEditText.height.toFloat())
+//        animator.duration = 500
+//        animator.start()
     }
 
     override fun onNewIntent(intent: Intent?) {
