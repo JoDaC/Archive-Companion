@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchUrlInBrowser(url: String) {
-        Log.i("Shared URL %" ,"$url")
+        Log.i("Shared URL %" , url)
         val archiveUrl = "https://archive.vn/$url"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
         startActivity(browserIntent)
