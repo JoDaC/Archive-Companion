@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 class MainActivity : AppCompatActivity() {
     private lateinit var urlEditText: EditText
     private lateinit var goButton: Button
+    private val tag = "MainActivityTag"
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,21 +24,7 @@ class MainActivity : AppCompatActivity() {
         urlEditText = findViewById(R.id.url_edit_text)
         goButton = findViewById(R.id.go_button)
 
-        val intent = intent
-        val type = intent.type
 
-        // Handle URL sent to the app via the Android share sheet
-        // handleShareSheetUrl()
-        when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                if ("text/plain" == type) {
-                    val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-                    if (sharedText != null) {
-                        launchUrlInBrowser(sharedText)
-                    }
-                }
-            }
-        }
 
         goButton.setOnClickListener {
             val url = urlEditText.text.toString()
@@ -49,26 +36,64 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.v(tag, "onStart")
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.v(tag, "onNewIntent")
+        handleShareSheetUrl(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.v(tag, "onResume")
+        // Handle URL sent to the app via the Android share sheet
+        handleShareSheetUrl(intent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v(tag, "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.v(tag, "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.v(tag, "onDestroy")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.v(tag, "onRestart")
+    }
+
+    private fun handleShareSheetUrl(intent: Intent?) {
+        if (intent != null) {
+            when (intent.action) {
+                Intent.ACTION_SEND -> {
+                    if ("text/plain" == intent.type) {
+                        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+                        if (sharedText != null) {
+                            launchUrlInBrowser(sharedText)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun launchUrlInBrowser(url: String) {
         Log.i("Shared URL %" ,"$url")
         val archiveUrl = "https://archive.vn/$url"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
         startActivity(browserIntent)
     }
-
-//    private fun handleShareSheetUrl() {
-//        val intent = intent
-//        val action = intent.action
-//        val type = intent.type
-//
-//        if (Intent.ACTION_SEND == action && type != null) {
-//            if ("text/plain" == type) {
-//                val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-//                if (sharedText != null) {
-//                    launchUrlInBrowser(sharedText)
-//                }
-//            }
-//        }
-//    }
 }
 
