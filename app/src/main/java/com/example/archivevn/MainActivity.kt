@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             Intent.ACTION_SEND -> {
                 if ("text/plain" == type) {
                     val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-                    println(sharedText)
                     if (sharedText != null) {
                         launchUrlInBrowser(sharedText)
                     }
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchUrlInBrowser(url: String) {
+        Log.i("Shared URL %" ,"$url")
         val archiveUrl = "https://archive.vn/$url"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
         startActivity(browserIntent)
