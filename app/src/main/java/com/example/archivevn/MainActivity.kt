@@ -38,22 +38,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.v(tag, "onStart")
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v(tag, "onNewIntent")
-//        handleShareSheetUrlInBrowser(intent)
-        handleShareSheetUrlInBackground(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.v(tag, "onResume")
-        // Handle URL sent to the app via the Android share sheet
 //        handleShareSheetUrlInBrowser(intent)
         handleShareSheetUrlInBackground(intent)
     }
@@ -80,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     if ("text/plain" == intent.type) {
                         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
                         if (sharedText != null) {
-                            launchUrlInBackground(sharedText)
+                            launchUrlInBackground(sharedText, "No results")
                         }
                     }
                 }
@@ -88,36 +75,57 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchUrlInBrowser(url: String, archiveUrlType: Boolean ?= null) {
+    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean ?= null) {
         Log.i("Shared URL %" , url)
         var archiveUrl = "https://archive.vn/$url"
-        if (archiveUrlType == true) {
+        if (urlToArchive == true) {
             archiveUrl = "https://archive.is/?$url"
         }
-//        val archiveUrl = "https://archive.vn/$url"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
         startActivity(browserIntent)
     }
 
-    private fun launchUrlInBackground(url: String) {
+    private fun launchUrlInBackground(url: String, searchTerm: String, urlToArchive: Boolean ?= null) {
         Log.i("Shared URL %" , url)
-        val archiveUrl = "https://archive.vn/$url"
+        var archiveUrl = "https://archive.vn/$url"
+        if (urlToArchive == true) {
+            archiveUrl = "https://archive.is/?url=$url"
+        }
         val loader = OkHttpHandler(archiveUrl)
-        val result = loader.loadUrl()
-        if (result) {
-            showArchiveDialog(url)
+        val result = loader.loadUrl(searchTerm)
+        if (result && searchTerm == "No results") {
+            archiveDialog(url)
+        }
+        if (result && searchTerm == "Save") {
+            archiveConfirmedDialog(url)
         }
     }
 
-    private fun showArchiveDialog(url: String) {
+    private fun archiveDialog(url: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("No Archived Page Found")
         builder.setMessage("Do you want to archive this page?")
         builder.setPositiveButton("Yes") { _, _ ->
+            launchUrlInBackground(url, "Save", true)
+        }
+        builder.setNegativeButton("No") { _, _ ->
+        }
+        builder.setNeutralButton("Launch in Browser") { _, _ ->
             launchUrlInBrowser(url)
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun archiveConfirmedDialog(url: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("No Archived Page Found")
+        builder.setMessage("Do you want to archive this page?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            launchUrlInBackground(url, "Save", true)
             // handle 'yes' button click
             // code for archiving the page goes here
-            // val urlToArchive = "https://archive.is/?$url"
+            // val urlToArchive = "https://archive.is/?url=$url"
         }
         builder.setNegativeButton("No") { _, _ ->
             // handle 'no' button click

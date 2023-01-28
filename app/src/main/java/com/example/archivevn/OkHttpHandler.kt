@@ -8,7 +8,7 @@ import okhttp3.Request
 
 class OkHttpHandler(private val url: String) {
 
-    fun loadUrl(): Boolean {
+    fun loadUrl(searchTerm: String): Boolean {
         var result = false
         Thread {
             val client = OkHttpClient()
@@ -18,13 +18,13 @@ class OkHttpHandler(private val url: String) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
 
-            result = responseBody.let { !it.isNullOrEmpty() && it.contains("No results") }
+            result = responseBody.let { !it.isNullOrEmpty() && it.contains(searchTerm) }
             if (result) {
                 if (responseBody != null) {
                     Log.d("Response Body", responseBody)
                 }
             } else {
-                Log.d("'No results' not found in Response Body", responseBody!!)
+                Log.d("$searchTerm not found in Response Body", responseBody!!)
             }
         }.start()
         //TODO()Remove sleep and use either coroutines or a callback
