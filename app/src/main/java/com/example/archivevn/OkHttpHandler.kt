@@ -6,9 +6,10 @@ import androidx.appcompat.app.AlertDialog
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class OkHttpHandler(private val activity: Activity, private val url: String) {
+class OkHttpHandler(private val url: String) {
 
-    fun load() {
+    fun loadUrl(): Boolean {
+        var result = false
         Thread {
             val client = OkHttpClient()
             val request = Request.Builder()
@@ -17,32 +18,17 @@ class OkHttpHandler(private val activity: Activity, private val url: String) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
 
-            if (!responseBody.isNullOrEmpty() && responseBody.contains("No results")) {
-                Log.d("Response Body", responseBody)
-                activity.runOnUiThread {
-                    showArchiveDialog()
+            result = responseBody.let { !it.isNullOrEmpty() && it.contains("No results") }
+            if (result) {
+                if (responseBody != null) {
+                    Log.d("Response Body", responseBody)
                 }
             } else {
-                if (responseBody != null) {
-                    Log.d("'No results' not found in Response Body", responseBody)
-                }
+                Log.d("'No results' not found in Response Body", responseBody!!)
             }
         }.start()
-    }
-
-    private fun showArchiveDialog() {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle("No Archived Page Found")
-        builder.setMessage("Do you want to archive this page?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            // handle 'yes' button click
-            // code for archiving the page goes here
-            // val urlToArchive = "https://archive.is/?$url"
-        }
-        builder.setNegativeButton("No") { _, _ ->
-            // handle 'no' button click
-        }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        //TODO()Remove sleep and use either coroutines or a callback
+        Thread.sleep(1000)
+        return result
     }
 }

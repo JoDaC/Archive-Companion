@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
 
@@ -87,9 +88,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchUrlInBrowser(url: String) {
+    private fun launchUrlInBrowser(url: String, archiveUrlType: Boolean ?= null) {
         Log.i("Shared URL %" , url)
-        val archiveUrl = "https://archive.vn/$url"
+        var archiveUrl = "https://archive.vn/$url"
+        if (archiveUrlType == true) {
+            archiveUrl = "https://archive.is/?$url"
+        }
+//        val archiveUrl = "https://archive.vn/$url"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
         startActivity(browserIntent)
     }
@@ -97,8 +102,28 @@ class MainActivity : AppCompatActivity() {
     private fun launchUrlInBackground(url: String) {
         Log.i("Shared URL %" , url)
         val archiveUrl = "https://archive.vn/$url"
-        val loader = OkHttpHandler(this, archiveUrl)
-        loader.load()
+        val loader = OkHttpHandler(archiveUrl)
+        val result = loader.loadUrl()
+        if (result) {
+            showArchiveDialog(url)
+        }
+    }
+
+    private fun showArchiveDialog(url: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("No Archived Page Found")
+        builder.setMessage("Do you want to archive this page?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            launchUrlInBrowser(url)
+            // handle 'yes' button click
+            // code for archiving the page goes here
+            // val urlToArchive = "https://archive.is/?$url"
+        }
+        builder.setNegativeButton("No") { _, _ ->
+            // handle 'no' button click
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 }
 
