@@ -97,7 +97,11 @@ class MainActivity : AppCompatActivity() {
             archiveDialog(url)
         }
         if (result && searchTerm == "Save") {
-            archiveConfirmedDialog(url)
+            // sending the searchTerm to search for in the parsed body of the page.
+            // Return a final URL of the archived page. or, at least it should - this will probably break rn idfk
+            val archivedResult = loader.bodyParserAndLinkRequest(searchTerm)
+            Log.i("Final URL of Archived page ", archivedResult)
+            archiveConfirmedDialog(archivedResult)
         }
     }
 
@@ -117,12 +121,12 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun archiveConfirmedDialog(url: String) {
+    private fun archiveConfirmedDialog(url: String ?= null) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("No Archived Page Found")
-        builder.setMessage("Do you want to archive this page?")
+        builder.setTitle("Page has been archived!")
+        builder.setMessage("Do you want to view in your browser?")
         builder.setPositiveButton("Yes") { _, _ ->
-            launchUrlInBackground(url, "Save", true)
+            launchUrlInBrowser(url!!)
             // handle 'yes' button click
             // code for archiving the page goes here
             // val urlToArchive = "https://archive.is/?url=$url"
