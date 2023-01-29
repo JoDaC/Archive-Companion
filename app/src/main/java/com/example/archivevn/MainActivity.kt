@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.*
 import okhttp3.*
 
 class MainActivity : AppCompatActivity() {
@@ -92,16 +93,18 @@ class MainActivity : AppCompatActivity() {
             archiveUrl = "https://archive.is/?url=$url"
         }
         val loader = OkHttpHandler(archiveUrl)
-        val result = loader.loadUrl(searchTerm)
-        if (result && searchTerm == "No results") {
-            archiveDialog(url)
-        }
-        if (result && searchTerm == "Save") {
-            // sending the searchTerm to search for in the parsed body of the page.
-            // Return a final URL of the archived page. or, at least it should - this will probably break rn idfk
-            val archivedResult = loader.bodyParserAndLinkRequest(searchTerm)
-            Log.i("Final URL of Archived page ", archivedResult)
-            archiveConfirmedDialog(archivedResult)
+        GlobalScope.launch(Dispatchers.Main) {
+//            val result = async { loader.loadUrl(searchTerm) }.await()
+            val result = loader.loadUrl(searchTerm)
+
+            if (result && searchTerm == "No results") {
+                archiveDialog(url)
+            }
+            if (result && searchTerm == "Save") {
+                val archivedResult = loader.bodyParserAndLinkRequest(searchTerm)
+                Log.i("Final URL of Archived page ", archivedResult)
+                archiveConfirmedDialog(archivedResult)
+            }
         }
     }
 
@@ -127,12 +130,8 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage("Do you want to view in your browser?")
         builder.setPositiveButton("Yes") { _, _ ->
             launchUrlInBrowser(url!!)
-            // handle 'yes' button click
-            // code for archiving the page goes here
-            // val urlToArchive = "https://archive.is/?url=$url"
         }
         builder.setNegativeButton("No") { _, _ ->
-            // handle 'no' button click
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
