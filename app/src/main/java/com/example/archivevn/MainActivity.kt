@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
             archiveUrl = "https://archive.is/?url=$url"
         }
         val loader = OkHttpHandler(archiveUrl)
+        Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
         GlobalScope.launch(Dispatchers.Main) {
             Log.i("Searching for searchTerm %" , searchTerm)
             val result = loader.loadUrl(searchTerm)
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i(tag,"Displaying Archive Dialog")
                 archiveDialog(url)
             }
-            if (result && searchTerm == "Save") {
+            if (result && searchTerm == "save") {
                 Log.i(tag,"Parsing page body and displaying Archive Dialog")
                 val archivedResult = loader.bodyParserAndLinkRequest(searchTerm)
                 Log.i("Final URL of Archived page ", archivedResult)
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("No Archived Page Found")
         builder.setMessage("Do you want to archive this page?")
         builder.setPositiveButton("Yes") { _, _ ->
-            launchUrlInBackground(url, "Save", true)
+            launchUrlInBackground(url, "save", true)
         }
         builder.setNegativeButton("No") { _, _ ->
         }

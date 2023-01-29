@@ -42,10 +42,12 @@ class OkHttpHandler(url: String) {
             var url = ""
             for (element in elements) {
                 val href = element.attr("href")
+                Log.i("href is ",href)
                 val request = Request.Builder().url(href).build()
                 val response = client.newCall(request).execute()
                 url = response.request().url().toString()
             }
+            Log.i("Final URL is ",url)
             url
         }
     }
