@@ -94,17 +94,24 @@ class MainActivity : AppCompatActivity() {
         }
         val loader = OkHttpHandler(archiveUrl)
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
+        //TODO: Stop using GlobalScope, switch to something less delicate
         GlobalScope.launch(Dispatchers.Main) {
             Log.i("Searching for searchTerm %" , searchTerm)
+            // Get rid of the idea of a search term all together in this app. We'll grab the entire
+            // bodyReponse and if there is "No results", "Newest" or "Save" we can act accordingly.
             val result = loader.loadUrl(searchTerm)
 
             if (result && searchTerm == "No results") {
                 Log.i(tag,"Displaying Archive Dialog")
                 archiveDialog(url)
             }
+            if (result && searchTerm == "Newest") {
+                Log.i(tag,"Displaying Archive Dialog")
+                linkFoundDialog(url)
+            }
             if (result && searchTerm == "save") {
-                Log.i(tag,"Parsing page body and displaying Archive Dialog")
-                val archivedResult = loader.bodyParserAndLinkRequest(searchTerm)
+                Log.i(tag,"Triggering page archival and displaying Archived Dialog")
+                val archivedResult = loader.launchPageArchival(archiveUrl)
                 Log.i("Final URL of Archived page ", archivedResult)
                 archiveConfirmedDialog(archivedResult)
             }
@@ -123,6 +130,24 @@ class MainActivity : AppCompatActivity() {
         }
         builder.setNeutralButton("Launch in Browser") { _, _ ->
             launchUrlInBrowser(url)
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun linkFoundDialog(url: String) {
+        Log.i(tag,"linkFoundDialog() started")
+        val loader = OkHttpHandler(url)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Archived Page for this URL has been found")
+        builder.setMessage("Do you want to view in your browser or read now?")
+        builder.setPositiveButton("Launch in Browser") { _, _ ->
+            GlobalScope.launch(Dispatchers.Main) {
+                launchUrlInBrowser(loader.openMostRecentArchivedPage(url))
+            }
+        }
+        builder.setNeutralButton("Launch in Reader") { _, _ ->
+            // launch code for text extraction
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()

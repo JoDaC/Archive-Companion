@@ -2,12 +2,12 @@ package com.example.archivevn
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.jsoup.Jsoup
+import org.openqa.selenium.By
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeDriver
 
 class OkHttpHandler(url: String) {
 
@@ -33,22 +33,46 @@ class OkHttpHandler(url: String) {
         }
     }
 
-    suspend fun bodyParserAndLinkRequest(searchTerm: String): String {
+    suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.Default) {
-            val response = client.newCall(request).execute()
-            val responseBody = response.body()?.string()
-            val parsedBody = Jsoup.parse(responseBody!!)
-            val elements = parsedBody.select("a:contains($searchTerm)")
-            var url = ""
-            for (element in elements) {
-                val href = element.attr("href")
-                Log.i("href is ",href)
-                val request = Request.Builder().url(href).build()
-                val response = client.newCall(request).execute()
-                url = response.request().url().toString()
+
+            val driver: WebDriver = ChromeDriver()
+            driver.get(url)
+            val submitButton =
+                driver.findElement(By.xpath("//input[@type='submit'][@value='Save']"))
+            submitButton.click()
+            driver.currentUrl
+//            val response = client.newCall(request).execute()
+//            val responseBody = response.body()?.string()
+//            val parsedBody = Jsoup.parse(responseBody!!)
+//            val elements = parsedBody.select("a:contains($searchTerm)")
+//            var url = ""
+//            for (element in elements) {
+//                val href = element.attr("href")
+//                Log.i("href is ",href)
+//                val request = Request.Builder().url(href).build()
+//                val response = client.newCall(request).execute()
+//                url = response.request().url().toString()
+//            }
+//            Log.i("Final URL is ",url)
+//            url
+        }
+    }
+
+    suspend fun openMostRecentArchivedPage(url: String): String {
+        return withContext(Dispatchers.Default) {
+
+            val driver: WebDriver = ChromeDriver()
+            driver.get(url)
+
+            val textElement = driver.findElement(By.xpath("//div[text()='List of URLs, ordered from newer to older' and @style='display:table-cell;max-width:622px;padding:2px']"))
+            val isDisplayed = textElement.isDisplayed()
+
+            var href = ""
+            if (isDisplayed) {
+                href = driver.findElement(By.xpath("//a[@class='TEXT-BLOCK']")).getAttribute("href")
             }
-            Log.i("Final URL is ",url)
-            url
+            href
         }
     }
 }
