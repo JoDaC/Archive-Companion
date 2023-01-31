@@ -36,7 +36,8 @@ class OkHttpHandler(url: String) {
         return withContext(Dispatchers.Default) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
-            val searchTerms = listOf("No results", "Newest", "My url is alive and I want to archive its content")
+            val searchTerms =
+                listOf("No results", "Newest", "My url is alive and I want to archive its content")
             var resultString = ""
             for (searchTerm in searchTerms) {
                 if (responseBody != null && responseBody.contains(searchTerm)) {
@@ -57,14 +58,14 @@ class OkHttpHandler(url: String) {
             val responseBody = responseOne.body()?.string()
             val parsedBody = Jsoup.parse(responseBody!!)
             val submitId = parsedBody.select("[name='submitId']").first()?.attr("value")
-            Log.i("submitId is ",submitId!!)
+            Log.i("submitId is ", submitId!!)
             val encodedUrl = URLEncoder.encode(url, "UTF-8")
             val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
-            Log.i("fullRequestString is ",fullRequestString)
+            Log.i("fullRequestString is ", fullRequestString)
             val request = Request.Builder().url(fullRequestString).build()
             val responseTwo = client.newCall(request).execute()
             val fullRequest = responseTwo.request().url().toString()
-            Log.i("Final URL is ",fullRequest)
+            Log.i("Final URL is ", fullRequest)
             fullRequest
         }
     }

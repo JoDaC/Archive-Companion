@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v(tag, "onNewIntent")
-//        handleShareSheetUrlInBrowser(intent)
         handleShareSheetUrlInBackground(intent)
     }
 
@@ -76,8 +75,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean ?= null) {
-        Log.i("Shared URL %" , url)
+    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
+        Log.i("Shared URL %", url)
         var archiveUrl = "https://archive.vn/$url"
         if (urlToArchive == true) {
             archiveUrl = "https://archive.is/?$url"
@@ -86,8 +85,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(browserIntent)
     }
 
-    private fun launchUrlInBackground(url: String, urlToArchive: Boolean ?= null) {
-        Log.i("Shared URL %" , url)
+    private fun launchUrlInBackground(url: String, urlToArchive: Boolean? = null) {
+        Log.i("Shared URL %", url)
         var archiveUrl = "https://archive.vn/$url"
         if (urlToArchive == true) {
             archiveUrl = "https://archive.is/?url=$url"
@@ -97,71 +96,72 @@ class MainActivity : AppCompatActivity() {
         //TODO: Stop using GlobalScope, switch to something less delicate
         GlobalScope.launch(Dispatchers.Main) {
             Log.i(tag, "Checking Page to see if URL archived or not %")
-            val result = loader.loadUrl()
 
-            if (result == "No results") {
-                Log.i(tag,"Displaying Archive Dialog")
-                archiveDialog(url)
-            }
-            if (result == "Newest") {
-                Log.i(tag,"Displaying Archive Dialog")
-                linkFoundDialog(url)
-            }
-            if (result == "My url is alive and I want to archive its content") {
-                Log.i(tag,"Triggering page archival and displaying Archived Dialog")
-                val archivedResult = loader.launchPageArchival(archiveUrl)
-                Log.i("Final URL of Archived page ", archivedResult)
-                archiveConfirmedDialog(archivedResult)
+            when (loader.loadUrl()) {
+                "No results" -> {
+                    Log.i(tag, "Displaying Archive Dialog")
+                    archiveDialog(url)
+                }
+                "Newest" -> {
+                    Log.i(tag, "Displaying Archive Dialog")
+                    linkFoundDialog(url)
+                }
+                "My url is alive and I want to archive its content" -> {
+                    Log.i(tag, "Triggering page archival and displaying Archived Dialog")
+                    val archivedResult = loader.launchPageArchival(archiveUrl)
+                    Log.i("Final URL of Archived page ", archivedResult)
+                    archiveConfirmedDialog(archivedResult)
+                }
             }
         }
     }
 
     private fun archiveDialog(url: String) {
-        Log.i(tag,"First Time archiveDialog() started")
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("No Archived Page Found")
-        builder.setMessage("Do you want to archive this page?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            launchUrlInBackground(url, true)
-        }
-        builder.setNegativeButton("No") { _, _ ->
-        }
-        builder.setNeutralButton("Launch in Browser") { _, _ ->
-            launchUrlInBrowser(url)
-        }
+        Log.i(tag, "First Time archiveDialog() started")
+        val builder = AlertDialog.Builder(this).apply { }
+            .setTitle("No Archived Page Found")
+            .setMessage("Do you want to archive this page?")
+            .setPositiveButton("Yes") { _, _ ->
+                launchUrlInBackground(url, true)
+            }
+            .setNegativeButton("No") { _, _ ->
+            }
+            .setNeutralButton("Launch in Browser") { _, _ ->
+                launchUrlInBrowser(url)
+            }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
 
     private fun linkFoundDialog(url: String) {
-        Log.i(tag,"linkFoundDialog() started")
+        Log.i(tag, "linkFoundDialog() started")
         val loader = OkHttpHandler(url)
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Archived Page for this URL has been found")
-        builder.setMessage("Do you want to view in your browser or read now?")
-        builder.setPositiveButton("Launch in Browser") { _, _ ->
+        val builder = AlertDialog.Builder(this).apply { }
+            .setTitle("Archived Page for this URL has been found")
+            .setMessage("Do you want to view in your browser or read now?")
+            .setPositiveButton("Launch in Browser") { _, _ ->
 //            GlobalScope.launch(Dispatchers.Main) {
 //                launchUrlInBrowser(loader.openMostRecentArchivedPage(url))
 //            }
-            launchUrlInBrowser("http://archive.is/newest/$url")
-        }
-        builder.setNeutralButton("Launch in Reader") { _, _ ->
-            // launch code for text extraction
-        }
+                launchUrlInBrowser("http://archive.is/newest/$url")
+            }
+            .setNeutralButton("Launch in Reader") { _, _ ->
+                // launch code for text extraction
+            }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
 
-    private fun archiveConfirmedDialog(url: String ?= null) {
-        Log.i(tag,"archiveConfirmedDialog() started")
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Page has been archived!")
-        builder.setMessage("Do you want to view in your browser?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            launchUrlInBrowser(url!!)
-        }
-        builder.setNegativeButton("No") { _, _ ->
-        }
+    private fun archiveConfirmedDialog(url: String? = null) {
+        Log.i(tag, "archiveConfirmedDialog() started")
+        val builder = AlertDialog.Builder(this).apply { }
+            .setTitle("Page has been archived!")
+            .setMessage("Do you want to view in your browser?")
+            .setPositiveButton("Yes") { _, _ ->
+                launchUrlInBrowser(url!!)
+            }
+            .setNegativeButton("No") { _, _ ->
+            }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
