@@ -56,10 +56,10 @@ class OkHttpHandler(url: String) {
             val responseOne = client.newCall(request).execute()
             val responseBody = responseOne.body()?.string()
             val parsedBody = Jsoup.parse(responseBody!!)
-            val submitId = parsedBody.select("[name='submitId']").first().toString()
-            Log.i("submitId is ",submitId)
+            val submitId = parsedBody.select("[name='submitId']").first()?.attr("value")
+            Log.i("submitId is ",submitId!!)
             val encodedUrl = URLEncoder.encode(url, "UTF-8")
-            val fullRequestString = "/submit/?submitid=$submitId=&url$encodedUrl"
+            val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
             Log.i("fullRequestString is ",fullRequestString)
             val request = Request.Builder().url(fullRequestString).build()
             val responseTwo = client.newCall(request).execute()
