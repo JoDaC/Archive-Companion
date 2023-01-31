@@ -5,9 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.openqa.selenium.By
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
+import org.jsoup.Jsoup
+import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
 
@@ -17,7 +16,7 @@ class OkHttpHandler(url: String) {
         .url(url)
         .build()
 
-    suspend fun loadUrl(searchTerm: String): Boolean {
+    suspend fun loadUrlWithSearchTerm(searchTerm: String): Boolean {
         return withContext(Dispatchers.Default) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
@@ -33,49 +32,44 @@ class OkHttpHandler(url: String) {
         }
     }
 
-    suspend fun launchPageArchival(url: String): String {
+    suspend fun loadUrl(): String {
         return withContext(Dispatchers.Default) {
-
-            val driver: WebDriver = ChromeDriver()
-            driver.get(url)
-            val submitButton =
-                driver.findElement(By.xpath("//input[@type='submit'][@value='Save']"))
-            submitButton.click()
-            driver.currentUrl
-//            val response = client.newCall(request).execute()
-//            val responseBody = response.body()?.string()
-//            val parsedBody = Jsoup.parse(responseBody!!)
-//            val elements = parsedBody.select("a:contains($searchTerm)")
-//            var url = ""
-//            for (element in elements) {
-//                val href = element.attr("href")
-//                Log.i("href is ",href)
-//                val request = Request.Builder().url(href).build()
-//                val response = client.newCall(request).execute()
-//                url = response.request().url().toString()
-//            }
-//            Log.i("Final URL is ",url)
-//            url
+            val response = client.newCall(request).execute()
+            val responseBody = response.body()?.string()
+            val searchTerms = listOf("No results", "Newest", "My url is alive and I want to archive its content")
+            var resultString = ""
+            for (searchTerm in searchTerms) {
+                if (responseBody != null && responseBody.contains(searchTerm)) {
+                    resultString = searchTerm
+                    break
+                }
+            }
+            if (resultString.isEmpty()) {
+                Log.d("No search terms found in response body", responseBody!!)
+            }
+            resultString
         }
     }
 
-    suspend fun openMostRecentArchivedPage(url: String): String {
+    suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.Default) {
-
-            val driver: WebDriver = ChromeDriver()
-            driver.get(url)
-
-            val textElement = driver.findElement(By.xpath("//div[text()='List of URLs, ordered from newer to older' and @style='display:table-cell;max-width:622px;padding:2px']"))
-            val isDisplayed = textElement.isDisplayed()
-
-            var href = ""
-            if (isDisplayed) {
-                href = driver.findElement(By.xpath("//a[@class='TEXT-BLOCK']")).getAttribute("href")
-            }
-            href
+            val responseOne = client.newCall(request).execute()
+            val responseBody = responseOne.body()?.string()
+            val parsedBody = Jsoup.parse(responseBody!!)
+            val submitId = parsedBody.select("[name='submitId']").first().toString()
+            Log.i("submitId is ",submitId)
+            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+            val fullRequestString = "/submit/?submitid=$submitId=&url$encodedUrl"
+            Log.i("fullRequestString is ",fullRequestString)
+            val request = Request.Builder().url(fullRequestString).build()
+            val responseTwo = client.newCall(request).execute()
+            val fullRequest = responseTwo.request().url().toString()
+            Log.i("Final URL is ",fullRequest)
+            fullRequest
         }
     }
 }
+
 
 //class OkHttpHandler(private val url: String, val parseAndArchive: Boolean ?= null) {
 //

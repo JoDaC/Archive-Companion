@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     if ("text/plain" == intent.type) {
                         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
                         if (sharedText != null) {
-                            launchUrlInBackground(sharedText, "No results")
+                            launchUrlInBackground(sharedText)
                         }
                     }
                 }
@@ -82,11 +82,11 @@ class MainActivity : AppCompatActivity() {
         if (urlToArchive == true) {
             archiveUrl = "https://archive.is/?$url"
         }
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(archiveUrl))
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(browserIntent)
     }
 
-    private fun launchUrlInBackground(url: String, searchTerm: String, urlToArchive: Boolean ?= null) {
+    private fun launchUrlInBackground(url: String, urlToArchive: Boolean ?= null) {
         Log.i("Shared URL %" , url)
         var archiveUrl = "https://archive.vn/$url"
         if (urlToArchive == true) {
@@ -96,20 +96,18 @@ class MainActivity : AppCompatActivity() {
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
         //TODO: Stop using GlobalScope, switch to something less delicate
         GlobalScope.launch(Dispatchers.Main) {
-            Log.i("Searching for searchTerm %" , searchTerm)
-            // Get rid of the idea of a search term all together in this app. We'll grab the entire
-            // bodyReponse and if there is "No results", "Newest" or "Save" we can act accordingly.
-            val result = loader.loadUrl(searchTerm)
+            Log.i(tag, "Checking Page to see if URL archived or not %")
+            val result = loader.loadUrl()
 
-            if (result && searchTerm == "No results") {
+            if (result == "No results") {
                 Log.i(tag,"Displaying Archive Dialog")
                 archiveDialog(url)
             }
-            if (result && searchTerm == "Newest") {
+            if (result == "Newest") {
                 Log.i(tag,"Displaying Archive Dialog")
                 linkFoundDialog(url)
             }
-            if (result && searchTerm == "save") {
+            if (result == "My url is alive and I want to archive its content") {
                 Log.i(tag,"Triggering page archival and displaying Archived Dialog")
                 val archivedResult = loader.launchPageArchival(archiveUrl)
                 Log.i("Final URL of Archived page ", archivedResult)
@@ -124,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("No Archived Page Found")
         builder.setMessage("Do you want to archive this page?")
         builder.setPositiveButton("Yes") { _, _ ->
-            launchUrlInBackground(url, "save", true)
+            launchUrlInBackground(url, true)
         }
         builder.setNegativeButton("No") { _, _ ->
         }
@@ -142,9 +140,10 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("Archived Page for this URL has been found")
         builder.setMessage("Do you want to view in your browser or read now?")
         builder.setPositiveButton("Launch in Browser") { _, _ ->
-            GlobalScope.launch(Dispatchers.Main) {
-                launchUrlInBrowser(loader.openMostRecentArchivedPage(url))
-            }
+//            GlobalScope.launch(Dispatchers.Main) {
+//                launchUrlInBrowser(loader.openMostRecentArchivedPage(url))
+//            }
+            launchUrlInBrowser("http://archive.is/newest/$url")
         }
         builder.setNeutralButton("Launch in Reader") { _, _ ->
             // launch code for text extraction
