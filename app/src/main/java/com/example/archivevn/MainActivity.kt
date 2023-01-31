@@ -135,14 +135,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun linkFoundDialog(url: String) {
         Log.i(tag, "linkFoundDialog() started")
-        val loader = OkHttpHandler(url)
         val builder = AlertDialog.Builder(this).apply { }
             .setTitle("Archived Page for this URL has been found")
             .setMessage("Do you want to view in your browser or read now?")
             .setPositiveButton("Launch in Browser") { _, _ ->
-//            GlobalScope.launch(Dispatchers.Main) {
-//                launchUrlInBrowser(loader.openMostRecentArchivedPage(url))
-//            }
                 launchUrlInBrowser("http://archive.is/newest/$url")
             }
             .setNeutralButton("Launch in Reader") { _, _ ->
