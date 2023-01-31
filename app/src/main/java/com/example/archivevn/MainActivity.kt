@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 "My url is alive and I want to archive its content" -> {
                     Log.i(tag, "Triggering page archival and displaying Archived Dialog")
-                    val archivedResult = loader.launchPageArchival(archiveUrl)
+                    val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
                     archiveConfirmedDialog(archivedResult)
                 }
