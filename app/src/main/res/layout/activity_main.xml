@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.archivevn.ReaderFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/url_edit_text"
         android:layout_width="match_parent"
@@ -35,6 +41,23 @@
         android:padding="16dp"
         android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        />
+
+    <Button
+        android:id="@+id/reader_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reader"
+        android:onClick="readerButtonClicked"
+        app:layout_constraintTop_toBottomOf="@id/url_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/go_button"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        android:padding="16dp"
+        android:elevation="4dp"
         app:layout_constraintHorizontal_bias="0.5"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

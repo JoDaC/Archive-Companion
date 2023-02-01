@@ -11,12 +11,15 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import kotlinx.coroutines.*
 import okhttp3.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var urlEditText: EditText
     private lateinit var goButton: Button
+    private lateinit var readerButton: Button
     private val tag = "MainActivityTag"
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         // Initialize text field and button IDs.
         urlEditText = findViewById<EditText>(R.id.url_edit_text)
         goButton = findViewById(R.id.go_button)
+        readerButton = findViewById(R.id.reader_button)
 
         // Set onClickListener for GO button.
         goButton.setOnClickListener {
@@ -37,12 +41,25 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a URL", Toast.LENGTH_SHORT).show()
             }
         }
+        // Set onClickListener for Reader button to launch Reader fragment.
+        readerButton.setOnClickListener {
+            val readerFragment = ReaderFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, readerFragment)
+                .commit()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v(tag, "onNewIntent")
         handleShareSheetUrlInBackground(intent)
+
+//        supportFragmentManager.commit {
+//            replace<ReaderFragment>(R.id.fragmentContainerView3)
+//            setReorderingAllowed(true)
+//            addToBackStack(null)
+//        }
     }
 
     private fun handleShareSheetUrlInBrowser(intent: Intent?) {
