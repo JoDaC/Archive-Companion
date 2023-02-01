@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         val loader = OkHttpHandler(archiveUrl)
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
         //TODO: Stop using GlobalScope, switch to something less delicate
-        GlobalScope.launch(Dispatchers.Main) {
+        MainScope().launch {
             Log.i(tag, "Checking Page to see if URL archived or not %")
 
             when (loader.loadUrl()) {
@@ -169,11 +169,16 @@ class MainActivity : AppCompatActivity() {
         Log.i(tag, "archiveConfirmedDialog() started")
         val builder = AlertDialog.Builder(this).apply { }
             .setTitle("Page has been archived!")
-            .setMessage("Do you want to view in your browser?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setPositiveButton("View in Browser") { _, _ ->
                 launchUrlInBrowser(url!!)
             }
-            .setNegativeButton("No") { _, _ ->
+            .setNeutralButton("View in Reader") { _, _ ->
+                val loader = OkHttpHandler(url!!)
+                MainScope().launch {
+                    loader.loadUrlAndParseToString()
+                }
+                // Create function to send url to ReaderFragment. ReaderFragment launch
+                // once text is received
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()

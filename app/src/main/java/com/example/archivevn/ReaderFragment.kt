@@ -1,10 +1,14 @@
 package com.example.archivevn
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +37,25 @@ class ReaderFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        container?.removeAllViews()
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reader, container, false)
+        val view = inflater.inflate(R.layout.fragment_reader, container, false)
+
+        // Scrape the text here and store it in a variable
+        val loader = OkHttpHandler("https://archive.vn/8x7F3")
+        var scrapedText = ""
+        MainScope().launch {
+            scrapedText = loader.loadUrlAndParseToString()
+            Log.i("scrapedtexttag", scrapedText)
+            // Find the TextView in the layout
+            val textView = view.findViewById<TextView>(R.id.text_display)
+            // Set the text of the TextView to the scraped text
+            Log.i("scrapedtexttag", scrapedText)
+            textView.text = scrapedText
+        }
+
+        return view
+//        return inflater.inflate(R.layout.fragment_reader, container, false)
     }
 
     companion object {

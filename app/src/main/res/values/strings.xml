@@ -16,4 +16,5 @@
     <string name="reader">Reader</string>
     <string name="textview">TextView</string>
     <string name="enter_text_here">Enter text here</string>
+    <string name="welcome_to_the_reader">Welcome to the READER</string>
 </resources>

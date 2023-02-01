@@ -16,19 +16,16 @@ class OkHttpHandler(url: String) {
         .url(url)
         .build()
 
-    suspend fun loadUrlWithSearchTerm(searchTerm: String): Boolean {
+    suspend fun loadUrlAndParseToString(): String {
         return withContext(Dispatchers.Default) {
             val response = client.newCall(request).execute()
             val responseBody = response.body()?.string()
-            result = responseBody.let { !it.isNullOrEmpty() && it.contains(searchTerm) }
-            if (result) {
-                if (responseBody != null) {
-                    Log.d("Response Body", responseBody)
-                }
-            } else {
-                Log.d("$searchTerm not found in Response Body", responseBody!!)
-            }
-            result
+            val parsedBody = Jsoup.parse(responseBody!!)
+            Log.d("Parsed Body", parsedBody.toString())
+            val articleBody = parsedBody.select("[name='articleBody']")
+            Log.d("Article Body", articleBody.toString())
+//            result = responseBody.let { !it.isNullOrEmpty() && it.contains(searchTerm) }
+            articleBody.toString()
         }
     }
 

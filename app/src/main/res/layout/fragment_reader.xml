@@ -6,16 +6,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
         <TextView
             android:id="@+id/text_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="200dp"
-            android:text="Welcome to the READER" />
+            android:text="@string/welcome_to_the_reader" />
 
     </LinearLayout>
 
