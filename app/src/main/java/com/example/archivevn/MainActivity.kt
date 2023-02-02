@@ -5,8 +5,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var urlEditText: EditText
     private lateinit var goButton: Button
     private lateinit var readerButton: Button
+    private lateinit var loadingWheel: ProgressBar
     private val tag = "MainActivityTag"
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
@@ -31,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         urlEditText = findViewById<EditText>(R.id.url_edit_text)
         goButton = findViewById(R.id.go_button)
         readerButton = findViewById(R.id.reader_button)
+        loadingWheel = findViewById(R.id.progress_bar)
+        loadingWheel.visibility = View.GONE
 
         // Set onClickListener for GO button.
         goButton.setOnClickListener {
@@ -110,10 +115,9 @@ class MainActivity : AppCompatActivity() {
         }
         val loader = OkHttpHandler(archiveUrl)
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
-        //TODO: Stop using GlobalScope, switch to something less delicate
         MainScope().launch {
             Log.i(tag, "Checking Page to see if URL archived or not %")
-
+            loadingWheel.visibility = View.VISIBLE
             when (loader.loadUrl()) {
                 "No results" -> {
                     Log.i(tag, "Displaying Archive Dialog")
@@ -130,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                     archiveConfirmedDialog(archivedResult)
                 }
             }
+            loadingWheel.visibility = View.GONE
         }
     }
 
