@@ -10,7 +10,9 @@
         android:id="@+id/fragmentContainerView"
         android:name="com.example.archivevn.ReaderFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:elevation="11dp"
+        >
 
     </FrameLayout>
 

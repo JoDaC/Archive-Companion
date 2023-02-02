@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import kotlinx.coroutines.*
 import okhttp3.*
 
@@ -31,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Initialize text field and button IDs.
-        urlEditText = findViewById<EditText>(R.id.url_edit_text)
+        urlEditText = findViewById(R.id.url_edit_text)
         goButton = findViewById(R.id.go_button)
         readerButton = findViewById(R.id.reader_button)
         loadingWheel = findViewById(R.id.progress_bar)
@@ -48,10 +46,13 @@ class MainActivity : AppCompatActivity() {
         }
         // Set onClickListener for Reader button to launch Reader fragment.
         readerButton.setOnClickListener {
-            val readerFragment = ReaderFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, readerFragment)
-                .commit()
+            val url = urlEditText.text.toString()
+            if (url.isNotEmpty()) {
+                launchUrlInReader(url)
+            } else {
+                Toast.makeText(this, "Please enter a URL to view in Reader", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -59,12 +60,6 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.v(tag, "onNewIntent")
         handleShareSheetUrlInBackground(intent)
-
-//        supportFragmentManager.commit {
-//            replace<ReaderFragment>(R.id.fragmentContainerView3)
-//            setReorderingAllowed(true)
-//            addToBackStack(null)
-//        }
     }
 
     private fun handleShareSheetUrlInBrowser(intent: Intent?) {
@@ -95,6 +90,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun launchUrlInReader(url: String) {
+        Log.i("Shared URL %", url)
+        val readerFragment = ReaderFragment.newInstance(url)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, readerFragment)
+            .commit()
     }
 
     private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
@@ -164,7 +167,13 @@ class MainActivity : AppCompatActivity() {
                 launchUrlInBrowser("http://archive.is/newest/$url")
             }
             .setNeutralButton("Launch in Reader") { _, _ ->
+                Log.i("linkToSendFragment", "https://archive.is/newest/$url")
                 // launch code for text extraction
+                launchUrlInReader("https://archive.is/newest/$url")
+//                val readerFragment = ReaderFragment.newInstance("https://archive.is/newest/$url")
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.fragmentContainerView, readerFragment)
+//                    .commit()
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -178,10 +187,16 @@ class MainActivity : AppCompatActivity() {
                 launchUrlInBrowser(url!!)
             }
             .setNeutralButton("View in Reader") { _, _ ->
-                val loader = OkHttpHandler(url!!)
-                MainScope().launch {
-                    loader.loadUrlAndParseToString()
-                }
+//                MainScope().launch {
+//                    val loader = OkHttpHandler(url!!)
+//                    loader.loadUrlAndParseToString()
+//                }
+                // fragment gets launched here
+                launchUrlInReader(url!!)
+//                val readerFragment = ReaderFragment.newInstance(url!!)
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.fragmentContainerView, readerFragment)
+//                    .commit()
                 // Create function to send url to ReaderFragment. ReaderFragment launch
                 // once text is received
             }

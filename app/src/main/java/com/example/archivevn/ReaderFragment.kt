@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val PASSED_URL = "url1"
 
 /**
  * A simple [Fragment] subclass.
@@ -21,41 +20,37 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class ReaderFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            url = it.getString(PASSED_URL)
         }
+        Log.i("PASSED_URL_TAG", url!!)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // not sure if I need this
         container?.removeAllViews()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_reader, container, false)
-
         // Scrape the text here and store it in a variable
-        val loader = OkHttpHandler("https://archive.vn/8x7F3")
+        val loader = OkHttpHandler(url!!)
+        Log.i("PASSED_URL_TAG_2", url!!)
         var scrapedText = ""
         MainScope().launch {
             scrapedText = loader.loadUrlAndParseToString()
-            Log.i("scrapedtexttag", scrapedText)
+            Log.i("scraped_text_tag", scrapedText)
             // Find the TextView in the layout
             val textView = view.findViewById<TextView>(R.id.text_display)
             // Set the text of the TextView to the scraped text
-            Log.i("scrapedtexttag", scrapedText)
             textView.text = scrapedText
         }
-
         return view
-//        return inflater.inflate(R.layout.fragment_reader, container, false)
     }
 
     companion object {
@@ -63,17 +58,15 @@ class ReaderFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param url URL parameter.
          * @return A new instance of fragment ReaderFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(url: String) =
             ReaderFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(PASSED_URL, url)
                 }
             }
     }

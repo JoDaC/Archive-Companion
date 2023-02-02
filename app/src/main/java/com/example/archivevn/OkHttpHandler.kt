@@ -10,7 +10,6 @@ import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
 
-    private var result = false
     private val client = OkHttpClient()
     private val request = Request.Builder()
         .url(url)
@@ -22,10 +21,9 @@ class OkHttpHandler(url: String) {
             val responseBody = response.body()?.string()
             val parsedBody = Jsoup.parse(responseBody!!)
             Log.d("Parsed Body", parsedBody.toString())
-            val articleBody = parsedBody.select("[name='articleBody']")
-            Log.d("Article Body", articleBody.toString())
-//            result = responseBody.let { !it.isNullOrEmpty() && it.contains(searchTerm) }
-            articleBody.toString()
+//            val articleBody = parsedBody.select("[name='articleBody']")
+            Log.d("Article Body", parsedBody.toString())
+            parsedBody.toString()
         }
     }
 
