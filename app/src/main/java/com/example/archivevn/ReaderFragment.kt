@@ -35,7 +35,7 @@ class ReaderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // not sure if I need this
-        container?.removeAllViews()
+        // container?.removeAllViews()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_reader, container, false)
         // Scrape the text here and store it in a variable

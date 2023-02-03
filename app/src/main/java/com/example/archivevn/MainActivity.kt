@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var goButton: Button
     private lateinit var readerButton: Button
     private lateinit var loadingWheel: ProgressBar
+    private lateinit var fragmentContainerView: FrameLayout
     private val tag = "MainActivityTag"
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         goButton = findViewById(R.id.go_button)
         readerButton = findViewById(R.id.reader_button)
         loadingWheel = findViewById(R.id.progress_bar)
+        fragmentContainerView = findViewById(R.id.fragmentContainerView)
         loadingWheel.visibility = View.GONE
 
         // Set onClickListener for GO button.
@@ -98,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, readerFragment)
             .commit()
+        fragmentContainerView.visibility = View.VISIBLE
     }
 
     private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
@@ -152,7 +156,7 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("No") { _, _ ->
             }
             .setNeutralButton("Launch in Browser") { _, _ ->
-                launchUrlInBrowser(url)
+                launchUrlInBrowser("https://archive.vn/$url")
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
