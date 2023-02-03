@@ -174,10 +174,6 @@ class MainActivity : AppCompatActivity() {
                 Log.i("linkToSendFragment", "https://archive.is/newest/$url")
                 // launch code for text extraction
                 launchUrlInReader("https://archive.is/newest/$url")
-//                val readerFragment = ReaderFragment.newInstance("https://archive.is/newest/$url")
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.fragmentContainerView, readerFragment)
-//                    .commit()
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -191,18 +187,7 @@ class MainActivity : AppCompatActivity() {
                 launchUrlInBrowser(url!!)
             }
             .setNeutralButton("View in Reader") { _, _ ->
-//                MainScope().launch {
-//                    val loader = OkHttpHandler(url!!)
-//                    loader.loadUrlAndParseToString()
-//                }
-                // fragment gets launched here
                 launchUrlInReader(url!!)
-//                val readerFragment = ReaderFragment.newInstance(url!!)
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.fragmentContainerView, readerFragment)
-//                    .commit()
-                // Create function to send url to ReaderFragment. ReaderFragment launch
-                // once text is received
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
