@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
         fragmentContainerView = findViewById(R.id.fragmentContainerView)
         loadingWheel.visibility = View.GONE
 
+        // Create Notification Channel
+        NotificationHandler(this).createNotificationChannel()
+
         // Set onClickListener for GO button.
         goButton.setOnClickListener {
             val url = urlEditText.text.toString()
@@ -55,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please enter a URL to view in Reader", Toast.LENGTH_SHORT)
                     .show()
+                // delivering push notification here for easy testing purposes
+                NotificationHandler(this@MainActivity).showLoadingNotification()
             }
         }
     }
@@ -64,6 +69,21 @@ class MainActivity : AppCompatActivity() {
         Log.v(tag, "onNewIntent")
         handleShareSheetUrlInBackground(intent)
     }
+
+//    private fun createNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val name = getString(R.string.channel_name)
+//            val descriptionText = getString(R.string.channel_description)
+//            val importance = NotificationManager.IMPORTANCE_DEFAULT
+//            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+//                description = descriptionText
+//            }
+//            // Register the channel with the system
+//            val notificationManager: NotificationManager =
+//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//            notificationManager.createNotificationChannel(channel)
+//        }
+//    }
 
     private fun handleShareSheetUrlInBrowser(intent: Intent?) {
         if (intent != null) {
@@ -136,7 +156,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 "My url is alive and I want to archive its content" -> {
                     Log.i(tag, "Triggering page archival and displaying Archived Dialog")
-                    val archivedResult = loader.launchPageArchival(url)
+                    // THIS IS WHERE I NEED TO TRIGGER THE PUSH NOTIFICATION.
+                    var archivedResult = ""
+                    while (archivedResult.contains("https://archive.ph/wip/")) {
+                        NotificationHandler(this@MainActivity).showLoadingNotification()
+                        delay(1000)
+                    }
+                    archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
                     archiveConfirmedDialog(archivedResult)
                 }
