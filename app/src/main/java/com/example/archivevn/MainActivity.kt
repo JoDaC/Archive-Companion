@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentContainerView: FrameLayout
     private val tag = "MainActivityTag"
 
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a URL to view in Reader", Toast.LENGTH_SHORT)
                     .show()
                 // delivering push notification here for easy testing purposes
-                NotificationHandler(this@MainActivity).showLoadingNotification()
+                NotificationHandler(this@MainActivity).showTestNotification()
             }
         }
     }
@@ -190,16 +189,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun linkFoundDialog(url: String) {
         Log.i(tag, "linkFoundDialog() started")
+        val latestArchiveUrl = "http://archive.is/newest/$url"
         val builder = AlertDialog.Builder(this).apply { }
             .setTitle("Archived Page for this URL has been found")
             .setMessage("Do you want to view in your browser or read now?")
             .setPositiveButton("Launch in Browser") { _, _ ->
-                launchUrlInBrowser("http://archive.is/newest/$url")
+                launchUrlInBrowser(latestArchiveUrl)
             }
             .setNeutralButton("Launch in Reader") { _, _ ->
-                Log.i("linkToSendFragment", "https://archive.is/newest/$url")
+                Log.i("linkToSendFragment", latestArchiveUrl)
                 // launch code for text extraction
-                launchUrlInReader("https://archive.is/newest/$url")
+                launchUrlInReader(latestArchiveUrl)
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
