@@ -155,13 +155,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 "My url is alive and I want to archive its content" -> {
                     Log.i(tag, "Triggering page archival and displaying Archived Dialog")
-                    // THIS IS WHERE I NEED TO TRIGGER THE PUSH NOTIFICATION.
-                    var archivedResult = ""
-                    while (archivedResult.contains("https://archive.ph/wip/")) {
+                    val archivedResult = loader.launchPageArchival(url)
+                    while (archivedResult.isEmpty()) {
                         NotificationHandler(this@MainActivity).showLoadingNotification()
                         delay(1000)
                     }
-                    archivedResult = loader.launchPageArchival(url)
+//                    archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
                     archiveConfirmedDialog(archivedResult)
                 }
