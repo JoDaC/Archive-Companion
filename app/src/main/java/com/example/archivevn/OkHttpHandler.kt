@@ -24,6 +24,7 @@ class OkHttpHandler(url: String) {
             Log.d("Parsed Body", parsedBody.toString())
 //            val articleBody = parsedBody.select("[name='articleBody']")
             Log.d("Article Body", parsedBody.toString())
+            response.body()?.close()
             parsedBody.toString()
         }
     }
@@ -44,6 +45,7 @@ class OkHttpHandler(url: String) {
             if (resultString.isEmpty()) {
                 Log.d("No search terms found in response body", responseBody!!)
             }
+            response.body()?.close()
             resultString
         }
     }
@@ -66,10 +68,12 @@ class OkHttpHandler(url: String) {
             while (responseTwo.toString().contains("https://archive.ph/submit/?submitid=")) {
                 responseTwo = client.newCall(requestTwo).execute()
                 Log.i("big_ass_waffles", responseTwo.toString())
-                delay(10000)
+                delay(30000)
             }
             val urlToTriggerArchival = responseTwo.request().url().toString()
             Log.i("URL to trigger Archival ", urlToTriggerArchival)
+            responseOne.body()?.close()
+            responseTwo.body()?.close()
             urlToTriggerArchival
         }
     }
