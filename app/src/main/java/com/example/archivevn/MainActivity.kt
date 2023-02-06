@@ -2,8 +2,8 @@ package com.example.archivevn
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -11,11 +11,9 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
-import okhttp3.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var urlEditText: EditText
@@ -24,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loadingWheel: ProgressBar
     private lateinit var fragmentContainerView: FrameLayout
     private val tag = "MainActivityTag"
+//    private val notificationChannel = NotificationHandler.NotificationChannel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +37,8 @@ class MainActivity : AppCompatActivity() {
         loadingWheel.visibility = View.GONE
 
         // Create Notification Channel
-        NotificationHandler(this).createNotificationChannel()
+        val notificationChannel = NotificationHandler.NotificationChannel(this)
+        notificationChannel.createNotificationChannel()
 
         // Set onClickListener for GO button.
         goButton.setOnClickListener {
@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
                     .show()
                 // delivering push notification here for easy testing purposes
                 NotificationHandler(this@MainActivity).showTestNotification()
+                SystemClock.sleep(5000)
+                notificationChannel.closeNotification()
             }
         }
     }
@@ -68,21 +70,6 @@ class MainActivity : AppCompatActivity() {
         Log.v(tag, "onNewIntent")
         handleShareSheetUrlInBackground(intent)
     }
-
-//    private fun createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val name = getString(R.string.channel_name)
-//            val descriptionText = getString(R.string.channel_description)
-//            val importance = NotificationManager.IMPORTANCE_DEFAULT
-//            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-//                description = descriptionText
-//            }
-//            // Register the channel with the system
-//            val notificationManager: NotificationManager =
-//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//    }
 
     private fun handleShareSheetUrlInBrowser(intent: Intent?) {
         if (intent != null) {
@@ -155,14 +142,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 "My url is alive and I want to archive its content" -> {
                     Log.i(tag, "Triggering page archival and displaying Archived Dialog")
+                    NotificationHandler(this@MainActivity).showLoadingNotification()
                     val archivedResult = loader.launchPageArchival(url)
-                    while (archivedResult.isEmpty()) {
-                        NotificationHandler(this@MainActivity).showLoadingNotification()
-                        delay(1000)
-                    }
-//                    archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
                     archiveConfirmedDialog(archivedResult)
+                    val notificationChannel =
+                        NotificationHandler.NotificationChannel(this@MainActivity)
+                    notificationChannel.closeNotification()
                 }
             }
             loadingWheel.visibility = View.GONE
