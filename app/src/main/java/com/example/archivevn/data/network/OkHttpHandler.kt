@@ -1,4 +1,4 @@
-package com.example.archivevn
+package com.example.archivevn.data.network
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ class OkHttpHandler(url: String) {
             val parsedBody = Jsoup.parse(responseBody!!)
             Log.d("Parsed Body", parsedBody.toString())
 //            val articleBody = parsedBody.select("[name='articleBody']")
-            Log.d("Article Body", parsedBody.toString())
+//            Log.d("Article Body", parsedBody.toString())
             response.body()?.close()
             parsedBody.toString()
         }

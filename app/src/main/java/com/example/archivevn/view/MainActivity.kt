@@ -1,4 +1,4 @@
-package com.example.archivevn
+package com.example.archivevn.view
 
 import android.content.Intent
 import android.net.Uri
@@ -13,6 +13,12 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.example.archivevn.data.notifications.NotificationHandler
+import com.example.archivevn.data.network.OkHttpHandler
+import com.example.archivevn.R
+import com.example.archivevn.databinding.ActivityMainBinding
+import com.example.archivevn.viewmodel.MainViewModel
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,12 +27,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var readerButton: Button
     private lateinit var loadingWheel: ProgressBar
     private lateinit var fragmentContainerView: FrameLayout
+    lateinit var binding: ActivityMainBinding
+    lateinit var mainViewModel: MainViewModel
     private val tag = "MainActivityTag"
-//    private val notificationChannel = NotificationHandler.NotificationChannel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mainViewModel = MainViewModel()
+
+        binding.mainViewModel = mainViewModel
 
         // Initialize text field and button IDs.
         urlEditText = findViewById(R.id.url_edit_text)
@@ -42,12 +53,13 @@ class MainActivity : AppCompatActivity() {
 
         // Set onClickListener for GO button.
         goButton.setOnClickListener {
-            val url = urlEditText.text.toString()
-            if (url.isNotEmpty()) {
-                launchUrlInBrowser(url)
-            } else {
-                Toast.makeText(this, "Please enter a URL", Toast.LENGTH_SHORT).show()
-            }
+            viewModel.
+//            val url = urlEditText.text.toString()
+//            if (url.isNotEmpty()) {
+//                launchUrlInBrowser(url)
+//            } else {
+//                Toast.makeText(this, "Please enter a URL", Toast.LENGTH_SHORT).show()
+//            }
         }
         // Set onClickListener for Reader button to launch Reader fragment.
         readerButton.setOnClickListener {

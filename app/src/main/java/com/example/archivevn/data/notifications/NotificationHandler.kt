@@ -1,4 +1,4 @@
-package com.example.archivevn
+package com.example.archivevn.data.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.example.archivevn.R
 
 private const val CHANNEL_ID = "my_notification_channel_id"
 private const val NOTIFICATION_ID = 1

@@ -1,24 +1,25 @@
-package com.example.archivevn
+package com.example.archivevn.view
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.example.archivevn.data.network.OkHttpHandler
+import com.example.archivevn.R
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val PASSED_URL = "url1"
 
 /**
  * A simple [Fragment] subclass.
  * Use the [ReaderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+private const val PASSED_URL = "url1"
+
 class ReaderFragment : Fragment() {
     private var url: String? = null
 
