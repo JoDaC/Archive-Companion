@@ -23,4 +23,5 @@
     <string name="test_notification_message">Lets test this bitch…</string>
     <string name="channel_name">Archive Loading</string>
     <string name="channel_description">Notification of progress of page being archived in the background…</string>
+    <string name="keyword_empty">Please enter a URL</string>
 </resources>
