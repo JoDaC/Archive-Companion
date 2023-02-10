@@ -28,24 +28,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mainViewModel = MainViewModel(application)
+        mainViewModel = MainViewModel(application, binding)
+        mainViewModel.initializeNotificationChannel()
+        mainViewModel.setFragmentManager(supportFragmentManager)
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
         // Set onClickListener for GO button.
         binding.goButton.setOnClickListener {
-            mainViewModel.onGoButtonClicked(binding)
+            mainViewModel.onGoButtonClicked()
         }
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
-            mainViewModel.onReaderButtonClicked(binding)
+            mainViewModel.onReaderButtonClicked()
         }
+        // Set ProgressBar to no visibility.
+        binding.progressBar.visibility = View.GONE
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v("MainActivityTag", "onNewIntent")
-        mainViewModel.handleShareSheetUrlInBackground(intent, binding)
+        mainViewModel.handleShareSheetUrlInBackground(intent)
     }
 }
 
