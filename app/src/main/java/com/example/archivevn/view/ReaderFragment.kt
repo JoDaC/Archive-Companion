@@ -35,18 +35,14 @@ class ReaderFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // not sure if I need this
-        // container?.removeAllViews()
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_reader, container, false)
-        // Scrape the text here and store it in a variable
         val loader = OkHttpHandler(url!!)
         Log.i("PASSED_URL_TAG_2", url!!)
         var scrapedText = ""
         MainScope().launch {
             scrapedText = loader.loadUrlAndParseToString()
             Log.i("scraped_text_tag", scrapedText)
-            // Find the TextView in the layout
+            // Need to figure this part out
             val textView = view.findViewById<TextView>(R.id.text_display)
             // Set the text of the TextView to the scraped text
             textView.text = scrapedText
@@ -62,7 +58,6 @@ class ReaderFragment : Fragment() {
          * @param url URL parameter.
          * @return A new instance of fragment ReaderFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(url: String) =
             ReaderFragment().apply {

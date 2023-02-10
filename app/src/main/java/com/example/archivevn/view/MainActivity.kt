@@ -24,7 +24,6 @@ import kotlinx.coroutines.*
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private val tag = "MainActivityTag"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.v(tag, "onNewIntent")
+        Log.v("MainActivityTag", "onNewIntent")
         mainViewModel.handleShareSheetUrlInBackground(intent, binding)
     }
 }
