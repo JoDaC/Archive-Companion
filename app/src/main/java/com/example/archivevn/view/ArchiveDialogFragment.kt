@@ -1,21 +1,11 @@
 package com.example.archivevn.view
 
-import android.app.Application
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.DialogFragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
-import com.example.archivevn.R
-import com.example.archivevn.databinding.ActivityMainBinding
+import androidx.fragment.app.DialogFragment
 import com.example.archivevn.viewmodel.MainViewModel
-
 
 
 class ArchiveDialogFragment() : DialogFragment() {
@@ -36,13 +26,10 @@ class ArchiveDialogFragment() : DialogFragment() {
     }
 
     fun setMainViewModel(mainViewModel: MainViewModel) {
-        Log.d("ArchiveDialogFragment", "mainViewModel: $mainViewModel")
         this.mainViewModel = mainViewModel
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Log.d("ArchiveDialogFragment", "dialogType: $dialogType")
-        Log.d("ArchiveDialogFragment", "url: $url")
         when (dialogType) {
             DIALOG_TYPE_1 -> {
                 Log.i(tag, "First Time archiveDialog() started")
@@ -70,7 +57,6 @@ class ArchiveDialogFragment() : DialogFragment() {
                     }
                     .setNeutralButton("Launch in Reader") { _, _ ->
                         Log.i("linkToSendFragment", latestArchiveUrl)
-                        // launch code for text extraction
                         mainViewModel.launchUrlInReader(latestArchiveUrl)
                     }
                 return builder.create()
