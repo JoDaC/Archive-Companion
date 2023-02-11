@@ -48,23 +48,39 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         this.dialogFragment.setMainViewModel(this)
     }
 
+    /**
+    Initializes a new notification channel for this app.
+     */
     fun initializeNotificationChannel() {
         notificationChannel = NotificationHandler.NotificationChannel(getApplication())
     }
 
+    /**
+    Sets the fragment manager for this view model.
+
+    @param fragmentManager The fragment manager to set.
+     */
     fun setFragmentManager(fragmentManager: FragmentManager) {
         this.fragmentManager = fragmentManager
     }
 
+    /**
+    Handles the event when the "Go" button is clicked.
+    Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     */
     fun onGoButtonClicked() {
         val url = binding.urlEditText.text.toString()
         if (url.isNotEmpty()) {
-            launchUrlInBrowser(url)
+            dialogFragment.launchUrlInBrowser(url)
         } else {
             Toast.makeText(getApplication(), "Please enter a URL", Toast.LENGTH_SHORT).show()
         }
     }
 
+    /**
+    Handles the event when the "Reader" button is clicked.
+    Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
+     */
     fun onReaderButtonClicked() {
         val url = binding.urlEditText.text.toString()
         if (url.isNotEmpty()) {
@@ -83,17 +99,11 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
     }
 
+    /**
+    Launches a new ReaderFragment with the specified URL.
 
-    fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
-        Log.i("Shared URL %", url)
-        var archiveUrl = "https://archive.vn/$url"
-        if (urlToArchive == true) {
-            archiveUrl = "https://archive.is/?$url"
-        }
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        mContext.startActivity(browserIntent)
-    }
-
+    @param url The URL to parse and display in the reader.
+     */
     fun launchUrlInReader(url: String) {
         Log.i("Shared URL %", url)
         val readerFragment = ReaderFragment.newInstance(url)
@@ -103,6 +113,17 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
+    /**
+    Launches a new background coroutine to check if the specified URL contains three possible words
+    or phrases to determine if a page is already archived or not. Will then call appropriate
+    AlertDialog to inform if the url is already archived, if not archived, or if the archival
+    process is complete.
+
+    If Archival is chosen, display a push notification to indicate archival is in progress.
+
+    @param url The URL to archive or check for archival.
+    @param urlToArchive A flag indicating whether to archive the page.
+     */
     fun launchUrlInBackground(
         url: String,
         urlToArchive: Boolean? = null
@@ -141,6 +162,11 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
     }
 
+    /**
+    Handles the URL when the app is launched via the Android share sheet.
+
+    @param intent The intent containing the shared URL.
+     */
     fun handleShareSheetUrlInBackground(intent: Intent?) {
         if (intent != null) {
             when (intent.action) {
