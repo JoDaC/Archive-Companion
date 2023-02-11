@@ -16,6 +16,11 @@ class OkHttpHandler(url: String) {
         .url(url)
         .build()
 
+    /**
+    Loads the specified URL using the OkHttp client and returns the parsed HTML body as a string.
+
+    @return The parsed HTML body as a string.
+     */
     suspend fun loadUrlAndParseToString(): String {
         return withContext(Dispatchers.Default) {
             val response = client.newCall(request).execute()
@@ -29,6 +34,13 @@ class OkHttpHandler(url: String) {
         }
     }
 
+    /**
+    Loads the specified URL using the OkHttp client and searches for specific terms in the
+    response body, indicating whether the page is already archived, needs to be archived,
+    or cannot be archived.
+
+    @return A string indicating whether the page is already archived, needs to be archived, or cannot be archived.
+     */
     suspend fun loadUrl(): String {
         return withContext(Dispatchers.Default) {
             val response = client.newCall(request).execute()
@@ -50,6 +62,12 @@ class OkHttpHandler(url: String) {
         }
     }
 
+    /**
+    Launches the page archival process using the specified URL and the archive.ph service.
+
+    @param url The URL to archive.
+    @return The URL of the archived page.
+     */
     suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.IO) {
             val responseOne = client.newCall(request).execute()
@@ -68,6 +86,7 @@ class OkHttpHandler(url: String) {
             while (responseTwo.toString().contains("https://archive.ph/submit/?submitid=")) {
                 responseTwo = client.newCall(requestTwo).execute()
                 Log.i("big_ass_waffles", responseTwo.toString())
+                // Currently using a very large polling time to avoid captcha.
                 delay(30000)
             }
             val urlToTriggerArchival = responseTwo.request().url().toString()

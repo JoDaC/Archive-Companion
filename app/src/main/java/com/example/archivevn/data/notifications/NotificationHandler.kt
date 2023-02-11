@@ -14,17 +14,18 @@ private const val NOTIFICATION_ID = 1
 
 class NotificationHandler(private val context: Context) {
 
+    /**
+    Shows a loading notification to indicate that the page is being archived.
+     */
     fun showLoadingNotification() {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_message))
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
 
         with(NotificationManagerCompat.from(context)) {
-            // notificationId is a unique int for each notification that you must define
             notify(NOTIFICATION_ID, builder.build())
             Log.i("NotificationTag", "notify() called")
         }
@@ -35,12 +36,10 @@ class NotificationHandler(private val context: Context) {
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(context.getString(R.string.test_notification_title))
             .setContentText(context.getString(R.string.test_notification_message))
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
 
         with(NotificationManagerCompat.from(context)) {
-            // notificationId is a unique int for each notification that you must define
             notify(NOTIFICATION_ID, builder.build())
             Log.i("NotificationTag", "notify() called")
         }
@@ -57,17 +56,12 @@ class NotificationHandler(private val context: Context) {
                 val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                     description = descriptionText
                 }
-                // Register the channel with the system
-//                val notificationManager =
-//                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(channel)
                 Log.d("NotificationTag", "Notification channel created")
             }
         }
 
         fun closeNotification() {
-//            val notificationManager =
-//                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancelAll()
         }
     }
