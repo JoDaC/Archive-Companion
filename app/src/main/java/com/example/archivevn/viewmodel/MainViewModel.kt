@@ -30,16 +30,23 @@ import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.ReaderFragment
 import androidx.fragment.app.FragmentActivity
+import com.example.archivevn.view.ArchiveDialogFragment
 import kotlinx.coroutines.*
 
-class MainViewModel(application: Application, private val binding: ActivityMainBinding) : AndroidViewModel(application) {
+class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
+    AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
     private val mContext = ContextThemeWrapper(application, R.style.Theme_Archivevn)
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
+    private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment()
     private val tag = "MainActivityTag"
+
+    init {
+        this.dialogFragment.setMainViewModel(this)
+    }
 
     fun initializeNotificationChannel() {
         notificationChannel = NotificationHandler.NotificationChannel(getApplication())
@@ -48,6 +55,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     fun setFragmentManager(fragmentManager: FragmentManager) {
         this.fragmentManager = fragmentManager
     }
+
     fun onGoButtonClicked() {
         val url = binding.urlEditText.text.toString()
         if (url.isNotEmpty()) {
@@ -76,7 +84,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
 
-    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
+    fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
         Log.i("Shared URL %", url)
         var archiveUrl = "https://archive.vn/$url"
         if (urlToArchive == true) {
@@ -86,7 +94,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         mContext.startActivity(browserIntent)
     }
 
-    private fun launchUrlInReader(url: String) {
+    fun launchUrlInReader(url: String) {
         Log.i("Shared URL %", url)
         val readerFragment = ReaderFragment.newInstance(url)
         fragmentManager.beginTransaction()
@@ -95,7 +103,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
-    private fun launchUrlInBackground(
+    fun launchUrlInBackground(
         url: String,
         urlToArchive: Boolean? = null
     ) {
@@ -111,19 +119,19 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             binding.progressBar.visibility = View.VISIBLE
             when (loader.loadUrl()) {
                 "No results" -> {
-                    Log.i(tag, "Displaying Archive Dialog")
-                    archiveDialog(url)
+                    Log.i(tag, "Displaying showArchive Dialog")
+                    showArchiveDialog(url)
                 }
                 "Newest" -> {
-                    Log.i(tag, "Displaying Archive Dialog")
-                    linkFoundDialog(url)
+                    Log.i(tag, "Displaying showLinkFoundDialog")
+                    showLinkFoundDialog(url)
                 }
                 "My url is alive and I want to archive its content" -> {
-                    Log.i(tag, "Triggering page archival and displaying Archived Dialog")
+                    Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
                     NotificationHandler(getApplication()).showLoadingNotification()
                     val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
-                    archiveConfirmedDialog(archivedResult)
+                    showArchiveConfirmedDialog(archivedResult)
                     val notificationChannel =
                         NotificationHandler.NotificationChannel(getApplication())
                     notificationChannel.closeNotification()
@@ -148,52 +156,16 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
     }
 
-    private fun archiveDialog(url: String) {
-        Log.i(tag, "First Time archiveDialog() started")
-        val builder = AlertDialog.Builder(mContext).apply { }
-            .setTitle("No Archived Page Found")
-            .setMessage("Do you want to archive this page?")
-            .setPositiveButton("Yes") { _, _ ->
-                launchUrlInBackground(url, true)
-            }
-            .setNegativeButton("No") { _, _ ->
-            }
-            .setNeutralButton("Launch in Browser") { _, _ ->
-                launchUrlInBrowser("https://archive.vn/$url")
-            }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+    private fun showArchiveDialog(url: String) {
+        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_1, url)
+        dialogFragment.show(fragmentManager, "archive_dialog")
     }
-
-    private fun linkFoundDialog(url: String) {
-        Log.i(tag, "linkFoundDialog() started")
-        val latestArchiveUrl = "http://archive.is/newest/$url"
-        val builder = AlertDialog.Builder(mContext).apply { }
-            .setTitle("Archived Page for this URL has been found")
-            .setMessage("Do you want to view in your browser or read now?")
-            .setPositiveButton("Launch in Browser") { _, _ ->
-                launchUrlInBrowser(latestArchiveUrl)
-            }
-            .setNeutralButton("Launch in Reader") { _, _ ->
-                Log.i("linkToSendFragment", latestArchiveUrl)
-                // launch code for text extraction
-                launchUrlInReader(latestArchiveUrl)
-            }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+    private fun showLinkFoundDialog(url: String) {
+        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_2, url)
+        dialogFragment.show(fragmentManager, "link_found_dialog")
     }
-
-    private fun archiveConfirmedDialog(url: String? = null) {
-        Log.i(tag, "archiveConfirmedDialog() started")
-        val builder = AlertDialog.Builder(mContext).apply { }
-            .setTitle("Page has been archived!")
-            .setPositiveButton("View in Browser") { _, _ ->
-                launchUrlInBrowser(url!!)
-            }
-            .setNeutralButton("View in Reader") { _, _ ->
-                launchUrlInReader(url!!)
-            }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+    private fun showArchiveConfirmedDialog(url: String) {
+        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_3, url)
+        dialogFragment.show(fragmentManager, "archive_confirmed_dialog")
     }
 }

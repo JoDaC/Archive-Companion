@@ -34,6 +34,14 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
+        // Initialize the Dialog Fragment
+        val archiveDialogFragment = ArchiveDialogFragment()
+        archiveDialogFragment.setMainViewModel(mainViewModel)
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(archiveDialogFragment, "ArchiveDialogFragment")
+        fragmentTransaction.commit()
+
         // Set onClickListener for GO button.
         binding.goButton.setOnClickListener {
             mainViewModel.onGoButtonClicked()
