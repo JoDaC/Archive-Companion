@@ -23,29 +23,26 @@ class ArchiveDialogFragment() : DialogFragment() {
     }
 
     /**
-    Sets the type of dialog to be displayed and a URL to be used in certain cases.
-
-    @param dialogType The type of dialog to be displayed.
-    @param url A URL to be used in certain cases.
-     */
+    * Sets the type of dialog to be displayed and a URL to be used in certain cases.
+    * @param dialogType The type of dialog to be displayed.
+    * @param url A URL to be used in certain cases.
+    */
     fun setDialogType(dialogType: Int, url: String?) {
         this.dialogType = dialogType
         this.url = url
     }
 
     /**
-    Sets the MainViewModel object for this fragment.
-
-    @param mainViewModel The MainViewModel object to set for this fragment.
+     *Sets the MainViewModel object for this fragment.
+     *@param mainViewModel The MainViewModel object to set for this fragment.
      */
     fun setMainViewModel(mainViewModel: MainViewModel) {
         this.mainViewModel = mainViewModel
     }
 
     /**
-    Creates and returns a new Dialog object based on the specified dialog type.
-
-    @return A new Dialog object.
+     * Creates and returns a new Dialog object based on the specified dialog type.
+     * @return A new Dialog object.
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         when (dialogType) {
@@ -98,11 +95,11 @@ class ArchiveDialogFragment() : DialogFragment() {
     }
 
     /**
-    Launches a new browser Intent with the specified URL and optionally amends the given url for
-    archive.vn or archive.is if specified.
-
-    @param url The URL to launch in the browser.
-    @param urlToArchive A flag indicating whether to amend the url for archive.vn or archive.is.
+     * Launches a new browser Intent with the specified URL and optionally amends the given url for
+     * archive.vn or archive.is if specified.
+     *
+     * @param url The URL to launch in the browser.
+     * @param urlToArchive A flag indicating whether to amend the url for archive.vn or archive.is.
      */
     fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
         Log.i("Shared URL %", url)

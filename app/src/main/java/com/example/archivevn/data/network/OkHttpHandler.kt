@@ -17,9 +17,8 @@ class OkHttpHandler(url: String) {
         .build()
 
     /**
-    Loads the specified URL using the OkHttp client and returns the parsed HTML body as a string.
-
-    @return The parsed HTML body as a string.
+     * Loads the specified URL using the OkHttp client and returns the parsed HTML body as a string.
+     * @return The parsed HTML body as a string.
      */
     suspend fun loadUrlAndParseToString(): String {
         return withContext(Dispatchers.Default) {
@@ -35,11 +34,11 @@ class OkHttpHandler(url: String) {
     }
 
     /**
-    Loads the specified URL using the OkHttp client and searches for specific terms in the
-    response body, indicating whether the page is already archived, needs to be archived,
-    or cannot be archived.
-
-    @return A string indicating whether the page is already archived, needs to be archived, or cannot be archived.
+     * Loads the specified URL using the OkHttp client and searches for specific terms in the
+     * response body, indicating whether the page is already archived, needs to be archived,
+     * or cannot be archived.
+     *
+     * @return A string indicating whether the page is already archived, needs to be archived, or cannot be archived.
      */
     suspend fun loadUrl(): String {
         return withContext(Dispatchers.Default) {
@@ -63,10 +62,10 @@ class OkHttpHandler(url: String) {
     }
 
     /**
-    Launches the page archival process using the specified URL and the archive.ph service.
-
-    @param url The URL to archive.
-    @return The URL of the archived page.
+     * Launches the page archival process using the specified URL and the archive.ph service.
+     *
+     * @param url The URL to archive.
+     * @return The URL of the archived page.
      */
     suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.IO) {

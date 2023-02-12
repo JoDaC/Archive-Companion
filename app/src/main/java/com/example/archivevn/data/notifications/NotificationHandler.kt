@@ -15,7 +15,7 @@ private const val NOTIFICATION_ID = 1
 class NotificationHandler(private val context: Context) {
 
     /**
-    Shows a loading notification to indicate that the page is being archived.
+     * Shows a loading notification to indicate that the page is being archived.
      */
     fun showLoadingNotification() {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)

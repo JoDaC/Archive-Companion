@@ -34,24 +34,24 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-    Initializes a new notification channel for this app.
+     * Initializes a new notification channel for this app.
      */
     fun initializeNotificationChannel() {
         notificationChannel = NotificationHandler.NotificationChannel(getApplication())
     }
 
     /**
-    Sets the fragment manager for this view model.
-
-    @param fragmentManager The fragment manager to set.
+     * Sets the fragment manager for this view model.
+     *
+     * @param fragmentManager The fragment manager to set.
      */
     fun setFragmentManager(fragmentManager: FragmentManager) {
         this.fragmentManager = fragmentManager
     }
 
     /**
-    Handles the event when the "Go" button is clicked.
-    Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     * Handles the event when the "Go" button is clicked.
+     *  Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
     fun onGoButtonClicked() {
         val url = binding.urlEditText.text.toString()
@@ -63,8 +63,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-    Handles the event when the "Reader" button is clicked.
-    Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
+     * Handles the event when the "Reader" button is clicked.
+     * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
      */
     fun onReaderButtonClicked() {
         val url = binding.urlEditText.text.toString()
