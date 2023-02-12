@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         archiveDialogFragment.setMainViewModel(mainViewModel)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(archiveDialogFragment, "ArchiveDialogFragment")
         fragmentTransaction.commit()
 
         // Set onClickListener for GO button.
