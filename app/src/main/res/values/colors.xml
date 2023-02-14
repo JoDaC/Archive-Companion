@@ -9,8 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorText">#000000</color>
+    <color name="very_light_blue">#C5DBE1</color>
     <color name="navy_blue">#0D47A1</color>
     <color name="dark_blue">#253f4b</color>
+    <color name="dark_greyish_blue">#536872</color>
     <color name="light_blue">#ADD8E6</color>
     <color name="material_blue_500">#2196F3</color>
     <color name="material_blue_700">#1976D2</color>
