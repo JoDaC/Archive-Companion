@@ -1,13 +1,11 @@
 package com.example.archivevn.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import com.example.archivevn.R
@@ -20,9 +18,6 @@ import kotlinx.coroutines.*
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
-
-    @SuppressLint("StaticFieldLeak")
-    private val mContext = ContextThemeWrapper(application, R.style.Theme_Archivevn)
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
@@ -50,13 +45,23 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
+     * Handles the event when the "Paste" button is clicked.
+     *  Triggers
+     */
+    fun onPasteButtonClicked(string: String) {
+        // add code here to past the actual string
+        binding.urlEditText.setText(string)
+        onGoButtonClicked()
+    }
+
+    /**
      * Handles the event when the "Go" button is clicked.
      *  Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
     fun onGoButtonClicked() {
         val url = binding.urlEditText.text.toString()
         if (url.isNotEmpty()) {
-            dialogFragment.launchUrlInBrowser(url)
+            launchUrlInBackground(url)
         } else {
             Toast.makeText(getApplication(), "Please enter a URL", Toast.LENGTH_SHORT).show()
         }
