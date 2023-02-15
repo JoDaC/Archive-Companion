@@ -14,7 +14,7 @@ import com.example.archivevn.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var clipboardManager: ClipboardManager
+//    private lateinit var clipboardManager: ClipboardManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
-        clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = clipboardManager.primaryClip
+//        clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+//        val clipData = clipboardManager.primaryClip
 
         // Initialize the Dialog Fragment
         val archiveDialogFragment = ArchiveDialogFragment()
@@ -49,12 +49,12 @@ class MainActivity : AppCompatActivity() {
         // Set Paste button to no visibility onCreate.
         binding.pasteButton.visibility = View.GONE
 
-        clipBoardListener(clipboardManager)
-        binding.pasteButton.setOnClickListener {
-            val pasteData = clipData?.getItemAt(0)
-            val text = pasteData?.text.toString()
-            mainViewModel.onPasteButtonClicked(text)
-        }
+//        clipBoardListener(clipboardManager)
+//        binding.pasteButton.setOnClickListener {
+//            val pasteData = clipData?.getItemAt(0)
+//            val text = pasteData?.text.toString()
+//            mainViewModel.onPasteButtonClicked(text)
+//        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -63,18 +63,18 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.handleShareSheetUrlInBackground(intent)
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.i("MainActivityTag", "onResume()")
-        clipBoardListener(clipboardManager)
-    }
-
-    private fun clipBoardListener(clipboard: ClipboardManager) {
-        clipboard.addPrimaryClipChangedListener {
-            if (clipboard.primaryClip != null) {
-                binding.pasteButton.visibility = View.VISIBLE
-            }
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        Log.i("MainActivityTag", "onResume()")
+//        clipBoardListener(clipboardManager)
+//    }
+//
+//    private fun clipBoardListener(clipboard: ClipboardManager) {
+//        clipboard.addPrimaryClipChangedListener {
+//            if (clipboard.primaryClip != null) {
+//                binding.pasteButton.visibility = View.VISIBLE
+//            }
+//        }
+//    }
 }
 

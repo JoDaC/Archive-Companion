@@ -73,12 +73,13 @@
 
         <Button
             android:id="@+id/paste_button"
-            android:layout_width="wrap_content"
+            android:layout_width="181dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="67dp"
             android:text="@string/paste_url"
             android:textColor="?android:textColorPrimary"
-            app:layout_constraintStart_toStartOf="@+id/reader_button"
+            app:layout_constraintEnd_toStartOf="@+id/progress_bar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar

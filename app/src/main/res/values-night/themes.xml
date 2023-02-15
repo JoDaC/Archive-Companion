@@ -3,7 +3,7 @@
     <style name="Theme.Archivevn" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/dark_greyish_blue</item>
         <item name="colorPrimaryVariant">@color/dark_blue</item>
-        <item name="colorOnPrimary">@color/black</item>
+<!--        <item name="colorOnPrimary">@color/black</item>-->
         <item name="android:windowBackground">@color/dark_blue</item>
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
@@ -12,4 +12,14 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
+
+    <style name="Theme.Archivevn.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+<!--    <style name="Theme.Archivevn.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />-->
+
+    <style name="Theme.Archivevn.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark" />
+
 </resources>
