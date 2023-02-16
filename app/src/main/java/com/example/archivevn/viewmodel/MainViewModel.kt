@@ -14,7 +14,8 @@ import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.ReaderFragment
-import kotlinx.coroutines.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
@@ -33,6 +34,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      */
     fun initializeNotificationChannel() {
         notificationChannel = NotificationHandler.NotificationChannel(getApplication())
+        notificationChannel.createNotificationChannel()
     }
 
     /**
@@ -56,7 +58,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     /**
      * Handles the event when the "Go" button is clicked.
-     *  Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
     fun onGoButtonClicked() {
         val url = binding.urlEditText.text.toString()
@@ -82,7 +84,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 Toast.LENGTH_SHORT
             )
                 .show()
-            // delivering push notification here for easy testing purposes
+            // delivering push notification here for testing purposes
             NotificationHandler(getApplication()).showTestNotification()
             SystemClock.sleep(5000)
             notificationChannel.closeNotification()
@@ -90,29 +92,31 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-    Launches a new ReaderFragment with the specified URL.
-
-    @param url The URL to parse and display in the reader.
+     * Launches a new ReaderFragment with the specified URL.
+     *
+     * @param url The URL to parse and display in the reader.
      */
     fun launchUrlInReader(url: String) {
         Log.i("Shared URL %", url)
         val readerFragment = ReaderFragment.newInstance(url)
         fragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, readerFragment)
+            .addToBackStack("ReaderFragment")
             .commit()
+        // this may not be needed
         binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
     /**
-    Launches a new background coroutine to check if the specified URL contains three possible words
-    or phrases to determine if a page is already archived or not. Will then call appropriate
-    AlertDialog to inform if the url is already archived, if not archived, or if the archival
-    process is complete.
+     * Launches a new background coroutine to check if the specified URL contains three possible words
+     * or phrases to determine if a page is already archived or not. Will then call appropriate
+     * AlertDialog to inform if the url is already archived, if not archived, or if the archival
+     * process is complete.
 
-    If Archival is chosen, display a push notification to indicate archival is in progress.
+     * If Archival is chosen, display a push notification to indicate archival is in progress.
 
-    @param url The URL to archive or check for archival.
-    @param urlToArchive A flag indicating whether to archive the page.
+     * @param url The URL to archive or check for archival.
+     * @param urlToArchive A flag indicating whether to archive the page.
      */
     fun launchUrlInBackground(
         url: String,
@@ -153,9 +157,9 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-    Handles the URL when the app is launched via the Android share sheet.
-
-    @param intent The intent containing the shared URL.
+     * Handles the URL when the app is launched via the Android share sheet.
+     *
+     * @param intent The intent containing the shared URL.
      */
     fun handleShareSheetUrlInBackground(intent: Intent?) {
         if (intent != null) {
@@ -176,10 +180,12 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_1, url)
         dialogFragment.show(fragmentManager, "archive_dialog")
     }
+
     private fun showLinkFoundDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_2, url)
         dialogFragment.show(fragmentManager, "link_found_dialog")
     }
+
     private fun showArchiveConfirmedDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_3, url)
         dialogFragment.show(fragmentManager, "archive_confirmed_dialog")

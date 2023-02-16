@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.R
@@ -22,6 +22,7 @@ private const val PASSED_URL = "url1"
 
 class ReaderFragment : Fragment() {
     private var url: String? = null
+    private lateinit var mWebView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,18 +37,17 @@ class ReaderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reader, container, false)
+        mWebView = view.findViewById(R.id.webview)
         val loader = OkHttpHandler(url!!)
-        Log.i("PASSED_URL_TAG_2", url!!)
-        var scrapedText = ""
         MainScope().launch {
-            scrapedText = loader.loadUrlAndParseToString()
-            Log.i("scraped_text_tag", scrapedText)
-            // Need to figure this part out
-            val textView = view.findViewById<TextView>(R.id.text_display)
-            // Set the text of the TextView to the scraped text
-            textView.text = scrapedText
+            val html = loader.fetchHtml(url!!)
+            displayHtml(html)
         }
         return view
+    }
+
+    private fun displayHtml(html: String) {
+        mWebView.loadData(html, "text/html", "UTF-8")
     }
 
     companion object {

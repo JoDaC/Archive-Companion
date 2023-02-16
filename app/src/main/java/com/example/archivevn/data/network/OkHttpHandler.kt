@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import java.io.IOException
 import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
@@ -30,6 +31,20 @@ class OkHttpHandler(url: String) {
 //            Log.d("Article Body", parsedBody.toString())
             response.body()?.close()
             parsedBody.toString()
+        }
+    }
+
+    suspend fun fetchHtml(url: String): String {
+        return withContext(Dispatchers.Default) {
+            val request = Request.Builder()
+                .url(url)
+                .build()
+            return@withContext try {
+                client.newCall(request).execute().body()?.string() ?: ""
+            } catch (e: IOException) {
+                e.printStackTrace()
+                ""
+            }
         }
     }
 

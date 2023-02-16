@@ -1,10 +1,10 @@
 package com.example.archivevn.view
 
-import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.archivevn.R
@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setFragmentManager(supportFragmentManager)
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
+
+        initializeBackPressDispatcher()
 
 //        clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
 //        val clipData = clipboardManager.primaryClip
@@ -49,6 +51,12 @@ class MainActivity : AppCompatActivity() {
         // Set Paste button to no visibility onCreate.
         binding.pasteButton.visibility = View.GONE
 
+        // Handle app launch via intent on cold start.
+        val intent = intent
+        if (intent != null) {
+            mainViewModel.handleShareSheetUrlInBackground(intent)
+        }
+
 //        clipBoardListener(clipboardManager)
 //        binding.pasteButton.setOnClickListener {
 //            val pasteData = clipData?.getItemAt(0)
@@ -61,6 +69,15 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.v("MainActivityTag", "onNewIntent")
         mainViewModel.handleShareSheetUrlInBackground(intent)
+    }
+
+    private fun initializeBackPressDispatcher() {
+        val dispatcher = onBackPressedDispatcher
+        dispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        })
     }
 
 //    override fun onResume() {
