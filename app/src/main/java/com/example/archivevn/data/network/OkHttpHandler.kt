@@ -8,6 +8,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import java.io.IOException
+import net.dankito.readability4j.Readability4J
+import net.dankito.readability4j.Article
 import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
@@ -34,19 +36,17 @@ class OkHttpHandler(url: String) {
         }
     }
 
-    suspend fun fetchHtml(url: String): String {
+    suspend fun fetchExtractedPage(url: String): String {
         return withContext(Dispatchers.Default) {
-            val request = Request.Builder()
-                .url(url)
-                .build()
-            return@withContext try {
-                client.newCall(request).execute().body()?.string() ?: ""
-            } catch (e: IOException) {
-                e.printStackTrace()
-                ""
-            }
+                val response = client.newCall(request).execute()
+                val html = response.body()?.string() ?: ""
+                // Use Readability4J to extract the relevant content
+                val readability4J = Readability4J(url, html)
+                val article = readability4J.parse()
+                val extractedContentHtml = article.content
+                extractedContentHtml
+            } ?: ""
         }
-    }
 
     /**
      * Loads the specified URL using the OkHttp client and searches for specific terms in the
