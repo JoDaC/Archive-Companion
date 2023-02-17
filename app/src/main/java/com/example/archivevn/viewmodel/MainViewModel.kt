@@ -47,16 +47,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-     * Handles the event when the "Paste" button is clicked.
-     *  Triggers
-     */
-    fun onPasteButtonClicked(string: String) {
-        // add code here to past the actual string
-        binding.urlEditText.setText(string)
-        onGoButtonClicked()
-    }
-
-    /**
      * Handles the event when the "Go" button is clicked.
      * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
