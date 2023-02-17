@@ -1,15 +1,18 @@
 package com.example.archivevn.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.archivevn.R
 import com.github.appintro.AppIntro
 import com.github.appintro.AppIntroFragment
 
 class AppIntroduction : AppIntro() {
 
+    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Hide/Show the status Bar
@@ -35,13 +38,20 @@ class AppIntroduction : AppIntro() {
         addSlide(
             AppIntroFragment.createInstance(
                 title = "Welcome to the Archive.vn Companion!",
-                description = "This is the first slide of the example"
+                description = "This is the first slide of the example",
+                imageDrawable = R.mipmap.bad_letter_a,
+                backgroundColorRes = R.color.dark_greyish_blue,
+                titleColorRes = R.color.white,
+                descriptionColorRes = R.color.white,
             )
         )
         addSlide(
             AppIntroFragment.createInstance(
                 title = "...Let's get started!",
-                description = "This is the last slide, I won't annoy you more :)"
+                description = "This is the last slide, I won't annoy you more :)",
+                backgroundColorRes = R.color.dark_greyish_blue,
+                titleColorRes = R.color.white,
+                descriptionColorRes = R.color.white,
             )
 
         )
@@ -49,7 +59,10 @@ class AppIntroduction : AppIntro() {
             addSlide(
                 AppIntroFragment.createInstance(
                     title = "Notification Permission",
-                    description = "This is the last slide, I won't annoy you more :)"
+                    description = "This is the last slide, I won't annoy you more :)",
+                    backgroundColorRes = R.color.dark_greyish_blue,
+                    titleColorRes = R.color.white,
+                    descriptionColorRes = R.color.white,
                 )
             )
         }
