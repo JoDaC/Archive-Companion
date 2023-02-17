@@ -45,6 +45,7 @@ class ReaderFragment : Fragment() {
         mWebView.webViewClient = WebViewClient()
         val webSettings = mWebView.settings
         webSettings.javaScriptEnabled = true
+        webSettings.textZoom = 150
         MainScope().launch {
             val extractedContent = loader.fetchExtractedPage(url!!)
             mWebView.loadDataWithBaseURL(null, extractedContent, "text/html", "UTF-8", null)
