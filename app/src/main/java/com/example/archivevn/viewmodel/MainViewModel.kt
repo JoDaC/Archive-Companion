@@ -12,6 +12,7 @@ import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.databinding.ActivityMainBinding
+import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.ReaderFragment
 import kotlinx.coroutines.MainScope
@@ -57,6 +58,29 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         } else {
             Toast.makeText(getApplication(), "Please enter a URL", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /**
+     * Handles the event when the "Intro" button is clicked. this is for testing puposes only.
+     * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     */
+    fun introButtonClicked() {
+        val prefs =
+            getApplication<Application>().getSharedPreferences("MyPrefs", Application.MODE_PRIVATE)
+        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
+        val intent = Intent(getApplication(), AppIntroduction::class.java)
+        // put this in it's own function
+
+//        if (isFirstLaunch) {
+//            val editor = prefs.edit()
+//            editor.putBoolean("isFirstLaunch", false)
+//            editor.apply()
+//
+//            val intent = Intent(this, AppIntroduction::class.java)
+//            startActivity(intent)
+//        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        getApplication<Application>().startActivity(intent)
     }
 
     /**

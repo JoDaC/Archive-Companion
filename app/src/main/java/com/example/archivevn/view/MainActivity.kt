@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
             mainViewModel.onReaderButtonClicked()
+        }// Set onClickListener for Reader button to launch Reader fragment.
+
+        binding.introButton.setOnClickListener {
+            mainViewModel.introButtonClicked()
         }
         // Set ProgressBar to no visibility.
         binding.progressBar.visibility = View.GONE
@@ -49,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         if (intent != null) {
             mainViewModel.handleShareSheetUrlInBackground(intent)
         }
-        appIntroductionCarousel()
+//        appIntroductionCarousel()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -67,20 +71,20 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun appIntroductionCarousel() {
-        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
-
-//        if (isFirstLaunch) {
-//            val editor = prefs.edit()
-//            editor.putBoolean("isFirstLaunch", false)
-//            editor.apply()
+//    private fun appIntroductionCarousel() {
+//        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+//        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
 //
-//            val intent = Intent(this, AppIntroduction::class.java)
-//            startActivity(intent)
-//        }
-        val intent = Intent(this, AppIntroduction::class.java)
-        startActivity(intent)
-    }
+////        if (isFirstLaunch) {
+////            val editor = prefs.edit()
+////            editor.putBoolean("isFirstLaunch", false)
+////            editor.apply()
+////
+////            val intent = Intent(this, AppIntroduction::class.java)
+////            startActivity(intent)
+////        }
+//        val intent = Intent(this, AppIntroduction::class.java)
+//        startActivity(intent)
+//    }
 }
 

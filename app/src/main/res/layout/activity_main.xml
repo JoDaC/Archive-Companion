@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:autofillHints="@string/enter_text_hint"
+            android:fontFamily="sans-serif-light"
             android:gravity="top|start"
             android:hint="@string/enter_a_url_to_archive"
             android:padding="16dp"
@@ -80,6 +81,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/intro_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reader_button"
+            app:srcCompat="@android:drawable/ic_menu_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
