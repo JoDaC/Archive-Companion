@@ -32,7 +32,7 @@
             android:id="@+id/url_edit_text"
             android:layout_width="match_parent"
             android:layout_height="550dp"
-            android:autofillHints="this is a hint, idiot"
+            android:autofillHints="@string/enter_text_hint"
             android:gravity="top|start"
             android:hint="@string/enter_a_url_to_archive"
             android:padding="16dp"
