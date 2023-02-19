@@ -33,13 +33,12 @@
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:autofillHints="this is a hint, idiot"
-            android:background="@drawable/edit_text_bg"
             android:gravity="top|start"
             android:hint="@string/enter_a_url_to_archive"
             android:padding="16dp"
             android:textAlignment="viewStart"
             android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
+            android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +55,8 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/progress_bar" />
+            app:layout_constraintStart_toEndOf="@+id/progress_bar"
+            app:layout_constraintTop_toBottomOf="@+id/url_edit_text" />
 
         <Button
             android:id="@+id/reader_button"

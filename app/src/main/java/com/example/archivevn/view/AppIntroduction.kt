@@ -39,7 +39,7 @@ class AppIntroduction : AppIntro() {
             AppIntroFragment.createInstance(
                 title = "Welcome to the Archive.vn Companion!",
                 description = "This is the first slide of the example",
-                imageDrawable = R.mipmap.bad_letter_a,
+                imageDrawable = R.mipmap.black_a,
                 backgroundColorRes = R.color.dark_greyish_blue,
                 titleColorRes = R.color.white,
                 descriptionColorRes = R.color.white,

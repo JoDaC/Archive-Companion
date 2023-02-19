@@ -68,20 +68,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun appIntroductionCarousel() {
-//        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-//        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
-//
-//        if (isFirstLaunch) {
-//            val editor = prefs.edit()
-//            editor.putBoolean("isFirstLaunch", false)
-//            editor.apply()
-//
-//            val intent = Intent(this, AppIntroduction::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
-        val intent = Intent(this, AppIntroduction::class.java)
-        startActivity(intent)
+        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
+
+        if (isFirstLaunch) {
+            val editor = prefs.edit()
+            editor.putBoolean("isFirstLaunch", false)
+            editor.apply()
+
+            val intent = Intent(this, AppIntroduction::class.java)
+            startActivity(intent)
+            finish()
+        }
+//        val intent = Intent(this, AppIntroduction::class.java)
+//        startActivity(intent)
     }
 }
 
