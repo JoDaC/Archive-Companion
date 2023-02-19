@@ -71,17 +71,16 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
 
-        if (isFirstLaunch) {
-            val editor = prefs.edit()
-            editor.putBoolean("isFirstLaunch", false)
-            editor.apply()
-
-            val intent = Intent(this, AppIntroduction::class.java)
-            startActivity(intent)
-            finish()
-        }
-//        val intent = Intent(this, AppIntroduction::class.java)
-//        startActivity(intent)
+//        if (isFirstLaunch) {
+//            val editor = prefs.edit()
+//            editor.putBoolean("isFirstLaunch", false)
+//            editor.apply()
+//
+//            val intent = Intent(this, AppIntroduction::class.java)
+//            startActivity(intent)
+//        }
+        val intent = Intent(this, AppIntroduction::class.java)
+        startActivity(intent)
     }
 }
 

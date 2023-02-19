@@ -15,8 +15,8 @@ class AppIntroduction : AppIntro() {
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Hide/Show the status Bar
         showStatusBar(true)
+        isColorTransitionsEnabled = true
         // Ask for required NOTIFICATION permission on the third slide.
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -39,8 +39,8 @@ class AppIntroduction : AppIntro() {
             AppIntroFragment.createInstance(
                 title = "Welcome to the Archive.vn Companion!",
                 description = "This is the first slide of the example",
-                imageDrawable = R.mipmap.black_a,
-                backgroundColorRes = R.color.dark_greyish_blue,
+                imageDrawable = R.mipmap.black_a_transformed,
+                backgroundColorRes = R.color.black,
                 titleColorRes = R.color.white,
                 descriptionColorRes = R.color.white,
             )
@@ -49,9 +49,9 @@ class AppIntroduction : AppIntro() {
             AppIntroFragment.createInstance(
                 title = "...Let's get started!",
                 description = "This is the last slide, I won't annoy you more :)",
-                backgroundColorRes = R.color.dark_greyish_blue,
-                titleColorRes = R.color.white,
-                descriptionColorRes = R.color.white,
+                backgroundColorRes = R.color.white,
+                titleColorRes = R.color.black,
+                descriptionColorRes = R.color.black,
             )
 
         )
