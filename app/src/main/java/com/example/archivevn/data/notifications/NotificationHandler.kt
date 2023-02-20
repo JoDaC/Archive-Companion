@@ -1,13 +1,18 @@
 package com.example.archivevn.data.notifications
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import androidx.core.app.NotificationCompat
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.archivevn.R
+import com.example.archivevn.view.MainActivity
+
 
 private const val CHANNEL_ID = "my_notification_channel_id"
 private const val NOTIFICATION_ID = 1
@@ -17,12 +22,23 @@ class NotificationHandler(private val context: Context) {
     /**
      * Shows a loading notification to indicate that the page is being archived.
      */
+    @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
     fun showLoadingNotification() {
+        val intent = Intent(context, MainActivity::class.java)
+
+        // Set the flag to clear the activity stack and bring the last activity to the front
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        // Create a PendingIntent to open the app with the above intent
+        val pendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
             .setOngoing(true)
 
         with(NotificationManagerCompat.from(context)) {
@@ -31,6 +47,7 @@ class NotificationHandler(private val context: Context) {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun showTestNotification() {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)

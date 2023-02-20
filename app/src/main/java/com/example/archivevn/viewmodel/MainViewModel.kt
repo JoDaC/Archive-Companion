@@ -100,8 +100,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .show()
             // delivering push notification here for testing purposes
             NotificationHandler(getApplication()).showTestNotification()
-            SystemClock.sleep(5000)
-            notificationChannel.closeNotification()
+//            SystemClock.sleep(5000)
+//            notificationChannel.closeNotification()
         }
     }
 
