@@ -1,5 +1,6 @@
 package com.example.archivevn.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.SystemClock
@@ -8,6 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
@@ -15,8 +18,10 @@ import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.ReaderFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
@@ -25,9 +30,13 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     private lateinit var fragmentManager: FragmentManager
     private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment()
     private val tag = "MainActivityTag"
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
     init {
         this.dialogFragment.setMainViewModel(this)
+        _isLoading.value = false
     }
 
     /**
@@ -143,7 +152,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
         MainScope().launch {
             Log.i(tag, "Checking Page to see if URL archived or not %")
-            binding.progressBar.visibility = View.VISIBLE
+            _isLoading.value = true
             when (loader.loadUrl()) {
                 "No results" -> {
                     Log.i(tag, "Displaying showArchive Dialog")
@@ -164,7 +173,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     notificationChannel.closeNotification()
                 }
             }
-            binding.progressBar.visibility = View.GONE
+            _isLoading.value = false
         }
     }
 
@@ -190,16 +199,19 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     private fun showArchiveDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_1, url)
+        dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "archive_dialog")
     }
 
     private fun showLinkFoundDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_2, url)
+        dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "link_found_dialog")
     }
 
     private fun showArchiveConfirmedDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_3, url)
+        dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "archive_confirmed_dialog")
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.TaskStackBuilder
 import androidx.databinding.DataBindingUtil
 import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
@@ -40,13 +41,15 @@ class MainActivity : AppCompatActivity() {
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
             mainViewModel.onReaderButtonClicked()
-        }// Set onClickListener for Reader button to launch Reader fragment.
-
+        }
+        // Set onClickListener for Intro button to launch Reader fragment.
         binding.introButton.setOnClickListener {
             mainViewModel.introButtonClicked()
         }
-        // Set ProgressBar to no visibility.
-        binding.progressBar.visibility = View.GONE
+        // Observe the isLoading LiveData object to show/hide the loading wheel
+        mainViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
 
         // Handle app launch via intent on cold start.
         val intent = intent
