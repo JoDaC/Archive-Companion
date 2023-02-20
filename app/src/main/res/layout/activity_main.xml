@@ -93,5 +93,17 @@
             app:layout_constraintTop_toBottomOf="@+id/reader_button"
             app:srcCompat="@android:drawable/ic_menu_view" />
 
+        <include
+            android:id="@+id/progress_view"
+            layout="@layout/archival_progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            app:layout_constraintBottom_toBottomOf="@+id/url_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+            app:layout_constraintVertical_bias="1.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

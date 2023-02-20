@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.TaskStackBuilder
 import androidx.databinding.DataBindingUtil
 import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
@@ -49,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         // Observe the isLoading LiveData object to show/hide the loading wheel
         mainViewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+        // Observe the archiveProgress LiveData object to the progress indicator
+        mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
+            binding.progressView.root.visibility = if (archiveProgressLoading) View.VISIBLE else View.GONE
         }
 
         // Handle app launch via intent on cold start.

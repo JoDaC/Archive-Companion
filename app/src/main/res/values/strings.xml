@@ -27,4 +27,5 @@
     <string name="keyword_empty">Please enter a URL</string>
     <string name="paste_url">Paste URL</string>
     <string name="title_activity_app_introduction">AppIntroduction</string>
+    <string name="archival_in_progress">Archival in Progress…</string>
 </resources>

@@ -101,7 +101,7 @@ class ArchiveDialogFragment() : DialogFragment() {
      * @param url The URL to launch in the browser.
      * @param urlToArchive A flag indicating whether to amend the url for archive.vn or archive.is.
      */
-    fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
+    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
         Log.i("Shared URL %", url)
         var archiveUrl = "https://archive.vn/$url"
         if (urlToArchive == true) {

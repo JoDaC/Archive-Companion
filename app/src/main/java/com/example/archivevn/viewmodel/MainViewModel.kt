@@ -1,9 +1,7 @@
 package com.example.archivevn.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -18,10 +16,8 @@ import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.ReaderFragment
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
@@ -31,8 +27,11 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment()
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _archiveProgressLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
+    val archiveProgressLoading: LiveData<Boolean>
+        get() = _archiveProgressLoading
 
     init {
         this.dialogFragment.setMainViewModel(this)
@@ -165,8 +164,11 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 "My url is alive and I want to archive its content" -> {
                     Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
                     NotificationHandler(getApplication()).showLoadingNotification()
+                    _isLoading.value = false
+                    _archiveProgressLoading.value = true
                     val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
+                    NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     showArchiveConfirmedDialog(archivedResult)
                     val notificationChannel =
                         NotificationHandler.NotificationChannel(getApplication())

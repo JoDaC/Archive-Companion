@@ -40,6 +40,22 @@ class NotificationHandler(private val context: Context) {
         }
     }
 
+    @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
+    fun showArchivalCompleteNotification() {
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val intent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle("Page Archival is Complete")
+            .setContentText("Your page is ready to be viewed.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(intent)
+        with(NotificationManagerCompat.from(context)) {
+            notify(NOTIFICATION_ID, builder.build())
+            Log.i("NotificationTag", "notify() called")
+        }
+    }
+
     @SuppressLint("MissingPermission")
     fun showTestNotification() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
