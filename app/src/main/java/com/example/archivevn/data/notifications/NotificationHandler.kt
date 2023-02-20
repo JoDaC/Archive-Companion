@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
 import com.example.archivevn.R
 import com.example.archivevn.view.MainActivity
 
@@ -18,29 +19,29 @@ private const val CHANNEL_ID = "my_notification_channel_id"
 private const val NOTIFICATION_ID = 1
 
 class NotificationHandler(private val context: Context) {
+    private val intent = Intent(context, MainActivity::class.java)
 
     /**
      * Shows a loading notification to indicate that the page is being archived.
      */
     @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
     fun showLoadingNotification() {
-        val intent = Intent(context, MainActivity::class.java)
-
-        // Set the flag to clear the activity stack and bring the last activity to the front
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-        // Create a PendingIntent to open the app with the above intent
-        val pendingIntent =
-            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(resultPendingIntent)
             .setOngoing(true)
-
         with(NotificationManagerCompat.from(context)) {
             notify(NOTIFICATION_ID, builder.build())
             Log.i("NotificationTag", "notify() called")
@@ -49,13 +50,20 @@ class NotificationHandler(private val context: Context) {
 
     @SuppressLint("MissingPermission")
     fun showTestNotification() {
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(context.getString(R.string.test_notification_title))
             .setContentText(context.getString(R.string.test_notification_message))
+            .setContentIntent(resultPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setOngoing(true)
-
         with(NotificationManagerCompat.from(context)) {
             notify(NOTIFICATION_ID, builder.build())
             Log.i("NotificationTag", "notify() called")
