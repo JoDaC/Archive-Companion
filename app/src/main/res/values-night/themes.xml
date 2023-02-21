@@ -10,7 +10,12 @@
         <item name="android:textColorPrimary">@color/dark_white_text</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/ultra_almost_black</item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Night</item>
+    </style>
+
+    <style name="Widget.App.FloatingActionButton.Night" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/dark_greyish_blue</item>
+        <item name="tint">@color/dark_white_text</item>
     </style>
 
     <style name="Theme.Archivevn.NoActionBar">

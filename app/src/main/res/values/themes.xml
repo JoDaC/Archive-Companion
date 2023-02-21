@@ -11,6 +11,13 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Day</item>
+    </style>
+
+    <style name="Widget.App.FloatingActionButton.Day" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/very_light_blue</item>
+        <item name="tint">@color/light_black_text</item>
+
     </style>
 
     <style name="Theme.Archivevn.NoActionBar">
