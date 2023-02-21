@@ -30,7 +30,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="96dp"
+            android:layout_marginEnd="108dp"
             android:fontFamily="sans-serif-light"
             android:text="@string/archival_in_progress"
             android:textSize="20sp"

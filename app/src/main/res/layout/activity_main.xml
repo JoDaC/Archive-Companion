@@ -49,7 +49,6 @@
             android:id="@+id/go_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="52dp"
             android:padding="16dp"
             android:text="@string/go"
             android:textColor="?android:textColorPrimary"
@@ -86,12 +85,27 @@
             android:id="@+id/intro_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="@color/ultra_light_blue"
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reader_button"
-            app:srcCompat="@android:drawable/ic_menu_view" />
+            app:srcCompat="@android:drawable/ic_menu_help" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="@color/ultra_light_blue"
+            android:clickable="true"
+            app:layout_constraintBottom_toTopOf="@+id/intro_button"
+            app:layout_constraintEnd_toStartOf="@+id/go_button"
+            app:layout_constraintStart_toEndOf="@+id/reader_button"
+            app:layout_constraintTop_toBottomOf="@+id/url_edit_text"
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
 
         <include
             android:id="@+id/progress_view"
