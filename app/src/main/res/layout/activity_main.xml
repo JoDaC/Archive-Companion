@@ -87,27 +87,29 @@
             android:id="@+id/intro_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            app:elevation="0dp"
             android:clickable="true"
+            app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/go_button"
+            app:layout_constraintStart_toEndOf="@+id/reader_button"
             app:layout_constraintTop_toBottomOf="@+id/reader_button"
-            app:srcCompat="@android:drawable/ic_menu_help" />
+            app:srcCompat="@android:drawable/ic_menu_help"
+            android:focusable="true"
+            android:contentDescription="@string/launches_intro" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:elevation="0dp"
             android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/intro_button"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/go_button"
             app:layout_constraintEnd_toStartOf="@+id/go_button"
             app:layout_constraintStart_toEndOf="@+id/reader_button"
             app:layout_constraintTop_toBottomOf="@+id/url_edit_text"
-            app:srcCompat="@android:drawable/ic_menu_preferences" />
+            app:srcCompat="@android:drawable/ic_menu_preferences"
+            android:focusable="true"
+            android:contentDescription="@string/settings" />
 
         <include
             android:id="@+id/progress_view"
