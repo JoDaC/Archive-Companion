@@ -111,6 +111,16 @@
             android:focusable="true"
             android:contentDescription="@string/settings" />
 
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/animationView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_rawRes="@raw/book_paing"-->
+<!--            tools:layout_editor_absoluteX="203dp"-->
+<!--            tools:layout_editor_absoluteY="111dp" />-->
+
         <include
             android:id="@+id/progress_view"
             layout="@layout/archival_progress_view"
