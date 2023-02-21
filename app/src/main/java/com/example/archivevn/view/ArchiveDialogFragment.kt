@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.example.archivevn.R
 import com.example.archivevn.viewmodel.MainViewModel
 
 
@@ -48,7 +49,7 @@ class ArchiveDialogFragment() : DialogFragment() {
         when (dialogType) {
             DIALOG_TYPE_1 -> {
                 Log.i(tag, "First Time archiveDialog() started")
-                val builder = AlertDialog.Builder(requireContext()).apply { }
+                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
                     .setTitle("No Archived Page Found")
                     .setMessage("Do you want to archive this page?")
                     .setPositiveButton("Yes") { _, _ ->
@@ -64,7 +65,7 @@ class ArchiveDialogFragment() : DialogFragment() {
             DIALOG_TYPE_2 -> {
                 Log.i(tag, "linkFoundDialog() started")
                 val latestArchiveUrl = "http://archive.is/newest/$url"
-                val builder = AlertDialog.Builder(requireContext()).apply { }
+                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
                     .setTitle("Archived Page for this URL has been found")
                     .setMessage("Do you want to view in your browser or read now?")
                     .setPositiveButton("Launch in Browser") { _, _ ->
@@ -78,7 +79,7 @@ class ArchiveDialogFragment() : DialogFragment() {
             }
             DIALOG_TYPE_3 -> {
                 Log.i(tag, "archiveConfirmedDialog() started")
-                val builder = AlertDialog.Builder(requireContext()).apply { }
+                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
                     .setTitle("Page has been archived!")
                     .setPositiveButton("View in Browser") { _, _ ->
                         launchUrlInBrowser(url!!)

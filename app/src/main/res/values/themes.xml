@@ -12,6 +12,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Day</item>
+        <item name="archiveProgressViewBackground">@color/light_blue</item>
     </style>
 
     <style name="Widget.App.FloatingActionButton.Day" parent="Widget.MaterialComponents.FloatingActionButton">

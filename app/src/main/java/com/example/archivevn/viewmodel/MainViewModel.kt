@@ -169,6 +169,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
+                    _archiveProgressLoading.value = false
                     showArchiveConfirmedDialog(archivedResult)
                     val notificationChannel =
                         NotificationHandler.NotificationChannel(getApplication())

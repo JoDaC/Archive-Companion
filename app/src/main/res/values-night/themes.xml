@@ -12,6 +12,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">@color/ultra_almost_black</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Night</item>
+        <item name="archiveProgressViewBackground">@color/dark_blue</item>
     </style>
 
     <style name="Widget.App.FloatingActionButton.Night" parent="Widget.MaterialComponents.FloatingActionButton">
