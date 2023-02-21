@@ -53,13 +53,13 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
             binding.progressView.root.visibility = if (archiveProgressLoading) View.VISIBLE else View.GONE
         }
-
         // Handle app launch via intent on cold start.
         val intent = intent
         if (intent != null) {
             mainViewModel.handleShareSheetUrlInBackground(intent)
         }
-//        appIntroductionCarousel()
+        // Launch App Intro carousel on first time launch.
+        appIntroductionCarousel()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -77,20 +77,18 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-//    private fun appIntroductionCarousel() {
-//        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-//        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
-//
-////        if (isFirstLaunch) {
-////            val editor = prefs.edit()
-////            editor.putBoolean("isFirstLaunch", false)
-////            editor.apply()
-////
-////            val intent = Intent(this, AppIntroduction::class.java)
-////            startActivity(intent)
-////        }
-//        val intent = Intent(this, AppIntroduction::class.java)
-//        startActivity(intent)
-//    }
+    private fun appIntroductionCarousel() {
+        val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
+
+        if (isFirstLaunch) {
+            val editor = prefs.edit()
+            editor.putBoolean("isFirstLaunch", false)
+            editor.apply()
+
+            val intent = Intent(this, AppIntroduction::class.java)
+            startActivity(intent)
+        }
+    }
 }
 
