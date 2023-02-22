@@ -6,25 +6,38 @@
     android:scrollbars="vertical"
     android:scrollbarStyle="outsideInset">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:paddingTop="@dimen/appintro_statusbar_height">
 
         <TextView
-            android:id="@+id/text_display"
-            android:textSize="12sp"
+            android:id="@+id/title_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/space_grotesk"
+            android:paddingBottom="24dp"
+            android:text="Title"
             android:textColor="@color/white"
-            android:fillViewport="false"
-            android:text="@string/welcome_to_the_reader" />
+            android:textSize="32sp" />
 
-    </LinearLayout>
+        <com.codesgood.views.JustifiedTextView
+            android:id="@+id/text_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_display"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/space_grotesk"
+            android:text="@string/welcome_to_the_reader"
+            android:textColor="@color/white"
+            android:textSize="21sp" />
+
+    </RelativeLayout>
 
 </ScrollView>
+
 <!--<WebView-->
 <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    android:id="@+id/webview"-->

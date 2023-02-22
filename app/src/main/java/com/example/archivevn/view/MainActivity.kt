@@ -72,7 +72,12 @@ class MainActivity : AppCompatActivity() {
         val dispatcher = onBackPressedDispatcher
         dispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                finish()
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                    binding.fragmentContainerView.visibility = View.GONE
+                } else {
+                    finish()
+                }
             }
         })
     }

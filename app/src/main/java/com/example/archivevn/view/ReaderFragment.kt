@@ -1,19 +1,18 @@
 package com.example.archivevn.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.R
-import com.example.archivevn.data.network.HtmlExtractionService
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -35,6 +34,25 @@ class ReaderFragment : Fragment() {
             url = it.getString(PASSED_URL)
         }
         Log.i("PASSED_URL_TAG", url!!)
+    }
+
+    // this is for immersive mode
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val windowInsetsController = ViewCompat.getWindowInsetsController(view)
+        windowInsetsController?.let {
+            it.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+            it.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
+
+    // this is for immersive mode
+    override fun onPause() {
+        super.onPause()
+
+        val windowInsetsController = ViewCompat.getWindowInsetsController(requireView())
+        windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
     }
 
 //    @SuppressLint("SetJavaScriptEnabled")
@@ -67,12 +85,15 @@ class ReaderFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_reader, container, false)
         val loader = OkHttpHandler(url!!)
         MainScope().launch {
+            // the following 4 lines need to be moved out of the reader fragment
             val extractedContent = loader.fetchExtractedTitleAndText(url!!)
             val extractedTitle = extractedContent.second
             val extractedText = extractedContent.first
             Log.d("ReaderFragment", "Extracted Text: $extractedText")
             val textView = view.findViewById<TextView>(R.id.text_display)
+            val titleView = view.findViewById<TextView>(R.id.title_display)
             textView.text = extractedText
+            titleView.text = extractedTitle
         }
         return view
     }

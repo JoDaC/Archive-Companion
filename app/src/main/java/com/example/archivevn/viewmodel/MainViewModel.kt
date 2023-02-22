@@ -113,7 +113,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             .replace(R.id.fragmentContainerView, readerFragment)
             .addToBackStack("ReaderFragment")
             .commit()
-        // this may not be needed
         binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
