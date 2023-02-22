@@ -2,7 +2,6 @@ package com.example.archivevn.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -78,16 +77,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             getApplication<Application>().getSharedPreferences("MyPrefs", Application.MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
         val intent = Intent(getApplication(), AppIntroduction::class.java)
-        // put this in it's own function
-
-//        if (isFirstLaunch) {
-//            val editor = prefs.edit()
-//            editor.putBoolean("isFirstLaunch", false)
-//            editor.apply()
-//
-//            val intent = Intent(this, AppIntroduction::class.java)
-//            startActivity(intent)
-//        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(intent)
     }

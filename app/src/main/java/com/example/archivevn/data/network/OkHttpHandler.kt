@@ -1,15 +1,23 @@
 package com.example.archivevn.data.network
 
 import android.util.Log
+import it.skrape.core.document
+import it.skrape.core.htmlDocument
+import it.skrape.fetcher.HttpFetcher
+import it.skrape.fetcher.extractIt
+import it.skrape.fetcher.response
+import it.skrape.fetcher.skrape
+import it.skrape.selects.eachHref
+import it.skrape.selects.eachText
+import it.skrape.selects.html5.a
+import it.skrape.selects.html5.p
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import net.dankito.readability4j.Readability4J
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
-import java.io.IOException
-import net.dankito.readability4j.Readability4J
-import net.dankito.readability4j.Article
 import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
@@ -18,6 +26,37 @@ class OkHttpHandler(url: String) {
     private val request = Request.Builder()
         .url(url)
         .build()
+//
+//    data class MyDataClass(
+//        var httpStatusCode: Int = 0,
+//        var httpStatusMessage: String = "",
+//        var paragraph: String = "",
+//        var allParagraphs: List<String> = emptyList(),
+//        var allLinks: List<String> = emptyList()
+//    )
+//
+//    suspend fun extractArticleFromUrl(url: String) {
+//        return withContext(Dispatchers.Default) {
+//            val extracted = skrape(HttpFetcher) {
+//                request {
+//                    this.url = url
+//                }
+//
+//                extractIt<MyDataClass> {
+//                    it.httpStatusCode = statusCode
+//                    it.httpStatusMessage = statusMessage.toString()
+//                    htmlDocument {
+//                        it.allParagraphs = p { findAll { eachText } }
+//                        it.paragraph = p { findFirst { text } }
+//                        it.allLinks = a { findAll { eachHref } }
+//                    }
+//                }
+//                // will print:
+//                // MyDataClass(httpStatusCode=200, httpStatusMessage=OK, paragraph=i'm a paragraph, allParagraphs=[i'm a paragraph, i'm a second paragraph], allLinks=[http://some.url, http://some-other.url])
+//            }
+//            print(extracted)
+//        }
+//    }
 
     /**
      * Loads the specified URL using the OkHttp client and returns the parsed HTML body as a string.
@@ -38,15 +77,31 @@ class OkHttpHandler(url: String) {
 
     suspend fun fetchExtractedPage(url: String): String {
         return withContext(Dispatchers.Default) {
-                val response = client.newCall(request).execute()
-                val html = response.body()?.string() ?: ""
-                // Use Readability4J to extract the relevant content
-                val readability4J = Readability4J(url, html)
-                val article = readability4J.parse()
-                val extractedContentHtml = article.content
-                extractedContentHtml
-            } ?: ""
+            val response = client.newCall(request).execute()
+            val html = response.body()?.string() ?: ""
+            // Use Readability4J to extract the relevant content
+            val readability4J = Readability4J(url, html)
+            val article = readability4J.parse()
+            val extractedContentHtml = article.content
+            extractedContentHtml
+        } ?: ""
+    }
+
+    // OPTIONAL FUNCTION TO RETURN TITLE AND STRING SEPARATELY
+    suspend fun fetchExtractedTitleAndText(url: String): Pair<String?, String?> {
+        return withContext(Dispatchers.Default) {
+            val response = client.newCall(request).execute()
+            val html = response.body()?.string() ?: ""
+            // Use Readability4J to extract the relevant content
+            val readability4J = Readability4J(url, html)
+            val article = readability4J.parse()
+            val extractedText = article.textContent
+            Log.i("ExtractedText", extractedText!!)
+            val extractedTitle = article.title
+            Log.i("ExtractedTitle", extractedTitle!!)
+            Pair(extractedText, extractedTitle)
         }
+    }
 
     /**
      * Loads the specified URL using the OkHttp client and searches for specific terms in the
