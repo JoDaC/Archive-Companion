@@ -49,7 +49,7 @@
             android:id="@+id/go_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="sans-serif"
             android:padding="16dp"
             android:text="@string/go"
             android:textColor="?android:textColorPrimary"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="4dp"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="sans-serif"
             android:padding="16dp"
             android:text="@string/reader"
             android:textColor="?android:textColorPrimary"
@@ -88,38 +88,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="@string/launches_intro"
+            android:focusable="true"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/go_button"
             app:layout_constraintStart_toEndOf="@+id/reader_button"
             app:layout_constraintTop_toBottomOf="@+id/reader_button"
-            app:srcCompat="@android:drawable/ic_menu_help"
-            android:focusable="true"
-            android:contentDescription="@string/launches_intro" />
+            app:srcCompat="@android:drawable/ic_menu_help" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="@string/settings"
+            android:focusable="true"
             app:elevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/go_button"
             app:layout_constraintEnd_toStartOf="@+id/go_button"
             app:layout_constraintStart_toEndOf="@+id/reader_button"
             app:layout_constraintTop_toBottomOf="@+id/url_edit_text"
-            app:srcCompat="@android:drawable/ic_menu_preferences"
-            android:focusable="true"
-            android:contentDescription="@string/settings" />
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+        <!--        <com.airbnb.lottie.LottieAnimationView-->
+        <!--            android:id="@+id/verticalLineViewOne"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+
+
+        <!--            app:lottie_autoPlay="true"-->
+        <!--            app:lottie_loop="false"-->
+        <!--            app:lottie_rawRes="@raw/vertical_line" />-->
 
 <!--        <com.airbnb.lottie.LottieAnimationView-->
-<!--            android:id="@+id/animationView"-->
+<!--            android:id="@+id/horizontalLineView"-->
 <!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_height="120dp"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/url_edit_text"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/url_edit_text"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
 <!--            app:lottie_autoPlay="true"-->
-<!--            app:lottie_loop="true"-->
-<!--            app:lottie_rawRes="@raw/book_paing"-->
-<!--            tools:layout_editor_absoluteX="203dp"-->
-<!--            tools:layout_editor_absoluteY="111dp" />-->
+<!--            app:lottie_loop="false"-->
+<!--            app:lottie_rawRes="@raw/starting_line" />-->
 
         <include
             android:id="@+id/progress_view"
