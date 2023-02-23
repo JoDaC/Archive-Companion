@@ -125,6 +125,7 @@
             android:id="@+id/horizontalLineViewNight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:lottie_speed="2.5"
 
             app:layout_constraintBottom_toBottomOf="@+id/url_edit_text"
             app:layout_constraintTop_toTopOf="@+id/progress_view"
@@ -136,6 +137,7 @@
             android:id="@+id/horizontalLineViewDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:lottie_speed="2.5"
 
             app:layout_constraintBottom_toBottomOf="@+id/url_edit_text"
             app:layout_constraintTop_toTopOf="@+id/progress_view"

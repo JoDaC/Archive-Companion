@@ -47,20 +47,46 @@ class OkHttpHandler(url: String) {
     }
 
     // OPTIONAL FUNCTION TO RETURN TITLE AND STRING SEPARATELY
-    suspend fun fetchExtractedTitleAndText(url: String): Pair<String?, String?> {
+    suspend fun fetchExtractedTitleAndText(url: String): Pair<String, String> {
         return withContext(Dispatchers.Default) {
+            // possible solution here: https://gist.github.com/billthornton/2404165
             val response = client.newCall(request).execute()
+
             val html = response.body()?.string() ?: ""
+            val parsedBody = Jsoup.parse(html)
             // Use Readability4J to extract the relevant content
             val readability4J = Readability4J(url, html)
             val article = readability4J.parse()
-            val extractedText = article.textContent
-            Log.i("ExtractedText", extractedText!!)
+
+            val paragraphs = parsedBody.getElementsByTag("p")
+            val text = StringBuilder()
+            for (paragraph in paragraphs) {
+                text.append(paragraph.text()).append("\n\n")
+            }
+            val formattedText = text.toString()
+
+//            val extractedText = article.content
+//            Log.i("ExtractedText", extractedText!!)
             val extractedTitle = article.title
             Log.i("ExtractedTitle", extractedTitle!!)
-            Pair(extractedText, extractedTitle)
+            Pair(formattedText, extractedTitle)
         }
     }
+
+//    suspend fun fetchExtractedTitleAndText(url: String): Pair<String?, String?> {
+//        return withContext(Dispatchers.Default) {
+//            val response = client.newCall(request).execute()
+//            val html = response.body()?.string() ?: ""
+//            // Use Readability4J to extract the relevant content
+//            val readability4J = Readability4J(url, html)
+//            val article = readability4J.parse()
+//            val extractedText = article.textContent
+//            Log.i("ExtractedText", extractedText!!)
+//            val extractedTitle = article.title
+//            Log.i("ExtractedTitle", extractedTitle!!)
+//            Pair(extractedText, extractedTitle)
+//        }
+//    }
 
     /**
      * Loads the specified URL using the OkHttp client and searches for specific terms in the
