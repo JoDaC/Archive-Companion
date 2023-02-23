@@ -46,47 +46,42 @@ class OkHttpHandler(url: String) {
         } ?: ""
     }
 
-    // OPTIONAL FUNCTION TO RETURN TITLE AND STRING SEPARATELY
-    suspend fun fetchExtractedTitleAndText(url: String): Pair<String, String> {
+    suspend fun fetchExtractedTitleAndText(url: String): Triple<String?, String?, List<String>> {
         return withContext(Dispatchers.Default) {
-            // possible solution here: https://gist.github.com/billthornton/2404165
             val response = client.newCall(request).execute()
-
             val html = response.body()?.string() ?: ""
-            val parsedBody = Jsoup.parse(html)
             // Use Readability4J to extract the relevant content
             val readability4J = Readability4J(url, html)
             val article = readability4J.parse()
+            val extractedText = article.textContent
+            val articleHtml = article.content
+//            articleHtml?.split(Regex("(?:\\n\\s*){2,}"))
+            Log.i("ExtractedText", extractedText!!)
+            Log.i("articleHtml", articleHtml!!)
+            val extractedTitle = article.title
+            Log.i("ExtractedTitle", extractedTitle!!)
+
+            val parsedBody = Jsoup.parse(articleHtml)
 
             val paragraphs = parsedBody.getElementsByTag("p")
             val text = StringBuilder()
+//            text.split(Regex("(?:\\n\\s*){2,}"))
             for (paragraph in paragraphs) {
                 text.append(paragraph.text()).append("\n\n")
             }
-            val formattedText = text.toString()
+            val articleText = text.toString()
 
-//            val extractedText = article.content
-//            Log.i("ExtractedText", extractedText!!)
-            val extractedTitle = article.title
-            Log.i("ExtractedTitle", extractedTitle!!)
-            Pair(formattedText, extractedTitle)
+            // Extract image URLs
+            val images = parsedBody.getElementsByTag("img").map { it.attr("src") }
+            Log.i("HTML images", images.toString())
+
+            // Extract article text and add line breaks between paragraphs
+//            val paragraphs = articleHtml.split(Regex("(?:\\n\\s*){2,}"))
+//            val articleText = paragraphs.joinToString(separator = "\n\n") { Jsoup.parse(it).text() }
+
+            Triple(articleText, extractedTitle, images)
         }
     }
-
-//    suspend fun fetchExtractedTitleAndText(url: String): Pair<String?, String?> {
-//        return withContext(Dispatchers.Default) {
-//            val response = client.newCall(request).execute()
-//            val html = response.body()?.string() ?: ""
-//            // Use Readability4J to extract the relevant content
-//            val readability4J = Readability4J(url, html)
-//            val article = readability4J.parse()
-//            val extractedText = article.textContent
-//            Log.i("ExtractedText", extractedText!!)
-//            val extractedTitle = article.title
-//            Log.i("ExtractedTitle", extractedTitle!!)
-//            Pair(extractedText, extractedTitle)
-//        }
-//    }
 
     /**
      * Loads the specified URL using the OkHttp client and searches for specific terms in the

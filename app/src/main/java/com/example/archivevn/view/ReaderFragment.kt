@@ -90,6 +90,9 @@ class ReaderFragment : Fragment() {
             val extractedContent = loader.fetchExtractedTitleAndText(url!!)
             val extractedTitle = extractedContent.second
             val extractedText = extractedContent.first
+            val extractedImages = extractedContent.third
+//            val extractedTitle = extractedContent.third
+//            val extractedText = extractedContent.second
             Log.d("ReaderFragment", "Extracted Text: $extractedText")
             val textView = view.findViewById<TextView>(R.id.text_display)
             val titleView = view.findViewById<TextView>(R.id.title_display)
