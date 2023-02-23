@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.R
 import kotlinx.coroutines.MainScope
@@ -92,8 +93,12 @@ class ReaderFragment : Fragment() {
             Log.d("ReaderFragment", "Extracted Text: $extractedText")
             val textView = view.findViewById<TextView>(R.id.text_display)
             val titleView = view.findViewById<TextView>(R.id.title_display)
+            val loadingView = view.findViewById<LottieAnimationView>(R.id.reader_loading_animation)
             textView.text = extractedText
+            loadingView.visibility = View.GONE
+            textView.visibility = View.VISIBLE
             titleView.text = extractedTitle
+            titleView.visibility = View.VISIBLE
         }
         return view
     }
