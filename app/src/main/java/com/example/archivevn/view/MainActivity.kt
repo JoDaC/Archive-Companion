@@ -1,6 +1,7 @@
 package com.example.archivevn.view
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -53,6 +54,18 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
             binding.progressView.root.visibility = if (archiveProgressLoading) View.VISIBLE else View.GONE
         }
+
+        // if i pick one theme that works for both i wont need this
+        val dayLine = findViewById<View>(R.id.horizontalLineViewDay)
+        val nightLine = findViewById<View>(R.id.horizontalLineViewNight)
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            nightLine.visibility = View.VISIBLE // Show the view
+        } else {
+            nightLine.visibility = View.GONE // Hide the view
+        }
+
         // Handle app launch via intent on cold start.
         val intent = intent
         if (intent != null) {

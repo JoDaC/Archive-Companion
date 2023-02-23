@@ -97,7 +97,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             )
                 .show()
             // delivering push notification here for testing purposes
-            NotificationHandler(getApplication()).showTestNotification()
+//            NotificationHandler(getApplication()).showTestNotification()
             val readerFragment = ReaderFragment.newInstance("https://www.businesstoday.in/latest/story/board-should-fire-sundar-pichai-google-layoffs-trigger-anger-sorrow-disbelief-367018-2023-01-22")
             fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, readerFragment)
