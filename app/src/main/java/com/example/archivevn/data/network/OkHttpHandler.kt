@@ -27,8 +27,6 @@ class OkHttpHandler(url: String) {
             val responseBody = response.body()?.string()
             val parsedBody = Jsoup.parse(responseBody!!)
             Log.d("Parsed Body", parsedBody.toString())
-//            val articleBody = parsedBody.select("[name='articleBody']")
-//            Log.d("Article Body", parsedBody.toString())
             response.body()?.close()
             parsedBody.toString()
         }
@@ -117,8 +115,16 @@ class OkHttpHandler(url: String) {
      * @param url The URL to archive.
      * @return The URL of the archived page.
      */
-    suspend fun launchPageArchival(fullRequestString: String): String {
+    suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.IO) {
+            val responseOne = client.newCall(request).execute()
+            val responseBody = responseOne.body()?.string()
+            val parsedBody = Jsoup.parse(responseBody!!)
+            val submitId = parsedBody.select("[name='submitId']").first()?.attr("value")
+            Log.i("submitId is ", submitId!!)
+            val encodedUrl = URLEncoder.encode(url, "UTF-8")
+            val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
+            Log.i("fullRequestString is ", fullRequestString)
 
             val requestTwo = Request.Builder()
                 .url(fullRequestString)
@@ -132,23 +138,9 @@ class OkHttpHandler(url: String) {
             }
             val urlToTriggerArchival = responseTwo.request().url().toString()
             Log.i("URL to trigger Archival ", urlToTriggerArchival)
+            responseOne.body()?.close()
             responseTwo.body()?.close()
             urlToTriggerArchival
-        }
-    }
-
-    suspend fun getFullRequestString(url: String): String {
-        return withContext(Dispatchers.IO) {
-            val responseOne = client.newCall(request).execute()
-            val responseBody = responseOne.body()?.string()
-            val parsedBody = Jsoup.parse(responseBody!!)
-            val submitId = parsedBody.select("[name='submitId']").first()?.attr("value")
-            Log.i("submitId is ", submitId!!)
-            val encodedUrl = URLEncoder.encode(url, "UTF-8")
-            val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
-            Log.i("fullRequestString is ", fullRequestString)
-            responseOne.body()?.close()
-            fullRequestString
         }
     }
 }

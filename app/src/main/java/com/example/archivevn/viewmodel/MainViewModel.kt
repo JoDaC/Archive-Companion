@@ -1,12 +1,9 @@
 package com.example.archivevn.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.util.Log
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
@@ -27,19 +24,14 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
-    @SuppressLint("StaticFieldLeak")
-    private lateinit var mWebView: WebView
     private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment()
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
     private val _archiveProgressLoading = MutableLiveData<Boolean>()
-    private val _isArchiving = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
         get() = _archiveProgressLoading
-    val isArchiving: LiveData<Boolean>
-        get() = _isArchiving
 
     init {
         this.dialogFragment.setMainViewModel(this)
@@ -87,16 +79,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         val intent = Intent(getApplication(), AppIntroduction::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(intent)
-    }
-
-    /**
-     * Display webview over mainactivity during archival loading period
-     */
-    private fun displayWebViewArchivalLoading(url: String) {
-        val webSettings = binding.webview.settings
-        webSettings.javaScriptEnabled = true
-        binding.webview.webViewClient = WebViewClient()
-        binding.webview.loadUrl(url)
     }
 
     /**
@@ -151,7 +133,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      * @param url The URL to archive or check for archival.
      * @param urlToArchive A flag indicating whether to archive the page.
      */
-    @SuppressLint("SetJavaScriptEnabled")
     fun launchUrlInBackground(
         url: String,
         urlToArchive: Boolean? = null
@@ -179,15 +160,9 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
                     NotificationHandler(getApplication()).showLoadingNotification()
                     _isLoading.value = false
-                    binding.webview.visibility = View.VISIBLE
-                    val pageArchivalRequest = loader.getFullRequestString(url)
-                    val webSettings = binding.webview.settings
-                    webSettings.javaScriptEnabled = true
-                    binding.webview.webViewClient = WebViewClient()
-                    binding.webview.loadUrl(pageArchivalRequest)
-                    val archivedResult = loader.launchPageArchival(pageArchivalRequest)
+                    _archiveProgressLoading.value = true
+                    val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
-                    binding.webview.visibility = View.GONE
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     _archiveProgressLoading.value = false
                     showArchiveConfirmedDialog(archivedResult)

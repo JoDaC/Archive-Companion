@@ -45,15 +45,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/progress_view"
-            app:layout_constraintEnd_toEndOf="@+id/url_edit_text"
-            app:layout_constraintStart_toStartOf="@+id/url_edit_text"
-            app:layout_constraintTop_toTopOf="@+id/url_edit_text" />
+<!--        <WebView-->
+<!--            android:id="@+id/webview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:elevation="20dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/progress_view"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/url_edit_text"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/url_edit_text" />-->
 
         <Button
             android:id="@+id/go_button"
