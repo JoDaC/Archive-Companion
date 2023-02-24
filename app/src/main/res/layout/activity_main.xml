@@ -47,9 +47,9 @@
 
         <WebView
             android:id="@+id/webview"
-            android:elevation="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="20dp"
             app:layout_constraintBottom_toTopOf="@+id/progress_view"
             app:layout_constraintEnd_toEndOf="@+id/url_edit_text"
             app:layout_constraintStart_toStartOf="@+id/url_edit_text"

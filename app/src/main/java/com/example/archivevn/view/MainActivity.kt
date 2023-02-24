@@ -51,12 +51,13 @@ class MainActivity : AppCompatActivity() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
+        binding.webview.visibility = View.GONE
+
         // maybe remove this
         // Observe the isArchiving LiveData object to show/hide the webview
-        mainViewModel.isArchiving.observe(this) { isArchiving ->
-            binding.webview.visibility = if (isArchiving) View.VISIBLE else View.GONE
-//            mainViewModel.displayWebViewArchivalLoading()
-        }
+//        mainViewModel.isArchiving.observe(this) { isArchiving ->
+//            binding.webview.visibility = if (isArchiving) View.VISIBLE else View.GONE
+//        }
 
         // Observe the archiveProgress LiveData object to the progress indicator
         mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->

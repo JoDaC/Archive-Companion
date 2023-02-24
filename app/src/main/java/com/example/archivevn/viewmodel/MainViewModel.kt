@@ -93,9 +93,10 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      * Display webview over mainactivity during archival loading period
      */
     private fun displayWebViewArchivalLoading(url: String) {
-        mWebView = binding.webview
-        mWebView.webViewClient = WebViewClient()
-        mWebView.loadUrl(url)
+        val webSettings = binding.webview.settings
+        webSettings.javaScriptEnabled = true
+        binding.webview.webViewClient = WebViewClient()
+        binding.webview.loadUrl(url)
     }
 
     /**
@@ -150,6 +151,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      * @param url The URL to archive or check for archival.
      * @param urlToArchive A flag indicating whether to archive the page.
      */
+    @SuppressLint("SetJavaScriptEnabled")
     fun launchUrlInBackground(
         url: String,
         urlToArchive: Boolean? = null
@@ -177,15 +179,15 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
                     NotificationHandler(getApplication()).showLoadingNotification()
                     _isLoading.value = false
-                    _archiveProgressLoading.value = true
+                    binding.webview.visibility = View.VISIBLE
                     val pageArchivalRequest = loader.getFullRequestString(url)
+                    val webSettings = binding.webview.settings
+                    webSettings.javaScriptEnabled = true
+                    binding.webview.webViewClient = WebViewClient()
+                    binding.webview.loadUrl(pageArchivalRequest)
                     val archivedResult = loader.launchPageArchival(pageArchivalRequest)
-//                    while (_archiveProgressLoading.value == true) {
-//                        _isArchiving.value = true
-//                        displayWebViewArchivalLoading(pageArchivalRequest)
-//                    }
-                    _isArchiving.value = false
                     Log.i("Final URL of Archived page ", archivedResult)
+                    binding.webview.visibility = View.GONE
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     _archiveProgressLoading.value = false
                     showArchiveConfirmedDialog(archivedResult)
