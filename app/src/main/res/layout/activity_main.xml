@@ -45,42 +45,47 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <WebView-->
-<!--            android:id="@+id/webview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:elevation="20dp"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/progress_view"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/url_edit_text"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/url_edit_text" />-->
-
-        <Button
+        <!--        <WebView-->
+        <!--            android:id="@+id/webview"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:elevation="20dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/progress_view"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/url_edit_text"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/url_edit_text" />-->
+<!--            android:backgroundTint="@color/material_dynamic_primary90"
+-->
+        <com.google.android.material.chip.Chip
             android:id="@+id/go_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:layout_width="226dp"
+            android:layout_height="104dp"
+            android:backgroundTint="?attr/archiveProgressViewBackground"
+            android:fontFamily="sans-serif-light"
             android:padding="16dp"
-            android:text="@string/go"
+            android:text="@string/search"
+            android:textAlignment="center"
             android:textColor="?android:textColorPrimary"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/progress_bar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/url_edit_text" />
 
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/reader_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:elevation="4dp"
             android:fontFamily="sans-serif"
             android:padding="16dp"
             android:text="@string/reader"
             android:textColor="?android:textColorPrimary"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/progress_bar"
+            app:layout_constraintBottom_toTopOf="@+id/progress_view"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/go_button" />
+            app:srcCompat="@android:drawable/arrow_up_float" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -96,29 +101,15 @@
             android:id="@+id/intro_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:clickable="true"
             android:contentDescription="@string/launches_intro"
             android:focusable="true"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/go_button"
-            app:layout_constraintStart_toEndOf="@+id/reader_button"
-            app:layout_constraintTop_toBottomOf="@+id/reader_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/go_button"
             app:srcCompat="@android:drawable/ic_menu_help" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:contentDescription="@string/settings"
-            android:focusable="true"
-            app:elevation="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/go_button"
-            app:layout_constraintEnd_toStartOf="@+id/go_button"
-            app:layout_constraintStart_toEndOf="@+id/reader_button"
-            app:layout_constraintTop_toBottomOf="@+id/url_edit_text"
-            app:srcCompat="@android:drawable/ic_menu_preferences" />
 
         <!--                <com.airbnb.lottie.LottieAnimationView-->
         <!--                    android:id="@+id/verticalLineViewOne"-->
@@ -130,29 +121,43 @@
         <!--                    app:lottie_loop="false"-->
         <!--                    app:lottie_rawRes="@raw/vertical_line" />-->
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:contentDescription="@string/settings"
+            android:focusable="true"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/go_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/horizontalLineViewNight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lottie_speed="2.5"
-
             app:layout_constraintBottom_toBottomOf="@+id/url_edit_text"
+
             app:layout_constraintTop_toTopOf="@+id/progress_view"
             app:lottie_autoPlay="true"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/light_for_night" />
+            app:lottie_rawRes="@raw/light_for_night"
+            app:lottie_speed="2.5" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/horizontalLineViewDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lottie_speed="2.5"
-
             app:layout_constraintBottom_toBottomOf="@+id/url_edit_text"
+
             app:layout_constraintTop_toTopOf="@+id/progress_view"
             app:lottie_autoPlay="true"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/line_for_day" />
+            app:lottie_rawRes="@raw/line_for_day"
+            app:lottie_speed="2.5" />
 
         <include
             android:id="@+id/progress_view"
