@@ -35,11 +35,13 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
 
         // Set onClickListener for GO button.
-        binding.goButton.setOnClickListener {
-            mainViewModel.onGoButtonClicked()
-        }
+//        binding.goButtonView.setOnClickListener {
+//            mainViewModel.onGoButtonClicked()
+//        }
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
+//            // Start the MotionLayout animation
+//            binding.motionLayout.transitionToEnd()
             mainViewModel.onReaderButtonClicked()
         }
         // Set onClickListener for Intro button to launch Reader fragment.
