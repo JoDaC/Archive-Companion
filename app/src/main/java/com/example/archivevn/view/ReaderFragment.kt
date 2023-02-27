@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.airbnb.lottie.LottieAnimationView
-import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.R
+import com.example.archivevn.data.network.OkHttpHandler
+import com.example.archivevn.databinding.FragmentReaderBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -28,6 +28,28 @@ private const val PASSED_URL = "url1"
 class ReaderFragment : Fragment() {
     private var url: String? = null
     private lateinit var mWebView: WebView
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding: FragmentReaderBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_reader, container, false)
+        val loader = OkHttpHandler(url!!)
+        MainScope().launch {
+            // the following 3 lines need to be moved out of the reader fragment
+            val extractedContent = loader.fetchExtractedTitleAndText(url!!)
+            val extractedTitle = extractedContent.second
+            val extractedText = extractedContent.first
+
+            Log.d("ReaderFragment", "Extracted Text: $extractedText")
+            binding.textDisplay.text = extractedText
+            binding.readerLoadingAnimation.visibility = View.GONE
+            binding.textDisplay.visibility = View.VISIBLE
+            binding.titleDisplay.text = extractedTitle
+            binding.titleDisplay.visibility = View.VISIBLE
+        }
+        return binding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,33 +75,6 @@ class ReaderFragment : Fragment() {
         // Setting Immersive mode onPause
         val windowInsetsController = ViewCompat.getWindowInsetsController(requireView())
         windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_reader, container, false)
-        val loader = OkHttpHandler(url!!)
-        MainScope().launch {
-            // the following 4 lines need to be moved out of the reader fragment
-            val extractedContent = loader.fetchExtractedTitleAndText(url!!)
-            val extractedTitle = extractedContent.second
-            val extractedText = extractedContent.first
-            val extractedImages = extractedContent.third
-//            val extractedTitle = extractedContent.third
-//            val extractedText = extractedContent.second
-            Log.d("ReaderFragment", "Extracted Text: $extractedText")
-            val textView = view.findViewById<TextView>(R.id.text_display)
-            val titleView = view.findViewById<TextView>(R.id.title_display)
-            val loadingView = view.findViewById<LottieAnimationView>(R.id.reader_loading_animation)
-            textView.text = extractedText
-            loadingView.visibility = View.GONE
-            textView.visibility = View.VISIBLE
-            titleView.text = extractedTitle
-            titleView.visibility = View.VISIBLE
-        }
-        return view
     }
 
     companion object {
