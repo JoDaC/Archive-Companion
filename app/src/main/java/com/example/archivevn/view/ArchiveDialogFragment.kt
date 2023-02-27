@@ -51,15 +51,13 @@ class ArchiveDialogFragment() : DialogFragment() {
                 Log.i(tag, "First Time archiveDialog() started")
                 val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
                     .setTitle("No Archived Page Found")
-                    .setMessage("Do you want to archive this page?")
+                    .setMessage("Do you want to archive this page in the background?")
                     .setPositiveButton("Yes") { _, _ ->
                         mainViewModel.launchUrlInBackground(url!!, true)
                     }
                     .setNegativeButton("No") { _, _ ->
                     }
-                    .setNeutralButton("Launch in Browser") { _, _ ->
-                        launchUrlInBrowser("https://archive.vn/$url!!")
-                    }
+
                 return builder.create()
             }
             DIALOG_TYPE_2 -> {
@@ -67,11 +65,11 @@ class ArchiveDialogFragment() : DialogFragment() {
                 val latestArchiveUrl = "http://archive.is/newest/$url"
                 val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
                     .setTitle("Archived Page for this URL has been found")
-                    .setMessage("Do you want to view in your browser or read now?")
-                    .setPositiveButton("Launch in Browser") { _, _ ->
+                    .setMessage("Do you want to view in your browser or reader mode?")
+                    .setPositiveButton("View in Browser") { _, _ ->
                         launchUrlInBrowser(latestArchiveUrl)
                     }
-                    .setNeutralButton("Launch in Reader") { _, _ ->
+                    .setNeutralButton("View in Reader") { _, _ ->
                         Log.i("linkToSendFragment", latestArchiveUrl)
                         mainViewModel.launchUrlInReader(latestArchiveUrl)
                     }

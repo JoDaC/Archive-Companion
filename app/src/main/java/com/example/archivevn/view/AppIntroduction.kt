@@ -3,15 +3,12 @@ package com.example.archivevn.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
-import android.graphics.fonts.Font
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.FontRes
 import androidx.fragment.app.Fragment
 import com.example.archivevn.R
 import com.github.appintro.AppIntro
 import com.github.appintro.AppIntroFragment
-import com.github.appintro.AppIntroPageTransformerType
 
 class AppIntroduction : AppIntro() {
 
@@ -55,7 +52,7 @@ class AppIntroduction : AppIntro() {
         addSlide(
             AppIntroFragment.createInstance(
                 title = "Your Personal Time Capsule For Web Pages",
-                description = "Archive.today is a time capsule for web pages! It takes a 'snapshot' of a webpage that will always be online even if the original page disappears. It saves a text and graphical copy of the page and provides a short link to an unalterable record of any web page.",
+                description = "Archive.today is a time capsule for web pages. It takes a 'snapshot' of a webpage that will always be online even if the original page disappears. It saves a text and graphical copy of the page and provides a short link to an unalterable record of any web page.",
                 imageDrawable = R.mipmap.black_a_transformed,
                 titleTypefaceFontRes = R.font.space_grotesk,
                 descriptionTypefaceFontRes = R.font.space_grotesk,

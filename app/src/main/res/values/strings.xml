@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_a_url_to_archive">Enter a URL to Archive</string>
+    <string name="edit_text_page_archival_hint">Page Archival in Progress</string>
     <string name="enter_text_hint">Paste the URL here that you would like to search on Archive.vn.</string>
     <string name="go">Go</string>
     <string name="reader">Reader</string>

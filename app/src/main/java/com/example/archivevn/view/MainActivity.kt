@@ -15,6 +15,7 @@ import com.example.archivevn.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private var isEnabled = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,26 +35,23 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.commit()
 
-        // Set onClickListener for GO button.
-//        binding.goButtonView.setOnClickListener {
-//            mainViewModel.onGoButtonClicked()
-//        }
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
-//            // Start the MotionLayout animation
-//            binding.motionLayout.transitionToEnd()
             mainViewModel.onReaderButtonClicked()
         }
         // Set onClickListener for Intro button to launch Reader fragment.
         binding.introButton.setOnClickListener {
             mainViewModel.introButtonClicked()
         }
+
+        binding.settingsButton.setOnClickListener {
+            isEnabled = !isEnabled
+            mainViewModel.onSettingsButtonClicked(isEnabled)
+        }
         // Observe the isLoading LiveData object to show/hide the loading wheel
         mainViewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
-
-//        binding.webview.visibility = View.GONE
 
         // Observe the archiveProgress LiveData object to the progress indicator
         mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->

@@ -82,6 +82,26 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
+     * Handles the event when the "Settings" button is clicked. this is for testing puposes only.
+     * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     */
+    fun onSettingsButtonClicked(isEnabled: Boolean) {
+        binding.urlEditText.isEnabled = isEnabled
+        if (binding.urlEditText.isEnabled) {
+            binding.urlEditText.hint = getApplication<Application>().getString(R.string.enter_a_url_to_archive)
+        } else {
+            binding.urlEditText.hint =
+                getApplication<Application>().getString(R.string.edit_text_page_archival_hint)
+            Toast.makeText(
+                getApplication(),
+                "Text entry disabled during archival.",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    /**
      * Handles the event when the "Reader" button is clicked.
      * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
      */
@@ -162,6 +182,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
                     NotificationHandler(getApplication()).showLoadingNotification()
                     _isLoading.value = false
+                    binding.urlEditText.isEnabled = false
                     _archiveProgressLoading.value = true
                     val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
@@ -171,6 +192,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     val notificationChannel =
                         NotificationHandler.NotificationChannel(getApplication())
                     notificationChannel.closeNotification()
+                    binding.urlEditText.isEnabled = false
                 }
             }
             _isLoading.value = false

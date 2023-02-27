@@ -177,14 +177,19 @@
         <include
             android:id="@+id/go_button"
             layout="@layout/search_button_animation"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="32dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
             android:elevation="1dp"
             android:onClick="@{() -> mainViewModel.onGoButtonClicked()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.4" />
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginBottom="32dp"-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
