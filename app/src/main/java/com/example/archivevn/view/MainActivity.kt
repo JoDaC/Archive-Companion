@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         binding.readerButton.setOnClickListener {
             mainViewModel.onReaderButtonClicked()
         }
+        // Set onClickListener for History button to launch History fragment.
+        binding.historyButton.setOnClickListener {
+            mainViewModel.onHistoryButtonClicked()
+        }
         // Set onClickListener for Intro button to launch Reader fragment.
         binding.introButton.setOnClickListener {
             mainViewModel.introButtonClicked()
@@ -91,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                     binding.fragmentContainerView.visibility = View.GONE
+                    binding.fragmentContainerViewHistory.visibility = View.GONE
                 } else {
                     finish()
                 }

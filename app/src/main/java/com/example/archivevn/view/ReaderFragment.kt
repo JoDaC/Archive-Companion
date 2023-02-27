@@ -37,7 +37,7 @@ class ReaderFragment : Fragment() {
         Log.i("PASSED_URL_TAG", url!!)
     }
 
-    // this is for immersive mode
+    // Setting Immersive mode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val windowInsetsController = ViewCompat.getWindowInsetsController(view)
@@ -48,36 +48,12 @@ class ReaderFragment : Fragment() {
         }
     }
 
-    // this is for immersive mode
     override fun onPause() {
         super.onPause()
-
+        // Setting Immersive mode onPause
         val windowInsetsController = ViewCompat.getWindowInsetsController(requireView())
         windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
     }
-
-//    @SuppressLint("SetJavaScriptEnabled")
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_reader, container, false)
-//        val loader = OkHttpHandler(url!!)
-//        mWebView = view.findViewById(R.id.webview)
-//        mWebView.webViewClient = WebViewClient()
-//        val webSettings = mWebView.settings
-//        webSettings.javaScriptEnabled = true
-//        webSettings.textZoom = 150
-//        MainScope().launch {
-//            val extractedContent = loader.fetchExtractedTitleAndText(url!!)
-//            val extractedTitle = extractedContent.second
-//            val extractedText = extractedContent.first
-//            Log.d("ReaderFragment", "Extracted Text: $extractedText")
-//            val html = "<html><head></head><body>$extractedText</body></html>"
-//            mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
-//        }
-//        return view
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,4 +98,27 @@ class ReaderFragment : Fragment() {
                 }
             }
     }
+
+    //    @SuppressLint("SetJavaScriptEnabled")
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        val view = inflater.inflate(R.layout.fragment_reader, container, false)
+//        val loader = OkHttpHandler(url!!)
+//        mWebView = view.findViewById(R.id.webview)
+//        mWebView.webViewClient = WebViewClient()
+//        val webSettings = mWebView.settings
+//        webSettings.javaScriptEnabled = true
+//        webSettings.textZoom = 150
+//        MainScope().launch {
+//            val extractedContent = loader.fetchExtractedTitleAndText(url!!)
+//            val extractedTitle = extractedContent.second
+//            val extractedText = extractedContent.first
+//            Log.d("ReaderFragment", "Extracted Text: $extractedText")
+//            val html = "<html><head></head><body>$extractedText</body></html>"
+//            mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+//        }
+//        return view
+//    }
 }

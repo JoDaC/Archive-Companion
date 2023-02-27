@@ -15,6 +15,7 @@ import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
+import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -126,6 +127,20 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .commit()
             binding.fragmentContainerView.visibility = View.VISIBLE
         }
+    }
+
+    /**
+     * Handles the event when the "Reader" button is clicked.
+     * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
+     */
+    fun onHistoryButtonClicked() {
+        val historyFragment = HistoryFragment.newInstance("Article Title")
+        fragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+            .replace(R.id.fragmentContainerViewHistory, historyFragment)
+            .addToBackStack("HistoryFragment")
+            .commit()
+        binding.fragmentContainerViewHistory.visibility = View.VISIBLE
     }
 
     /**
