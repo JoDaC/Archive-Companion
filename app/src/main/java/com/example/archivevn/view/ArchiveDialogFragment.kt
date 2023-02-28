@@ -11,11 +11,15 @@ import com.example.archivevn.R
 import com.example.archivevn.viewmodel.MainViewModel
 
 
-class ArchiveDialogFragment() : DialogFragment() {
-    private lateinit var mainViewModel: MainViewModel
+class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
+    private var mainViewModel: MainViewModel
 
     private var dialogType: Int = 0
     private var url: String? = null
+
+    init {
+        this.mainViewModel = mainViewModel
+    }
 
     companion object {
         const val DIALOG_TYPE_1 = 1
@@ -31,14 +35,6 @@ class ArchiveDialogFragment() : DialogFragment() {
     fun setDialogType(dialogType: Int, url: String?) {
         this.dialogType = dialogType
         this.url = url
-    }
-
-    /**
-     *Sets the MainViewModel object for this fragment.
-     *@param mainViewModel The MainViewModel object to set for this fragment.
-     */
-    fun setMainViewModel(mainViewModel: MainViewModel) {
-        this.mainViewModel = mainViewModel
     }
 
     /**

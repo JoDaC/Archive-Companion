@@ -29,17 +29,11 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
-    private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment()
+    private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment(this)
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
     private val _archiveProgressLoading = MutableLiveData<Boolean>()
-    private val _history = MutableLiveData<List<HistoryItem>>().apply {
-        value = listOf(
-            HistoryItem("Example Title 1", "https://www.example.com/page1", true),
-            HistoryItem("Example Title 2", "https://www.example.com/page2", false),
-            HistoryItem("Example Title 3", "https://www.example.com/page3", false)
-        )
-    }
+    private val _history = MutableLiveData<List<HistoryItem>>(emptyList())
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
@@ -47,7 +41,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     val history: LiveData<List<HistoryItem>> = _history
 
     init {
-        this.dialogFragment.setMainViewModel(this)
+//        this.dialogFragment.setMainViewModel(this)
         _isLoading.value = false
     }
 
@@ -116,17 +110,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         addHistoryItem("Sweet ass article title", "www.fuckgoogle.com", false)
     }
 
-    fun edit_text_hint() {
-        if (binding.urlEditText.isEnabled) {
-            binding.urlEditText.hint =
-                getApplication<Application>().getString(R.string.enter_a_url_to_archive)
-        } else {
-            binding.urlEditText.hint =
-                getApplication<Application>().getString(R.string.edit_text_page_archival_hint)
-
-        }
-    }
-
     /**
      * Handles the event when the "Reader" button is clicked.
      * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
@@ -163,7 +146,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             fragmentManager.popBackStack()
             binding.fragmentContainerViewHistory.visibility = View.GONE
         } else {
-            val historyFragment = HistoryFragment.newInstance(this)
+            val historyFragment = HistoryFragment(this)
             fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
                 .replace(R.id.fragmentContainerViewHistory, historyFragment)
@@ -187,7 +170,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         getApplication<Application>().startActivity(browserIntent)
     }
 
-    fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
+    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
         // This method is called when a new history item is added to the list.
         // You should create a new HistoryItem instance with the given title, url, and isReaderMode flag,
         // and add it to the list of history items stored in the _history LiveData object.
@@ -251,10 +234,12 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     NotificationHandler(getApplication()).showLoadingNotification()
                     _isLoading.value = false
                     binding.urlEditText.isEnabled = false
-                    edit_text_hint()
+                    editTextHint()
                     _archiveProgressLoading.value = true
                     val archivedResult = loader.launchPageArchival(url)
                     Log.i("Final URL of Archived page ", archivedResult)
+                    val articleTitle = loader.fetchExtractedTitleAndText(archivedResult).second
+                    addHistoryItem(articleTitle!!, archivedResult, false)
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     _archiveProgressLoading.value = false
                     showArchiveConfirmedDialog(archivedResult)
@@ -262,7 +247,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                         NotificationHandler.NotificationChannel(getApplication())
                     notificationChannel.closeNotification()
                     binding.urlEditText.isEnabled = false
-                    edit_text_hint()
+                    editTextHint()
                 }
             }
             _isLoading.value = false
@@ -286,6 +271,17 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     }
                 }
             }
+        }
+    }
+
+    private fun editTextHint() {
+        if (binding.urlEditText.isEnabled) {
+            binding.urlEditText.hint =
+                getApplication<Application>().getString(R.string.enter_a_url_to_archive)
+        } else {
+            binding.urlEditText.hint =
+                getApplication<Application>().getString(R.string.edit_text_page_archival_hint)
+
         }
     }
 

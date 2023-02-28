@@ -17,13 +17,7 @@ import com.example.archivevn.databinding.FragmentReaderBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ReaderFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
-private const val PASSED_URL = "url1"
+private const val PASSED_URL = ""
 
 class ReaderFragment : Fragment() {
     private var url: String? = null

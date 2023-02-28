@@ -26,38 +26,14 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setFragmentManager(supportFragmentManager)
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
-
         initializeBackPressDispatcher()
 
-        // Initialize the Dialog Fragment
-        val archiveDialogFragment = ArchiveDialogFragment()
-        archiveDialogFragment.setMainViewModel(mainViewModel)
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.commit()
-
-        // Initialize History Fragment
-//        val historyFragment = HistoryFragment()
-//        historyFragment.setMainViewModel(mainViewModel)
-//        fragmentTransaction.commit()
-
-        // Set onClickListener for Reader button to launch Reader fragment.
-        binding.readerButton.setOnClickListener {
-            mainViewModel.onReaderButtonClicked()
-        }
-        // Set onClickListener for History button to launch History fragment.
-        binding.historyButton.setOnClickListener {
-            mainViewModel.onHistoryButtonClicked()
-        }
-        // Set onClickListener for Intro button to launch Reader fragment.
-        binding.introButton.setOnClickListener {
-            mainViewModel.introButtonClicked()
-        }
-
+        // Set onClickListener for Settings button to launch reader settings.
         binding.settingsButton.setOnClickListener {
             isEnabled = !isEnabled
             mainViewModel.onSettingsButtonClicked(isEnabled)
         }
+
         // Observe the isLoading LiveData object to show/hide the loading wheel
         mainViewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -65,19 +41,12 @@ class MainActivity : AppCompatActivity() {
 
         // Observe the archiveProgress LiveData object to the progress indicator
         mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
-            binding.progressView.root.visibility = if (archiveProgressLoading) View.VISIBLE else View.GONE
+            binding.progressView.root.visibility =
+                if (archiveProgressLoading) View.VISIBLE else View.GONE
         }
 
-        // if i pick one theme that works for both i wont need this
-        val dayLine = findViewById<View>(R.id.horizontalLineViewDay)
-        val nightLine = findViewById<View>(R.id.horizontalLineViewNight)
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            nightLine.visibility = View.VISIBLE // Show the view
-        } else {
-            nightLine.visibility = View.GONE // Hide the view
-        }
+        // Set line animation depending on light/dark theme
+        lineAnimationTheme()
 
         // Handle app launch via intent on cold start.
         val intent = intent
@@ -92,6 +61,17 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.v("MainActivityTag", "onNewIntent")
         mainViewModel.handleShareSheetUrlInBackground(intent)
+    }
+
+    private fun lineAnimationTheme() {
+        val nightLine = binding.horizontalLineViewNight
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            nightLine.visibility = View.VISIBLE
+        } else {
+            nightLine.visibility = View.GONE
+        }
     }
 
     private fun initializeBackPressDispatcher() {

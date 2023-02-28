@@ -1,12 +1,11 @@
 package com.example.archivevn.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.archivevn.R
 import com.example.archivevn.databinding.FragmentHistoryBinding
@@ -14,11 +13,15 @@ import com.example.archivevn.view.adapters.HistoryAdapter
 import com.example.archivevn.viewmodel.MainViewModel
 
 
-class HistoryFragment() : Fragment() {
+class HistoryFragment(mainViewModel: MainViewModel) : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var historyAdapter: HistoryAdapter
-    private lateinit var mainViewModel: MainViewModel
+    private var mainViewModel: MainViewModel
+
+    init {
+        this.mainViewModel = mainViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +40,5 @@ class HistoryFragment() : Fragment() {
         }
 
         return binding.root
-    }
-
-    companion object {
-        fun newInstance(mainViewModel: MainViewModel) =
-            HistoryFragment().apply {
-                this.mainViewModel = mainViewModel
-            }
     }
 }
