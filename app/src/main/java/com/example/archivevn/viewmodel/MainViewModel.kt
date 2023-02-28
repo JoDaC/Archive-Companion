@@ -2,6 +2,7 @@ package com.example.archivevn.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.archivevn.R
+import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.databinding.ActivityMainBinding
@@ -17,6 +19,7 @@ import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
+import com.example.archivevn.view.adapters.HistoryAdapter
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -33,6 +36,15 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
         get() = _archiveProgressLoading
+    private val _history = MutableLiveData<List<HistoryItem>>().apply {
+        value = listOf(
+            HistoryItem("Example Title 1", "https://www.example.com/page1", true),
+            HistoryItem("Example Title 2", "https://www.example.com/page2", false),
+            HistoryItem("Example Title 3", "https://www.example.com/page3", false)
+        )
+    }
+    val history: LiveData<List<HistoryItem>> = _history
+    val historyAdapter = HistoryAdapter(this)
 
     init {
         this.dialogFragment.setMainViewModel(this)
@@ -100,6 +112,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             )
                 .show()
         }
+
+        addHistoryItem("Article Title bitch", "url", false)
     }
 
     /**
@@ -134,13 +148,36 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
      */
     fun onHistoryButtonClicked() {
-        val historyFragment = HistoryFragment.newInstance("Article Title")
+        val historyFragment = HistoryFragment.newInstance(this)
         fragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
             .replace(R.id.fragmentContainerViewHistory, historyFragment)
             .addToBackStack("HistoryFragment")
             .commit()
         binding.fragmentContainerViewHistory.visibility = View.VISIBLE
+    }
+
+    fun onViewInReaderModeClick(historyItem: HistoryItem) {
+        // This method is called when the user clicks the "Reader" button for a history item.
+        // You can add logic here to open the selected page in reader mode.
+        // You can use the Navigation component to navigate to the ReaderFragment.
+    }
+
+    fun onViewInBrowserClick(historyItem: HistoryItem) {
+        // This method is called when the user clicks the "Browser" button for a history item.
+        // You can add logic here to open the selected page in the default browser using an Intent.
+        // For example:
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(historyItem.url))
+        getApplication<Application>().startActivity(browserIntent)
+    }
+
+    fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
+        // This method is called when a new history item is added to the list.
+        // You should create a new HistoryItem instance with the given title, url, and isReaderMode flag,
+        // and add it to the list of history items stored in the _history LiveData object.
+        val newItem = HistoryItem(title, url, isReaderMode)
+        val currentList = _history.value ?: emptyList()
+        _history.value = currentList + newItem
     }
 
     /**

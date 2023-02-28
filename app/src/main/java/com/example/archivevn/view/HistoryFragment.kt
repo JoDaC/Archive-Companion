@@ -5,52 +5,44 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.archivevn.R
+import com.example.archivevn.databinding.FragmentHistoryBinding
+import com.example.archivevn.view.adapters.HistoryAdapter
+import com.example.archivevn.viewmodel.MainViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HistoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
+class HistoryFragment() : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-        }
-    }
+    private lateinit var binding: FragmentHistoryBinding
+    private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false)
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
+
+        // Create the history adapter and set it on the RecyclerView
+        historyAdapter = HistoryAdapter(mainViewModel)
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.historyRecyclerView.adapter = historyAdapter
+
+        // Observe the history LiveData in the MainViewModel and submit the list to the adapter
+        mainViewModel.history.observe(viewLifecycleOwner) { history ->
+            historyAdapter.submitList(history)
+        }
+
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HistoryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String) =
+        fun newInstance(mainViewModel: MainViewModel) =
             HistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                }
+                this.mainViewModel = mainViewModel
             }
     }
 }

@@ -35,6 +35,11 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.commit()
 
+        // Initialize History Fragment
+//        val historyFragment = HistoryFragment()
+//        historyFragment.setMainViewModel(mainViewModel)
+//        fragmentTransaction.commit()
+
         // Set onClickListener for Reader button to launch Reader fragment.
         binding.readerButton.setOnClickListener {
             mainViewModel.onReaderButtonClicked()
