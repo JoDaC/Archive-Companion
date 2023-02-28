@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="?attr/archiveProgressViewBackground">
 
         <TextView
             android:id="@+id/historyTitleView"
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,13 +43,15 @@
             android:id="@+id/launchInReader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="true"
+            app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/launchOnWeb"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_search_category_default"
-            android:contentDescription="TODO"
-            android:focusable="true" />
+            app:srcCompat="@android:drawable/ic_search_category_default" />
 
         <TextView
             android:id="@+id/urlTextView"
