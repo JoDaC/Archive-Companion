@@ -32,6 +32,10 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         fun bind(historyItem: HistoryItem, viewModel: MainViewModel) {
             binding.historyItem = historyItem
 
+            binding.historyTitleView.text = historyItem.title
+
+            binding.urlTextView.text = historyItem.url
+
             binding.launchInReader.setOnClickListener {
                 viewModel.onViewInReaderModeClick(historyItem)
             }
