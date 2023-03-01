@@ -107,7 +107,9 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .show()
         }
 
-        addHistoryItem("Sweet ass article title", "www.fuckgoogle.com", false)
+        addHistoryItem("WW3 Has Begun, we're all gonna die", "www.fuckgoogle.com", false)
+        addHistoryItem("Cancel that, WW3 is already over", "www.fuckgoogle.com", false)
+        addHistoryItem("Scratch that, WW3 is definitely happening now actually", "www.fuckgoogle.com", false)
     }
 
     /**
@@ -127,7 +129,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .show()
             // delivering push notification here for testing purposes
 //            NotificationHandler(getApplication()).showTestNotification()
-            val readerFragment = ReaderFragment.newInstance("https://www.businesstoday.in/latest/story/board-should-fire-sundar-pichai-google-layoffs-trigger-anger-sorrow-disbelief-367018-2023-01-22")
+            val readerFragment = ReaderFragment.newInstance("https://archive.is/8RiWt")
             fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
                 .replace(R.id.fragmentContainerView, readerFragment)
