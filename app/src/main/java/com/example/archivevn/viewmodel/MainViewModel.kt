@@ -6,12 +6,15 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.archivevn.R
+import com.example.archivevn.data.ArchiveService
 import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
@@ -126,13 +129,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 Toast.LENGTH_SHORT
             )
                 .show()
-            val readerFragment = ReaderFragment.newInstance("https://archive.is/8RiWt")
-            fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-                .replace(R.id.fragmentContainerView, readerFragment)
-                .addToBackStack("ReaderFragment")
-                .commit()
-            binding.fragmentContainerView.visibility = View.VISIBLE
+            // Test Article
+            launchUrlInReader("https://archive.is/8RiWt")
         }
     }
 
@@ -181,8 +179,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             .commit()
         if (binding.fragmentContainerViewHistory.isVisible) {
             binding.fragmentContainerViewHistory.visibility = View.GONE
-            binding.fragmentContainerView.visibility = View.VISIBLE
         }
+        binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
     /**
@@ -207,7 +205,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
         val loader = OkHttpHandler(archiveUrl)
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
-        MainScope().launch {
+        viewModelScope.launch {
             Log.i(tag, "Checking Page to see if URL archived or not %")
             _isLoading.value = true
             when (loader.loadUrl()) {
@@ -220,24 +218,23 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     showLinkFoundDialog(url)
                 }
                 "My url is alive and I want to archive its content" -> {
-                    Log.i(tag, "Triggering page archival and displaying showArchiveConfirmedDialog")
-                    NotificationHandler(getApplication()).showLoadingNotification()
                     _isLoading.value = false
                     binding.urlEditText.isEnabled = false
                     editTextHint()
                     _archiveProgressLoading.value = true
-                    val archivedResult = loader.launchPageArchival(url)
-                    Log.i("Final URL of Archived page ", archivedResult)
-                    val articleTitle = loader.fetchExtractedTitleAndText(archivedResult).second
+                    val archiveServiceIntent = Intent(getApplication(), ArchiveService::class.java)
+                    startForegroundService(getApplication(), archiveServiceIntent)
+                    val archivedResult = ArchiveService().archiveUrlInBackground(url, loader).first
+                    val articleTitle = ArchiveService().archiveUrlInBackground(url, loader).second
                     addHistoryItem(articleTitle!!, archivedResult, false)
-                    NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     _archiveProgressLoading.value = false
-                    showArchiveConfirmedDialog(archivedResult)
                     val notificationChannel =
                         NotificationHandler.NotificationChannel(getApplication())
                     notificationChannel.closeNotification()
                     binding.urlEditText.isEnabled = false
                     editTextHint()
+                    NotificationHandler(getApplication()).showArchivalCompleteNotification()
+                    showArchiveConfirmedDialog(archivedResult)
                 }
             }
             _isLoading.value = false

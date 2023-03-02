@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.example.archivevn.R
 import com.example.archivevn.viewmodel.MainViewModel
 
 
 class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
     private var mainViewModel: MainViewModel
-
     private var dialogType: Int = 0
     private var url: String? = null
 
@@ -25,6 +25,10 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
         const val DIALOG_TYPE_1 = 1
         const val DIALOG_TYPE_2 = 2
         const val DIALOG_TYPE_3 = 3
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        manager.beginTransaction().add(this, tag).commitAllowingStateLoss()
     }
 
     /**

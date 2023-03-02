@@ -1,6 +1,7 @@
 package com.example.archivevn.data.notifications
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -24,7 +25,7 @@ class NotificationHandler(private val context: Context) {
      * Shows a loading notification to indicate that the page is being archived.
      */
     @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
-    fun showLoadingNotification() {
+    fun loadingNotification(): Notification {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val intent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -34,10 +35,10 @@ class NotificationHandler(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(intent)
             .setOngoing(true)
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, builder.build())
-            Log.i("NotificationTag", "notify() called")
-        }
+//        with(NotificationManagerCompat.from(context)) {
+//            notify(NOTIFICATION_ID, builder.build())
+//            Log.i("NotificationTag", "notify() called")
+        return builder.build()
     }
 
     @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
