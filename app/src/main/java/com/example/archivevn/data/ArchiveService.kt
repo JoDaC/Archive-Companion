@@ -45,6 +45,12 @@ class ArchiveService : Service() {
         return Pair(archivedResult, articleTitle)
     }
 
+    /**
+     * Launches the page archival process using the specified URL and the archive.today service.
+     *
+     * @param url The URL to archive.
+     * @return The URL of the archived page.
+     */
     private suspend fun launchPageArchival(url: String): String {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder()
@@ -62,7 +68,6 @@ class ArchiveService : Service() {
             val encodedUrl = URLEncoder.encode(url, "UTF-8")
             val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
             Log.i("fullRequestString is ", fullRequestString)
-
             val requestTwo = Request.Builder()
                 .url(fullRequestString)
                 .build()

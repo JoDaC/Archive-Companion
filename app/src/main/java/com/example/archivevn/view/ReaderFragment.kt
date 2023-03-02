@@ -5,8 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -22,7 +20,6 @@ private const val PASSED_URL = ""
 
 class ReaderFragment : Fragment() {
     private var url: String? = null
-    private lateinit var mWebView: WebView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,27 +98,4 @@ class ReaderFragment : Fragment() {
                 }
             }
     }
-
-    //    @SuppressLint("SetJavaScriptEnabled")
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_reader, container, false)
-//        val loader = OkHttpHandler(url!!)
-//        mWebView = view.findViewById(R.id.webview)
-//        mWebView.webViewClient = WebViewClient()
-//        val webSettings = mWebView.settings
-//        webSettings.javaScriptEnabled = true
-//        webSettings.textZoom = 150
-//        MainScope().launch {
-//            val extractedContent = loader.fetchExtractedTitleAndText(url!!)
-//            val extractedTitle = extractedContent.second
-//            val extractedText = extractedContent.first
-//            Log.d("ReaderFragment", "Extracted Text: $extractedText")
-//            val html = "<html><head></head><body>$extractedText</body></html>"
-//            mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
-//        }
-//        return view
-//    }
 }

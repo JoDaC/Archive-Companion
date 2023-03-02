@@ -35,9 +35,6 @@ class NotificationHandler(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(intent)
             .setOngoing(true)
-//        with(NotificationManagerCompat.from(context)) {
-//            notify(NOTIFICATION_ID, builder.build())
-//            Log.i("NotificationTag", "notify() called")
         return builder.build()
     }
 

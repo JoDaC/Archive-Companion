@@ -23,7 +23,6 @@ import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
@@ -43,7 +42,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     val history: LiveData<List<HistoryItem>> = _history
 
     init {
-//        this.dialogFragment.setMainViewModel(this)
         _isLoading.value = false
     }
 
