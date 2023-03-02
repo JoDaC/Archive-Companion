@@ -224,8 +224,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     _archiveProgressLoading.value = true
                     val archiveServiceIntent = Intent(getApplication(), ArchiveService::class.java)
                     startForegroundService(getApplication(), archiveServiceIntent)
-                    val archivedResult = ArchiveService().archiveUrlInBackground(url, loader).first
-                    val articleTitle = ArchiveService().archiveUrlInBackground(url, loader).second
+                    val archivedResult = ArchiveService().archiveUrlInBackground(url).first
+                    val articleTitle = ArchiveService().archiveUrlInBackground(url).second
                     addHistoryItem(articleTitle!!, archivedResult, false)
                     _archiveProgressLoading.value = false
                     binding.urlEditText.isEnabled = true
