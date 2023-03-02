@@ -30,7 +30,7 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         // Add spacing between items
         val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
         layoutParams.bottomMargin =
-            16.dpToPx(holder.itemView.context) // set the desired spacing in pixels
+            8.dpToPx(holder.itemView.context) // set the desired spacing in pixels
         holder.itemView.layoutParams = layoutParams
         holder.bind(historyItem, viewModel)
     }

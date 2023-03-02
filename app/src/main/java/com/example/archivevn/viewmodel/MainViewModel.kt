@@ -179,7 +179,10 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             .replace(R.id.fragmentContainerView, readerFragment)
             .addToBackStack("ReaderFragment")
             .commit()
-        binding.fragmentContainerView.visibility = View.VISIBLE
+        if (binding.fragmentContainerViewHistory.isVisible) {
+            binding.fragmentContainerViewHistory.visibility = View.GONE
+            binding.fragmentContainerView.visibility = View.VISIBLE
+        }
     }
 
     /**
