@@ -34,7 +34,16 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
     val _archiveProgressLoading = MutableLiveData<Boolean>()
-    private val _history = MutableLiveData<List<HistoryItem>>(emptyList())
+    private val _history = MutableLiveData<List<HistoryItem>>().apply {
+        value = listOf(
+            HistoryItem("Biden forgets where he is mid press conference.", "https://archive.is/8RiWt", false),
+            HistoryItem("Discovered that Trump applies actual Cheetoh dust to his body this whole time, not sunless tanner.", "https://archive.is/8RiWt", false),
+            HistoryItem("War in the EU vs Russia.", "https://archive.is/8RiWt", false),
+            HistoryItem("WW3 has started and it sucks", "https://archive.is/8RiWt", true),
+            HistoryItem("For real though this war is very not chill and they should stop.", "https://archive.is/8RiWt", false),
+            HistoryItem("Seriously though, enough with WW3 most people are dead now and now it's basically gonna be Nuclear Holocaust which is bad vibes.", "https://archive.is/8RiWt", false)
+        )
+    }
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
@@ -107,9 +116,9 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .show()
         }
 
-        addHistoryItem("If you're looking at this your should hire me.", "https://archive.is/8RiWt", false)
-        addHistoryItem("For real, though this code is not that bad", "https://archive.is/8RiWt", false)
-        addHistoryItem("Look at those animations dude. those are sick. hire me for those alone", "https://archive.is/8RiWt", false)
+//        addHistoryItem("If you're looking at this your should hire me.", "https://archive.is/8RiWt", false)
+//        addHistoryItem("For real, though this code is not that bad", "https://archive.is/8RiWt", false)
+//        addHistoryItem("Look at those animations dude. those are sick. hire me for those alone", "https://archive.is/8RiWt", false)
     }
 
     /**
@@ -225,6 +234,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     val archivedResult = ArchiveService().archiveUrlInBackground(url).first
                     val articleTitle = ArchiveService().archiveUrlInBackground(url).second
                     addHistoryItem(articleTitle!!, archivedResult, false)
+                    // This is bad and will get changed
+//                    ArchiveService().stopSelf()
                     _archiveProgressLoading.value = false
                     binding.urlEditText.isEnabled = true
                     editTextHint()

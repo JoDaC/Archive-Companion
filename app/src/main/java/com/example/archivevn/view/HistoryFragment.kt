@@ -38,7 +38,6 @@ class HistoryFragment(mainViewModel: MainViewModel) : Fragment() {
         mainViewModel.history.observe(viewLifecycleOwner) { history ->
             historyAdapter.submitList(history)
         }
-
         return binding.root
     }
 }

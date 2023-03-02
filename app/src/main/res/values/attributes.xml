@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="archiveProgressViewBackground" format="reference|color" />
+    <attr name="historyBackground" format="reference|color" />
+    <attr name="historyItemTextColor" format="reference|color" />
+    <attr name="historyItemSubTextColor" format="reference|color" />
+    <attr name="historyItemFabColor" format="reference|color" />
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Set the background color for the shape -->
+    <solid android:color="?attr/historyBackground" />
+
+    <!-- Set the radius for each corner -->
+    <corners android:radius="16dp" />
+
+</shape>

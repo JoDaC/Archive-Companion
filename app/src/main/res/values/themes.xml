@@ -13,12 +13,15 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Day</item>
         <item name="archiveProgressViewBackground">@color/light_blue</item>
+        <item name="historyBackground">@color/white</item>
+        <item name="historyItemTextColor">@color/black</item>
+        <item name="historyItemSubTextColor">@color/design_default_color_error</item>
+        <item name="historyItemFabColor">@color/intro_grey</item>
     </style>
 
     <style name="Widget.App.FloatingActionButton.Day" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">@color/very_light_blue</item>
         <item name="tint">@color/light_black_text</item>
-
     </style>
 
     <style name="Theme.Archivevn.NoActionBar">
@@ -26,9 +29,5 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!--    <style name="Theme.Archivevn.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />-->
-
     <style name="Theme.Archivevn.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
-
-<!--    <style name="Theme.Archivevn.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 </resources>

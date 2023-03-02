@@ -29,7 +29,7 @@ class NotificationHandler(private val context: Context) {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val intent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_name)
+            .setSmallIcon(R.mipmap.black_a_transformed)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -43,7 +43,7 @@ class NotificationHandler(private val context: Context) {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val intent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_name)
+            .setSmallIcon(R.mipmap.black_a_transformed)
             .setContentTitle("Page Archival is Complete")
             .setContentText("Your page is ready to be viewed.")
             .setAutoCancel(true)

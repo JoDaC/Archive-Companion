@@ -10,17 +10,21 @@
             name="mainViewModel"
             type="com.example.archivevn.viewmodel.MainViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="16dp"
-        android:background="?attr/archiveProgressViewBackground">
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/history_background"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/historyTitleView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Title"
+            android:textColor="?attr/historyItemTextColor"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/launchInReader"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,13 +35,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="true"
+            android:backgroundTint="?attr/historyItemFabColor"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_mapmode"
-            android:contentDescription="TODO"
-            android:focusable="true" />
+            app:srcCompat="@android:drawable/ic_menu_mapmode" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/launchInReader"
@@ -47,6 +52,7 @@
             android:clickable="true"
             android:contentDescription="TODO"
             android:focusable="true"
+            android:backgroundTint="?attr/historyItemFabColor"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/launchOnWeb"
@@ -60,6 +66,7 @@
             android:layout_marginTop="17dp"
             android:text="url"
             android:textSize="10sp"
+            android:textColor="?attr/historyItemSubTextColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/historyTitleView" />

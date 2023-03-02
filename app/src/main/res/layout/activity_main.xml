@@ -33,7 +33,6 @@
             android:name="com.example.archivevn.ReaderFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="?android:editTextBackground"
             android:elevation="11dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/progress_view"
@@ -186,9 +185,6 @@
             app:layout_constraintHeight_percent="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.4" />
-<!--        android:layout_width="150dp"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:layout_marginBottom="32dp"-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
