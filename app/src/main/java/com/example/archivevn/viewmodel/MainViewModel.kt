@@ -20,7 +20,6 @@ import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
-import com.example.archivevn.view.adapters.HistoryAdapter
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -107,9 +106,9 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 .show()
         }
 
-        addHistoryItem("WW3 Has Begun, we're all gonna die", "www.fuckgoogle.com", false)
-        addHistoryItem("Cancel that, WW3 is already over", "www.fuckgoogle.com", false)
-        addHistoryItem("Scratch that, WW3 is definitely happening now actually", "www.fuckgoogle.com", false)
+        addHistoryItem("If you're looking at this your should hire me.", "https://archive.is/8RiWt", false)
+        addHistoryItem("For real, though this code is not that bad", "https://archive.is/8RiWt", false)
+        addHistoryItem("Look at those animations dude. those are sick. hire me for those alone", "https://archive.is/8RiWt", false)
     }
 
     /**
@@ -127,8 +126,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 Toast.LENGTH_SHORT
             )
                 .show()
-            // delivering push notification here for testing purposes
-//            NotificationHandler(getApplication()).showTestNotification()
             val readerFragment = ReaderFragment.newInstance("https://archive.is/8RiWt")
             fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
@@ -158,27 +155,15 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
     }
 
-    fun onViewInReaderModeClick(historyItem: HistoryItem) {
-        // This method is called when the user clicks the "Reader" button for a history item.
-        // You can add logic here to open the selected page in reader mode.
-        // You can use the Navigation component to navigate to the ReaderFragment.
+    fun inHistoryInReaderModeClick(historyItem: String) {
+        launchUrlInReader(historyItem)
     }
 
-    fun onViewInBrowserClick(historyItem: HistoryItem) {
-        // This method is called when the user clicks the "Browser" button for a history item.
-        // You can add logic here to open the selected page in the default browser using an Intent.
-        // For example:
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(historyItem.url))
+    fun inHistoryBrowserClick(historyItem: String) {
+        Log.i("historyItemUrl", historyItem)
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(historyItem))
+        browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(browserIntent)
-    }
-
-    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
-        // This method is called when a new history item is added to the list.
-        // You should create a new HistoryItem instance with the given title, url, and isReaderMode flag,
-        // and add it to the list of history items stored in the _history LiveData object.
-        val newItem = HistoryItem(title, url, isReaderMode)
-        val currentList = _history.value ?: emptyList()
-        _history.value = listOf(newItem) + currentList
     }
 
     /**
@@ -274,6 +259,12 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 }
             }
         }
+    }
+
+    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
+        val newItem = HistoryItem(title, url, isReaderMode)
+        val currentList = _history.value ?: emptyList()
+        _history.value = listOf(newItem) + currentList
     }
 
     private fun editTextHint() {
