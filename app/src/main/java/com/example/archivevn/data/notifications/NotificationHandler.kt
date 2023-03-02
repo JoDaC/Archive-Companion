@@ -49,6 +49,7 @@ class NotificationHandler(private val context: Context) {
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle("Page Archival is Complete")
             .setContentText("Your page is ready to be viewed.")
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(intent)
         with(NotificationManagerCompat.from(context)) {

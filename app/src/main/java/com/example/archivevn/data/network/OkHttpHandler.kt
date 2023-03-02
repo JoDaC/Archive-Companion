@@ -8,6 +8,7 @@ import net.dankito.readability4j.Readability4J
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import java.net.SocketTimeoutException
 import java.net.URLEncoder
 
 class OkHttpHandler(url: String) {
@@ -44,42 +45,55 @@ class OkHttpHandler(url: String) {
         } ?: ""
     }
 
+    /**
+     *
+     * Fetches the extracted title, text, and images for a given URL using Readability4J library.
+     * If a SocketTimeoutException occurs, the function will retry the request up to 2 times.
+     * @param url The URL to fetch the content from.
+     * @return A Triple object containing the article text, extracted title, and a list of image URLs.
+     */
     suspend fun fetchExtractedTitleAndText(url: String): Triple<String?, String?, List<String>> {
         return withContext(Dispatchers.Default) {
-            val response = client.newCall(request).execute()
-            val html = response.body()?.string() ?: ""
-            // Use Readability4J to extract the relevant content
-            val readability4J = Readability4J(url, html)
-            val article = readability4J.parse()
-            val extractedText = article.textContent
-            val articleHtml = article.content
-//            articleHtml?.split(Regex("(?:\\n\\s*){2,}"))
-            Log.i("ExtractedText", extractedText!!)
-            Log.i("articleHtml", articleHtml!!)
-            val extractedTitle = article.title
-            Log.i("ExtractedTitle", extractedTitle!!)
-
-            val parsedBody = Jsoup.parse(articleHtml)
-
-            val paragraphs = parsedBody.getElementsByTag("p")
-            val text = StringBuilder()
-//            text.split(Regex("(?:\\n\\s*){2,}"))
-            for (paragraph in paragraphs) {
-                text.append(paragraph.text()).append("\n\n")
+            var retryCount = 0
+            var extractedText: String?
+            var extractedTitle: String? = null
+            var images: List<String> = emptyList()
+            var articleHtml: String?
+            var articleText: String? = null
+            while (retryCount < 2) {
+                try {
+                    val response = client.newCall(request).execute()
+                    val html = response.body()?.string() ?: ""
+                    // Use Readability4J to extract the relevant content
+                    val readability4J = Readability4J(url, html)
+                    val article = readability4J.parse()
+                    extractedText = article.textContent
+                    articleHtml = article.content
+                    Log.i("ExtractedText", extractedText!!)
+                    Log.i("articleHtml", articleHtml!!)
+                    extractedTitle = article.title
+                    Log.i("ExtractedTitle", extractedTitle!!)
+                    val parsedBody = Jsoup.parse(articleHtml)
+                    val paragraphs = parsedBody.getElementsByTag("p")
+                    val text = StringBuilder()
+                    for (paragraph in paragraphs) {
+                        text.append(paragraph.text()).append("\n\n")
+                    }
+                    articleText = text.toString()
+                    images = parsedBody.getElementsByTag("img").map { it.attr("src") }
+                    Log.i("HTML images", images.toString())
+                    break // Exit the loop if the request succeeds
+                } catch (e: SocketTimeoutException) {
+                    // If the request times out, retry.
+                    retryCount++
+                    Log.e("FetchTitleAndText", "Request timed out. Retrying ($retryCount/2)...")
+                    continue
+                }
             }
-            val articleText = text.toString()
-
-            // Extract image URLs
-            val images = parsedBody.getElementsByTag("img").map { it.attr("src") }
-            Log.i("HTML images", images.toString())
-
-            // Extract article text and add line breaks between paragraphs
-//            val paragraphs = articleHtml.split(Regex("(?:\\n\\s*){2,}"))
-//            val articleText = paragraphs.joinToString(separator = "\n\n") { Jsoup.parse(it).text() }
-
             Triple(articleText, extractedTitle, images)
         }
     }
+
 
     /**
      * Loads the specified URL using the OkHttp client and searches for specific terms in the

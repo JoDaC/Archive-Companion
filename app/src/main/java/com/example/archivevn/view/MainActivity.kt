@@ -82,6 +82,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack()
                     binding.fragmentContainerView.visibility = View.GONE
                     binding.fragmentContainerViewHistory.visibility = View.GONE
+                } else if (mainViewModel._archiveProgressLoading.value == true) {
+                    mainViewModel.showArchiveInProgressDialog()
                 } else {
                     finish()
                 }

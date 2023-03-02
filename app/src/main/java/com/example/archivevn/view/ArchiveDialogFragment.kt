@@ -25,6 +25,7 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
         const val DIALOG_TYPE_1 = 1
         const val DIALOG_TYPE_2 = 2
         const val DIALOG_TYPE_3 = 3
+        const val DIALOG_TYPE_4 = 4
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
@@ -36,7 +37,7 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
     * @param dialogType The type of dialog to be displayed.
     * @param url A URL to be used in certain cases.
     */
-    fun setDialogType(dialogType: Int, url: String?) {
+    fun setDialogType(dialogType: Int, url: String? = null) {
         this.dialogType = dialogType
         this.url = url
     }
@@ -84,6 +85,18 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
                     }
                     .setNeutralButton("View in Reader") { _, _ ->
                         mainViewModel.launchUrlInReader(url!!)
+                    }
+                return builder.create()
+            }
+            DIALOG_TYPE_4 -> {
+                Log.i(tag, "_archiveProgressLoading in progress")
+                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogTheme).apply { }
+                    .setTitle("Are you sure you want to close?")
+                    .setMessage("A page is still being archived")
+                    .setPositiveButton("CLOSE") { _, _ ->
+                        activity?.finish()
+                    }
+                    .setNegativeButton("STAY") { _, _ ->
                     }
                 return builder.create()
             }

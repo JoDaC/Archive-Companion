@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
@@ -56,8 +57,9 @@ class ReaderFragment : Fragment() {
     // Setting Immersive mode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val windowInsetsController = ViewCompat.getWindowInsetsController(view)
-        windowInsetsController?.let {
+        val window = requireActivity().window
+        val windowInsetsController = WindowCompat.getInsetsController(window, view)
+        windowInsetsController.let {
             it.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
             it.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -67,8 +69,20 @@ class ReaderFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         // Setting Immersive mode onPause
-        val windowInsetsController = ViewCompat.getWindowInsetsController(requireView())
-        windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        val window = requireActivity().window
+        val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
+        windowInsetsController .show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+    }
+    override fun onResume() {
+        super.onResume()
+        // Setting Immersive mode onResume
+        val window = requireActivity().window
+        val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
+        windowInsetsController.let {
+            it.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+            it.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
     }
 
     companion object {

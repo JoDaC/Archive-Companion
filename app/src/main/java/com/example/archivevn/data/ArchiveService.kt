@@ -22,6 +22,12 @@ class ArchiveService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop the service
+        stopSelf()
+    }
+
     suspend fun archiveUrlInBackground(
         url: String,
         loader: OkHttpHandler,

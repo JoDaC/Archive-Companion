@@ -34,7 +34,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment(this)
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _archiveProgressLoading = MutableLiveData<Boolean>()
+    val _archiveProgressLoading = MutableLiveData<Boolean>()
     private val _history = MutableLiveData<List<HistoryItem>>(emptyList())
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -228,10 +228,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                     val articleTitle = ArchiveService().archiveUrlInBackground(url, loader).second
                     addHistoryItem(articleTitle!!, archivedResult, false)
                     _archiveProgressLoading.value = false
-                    val notificationChannel =
-                        NotificationHandler.NotificationChannel(getApplication())
-                    notificationChannel.closeNotification()
-                    binding.urlEditText.isEnabled = false
+                    binding.urlEditText.isEnabled = true
                     editTextHint()
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     showArchiveConfirmedDialog(archivedResult)
@@ -286,7 +283,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     private fun showLinkFoundDialog(url: String) {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_2, url)
-        dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "link_found_dialog")
     }
 
@@ -294,5 +290,10 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_3, url)
         dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "archive_confirmed_dialog")
+    }
+    fun showArchiveInProgressDialog() {
+        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_4)
+        dialogFragment.isCancelable = false
+        dialogFragment.show(fragmentManager, "archive_in_progress_dialog")
     }
 }
