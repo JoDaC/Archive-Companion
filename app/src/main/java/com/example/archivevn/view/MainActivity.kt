@@ -2,11 +2,14 @@ package com.example.archivevn.view
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
@@ -27,12 +30,6 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
         initializeBackPressDispatcher()
-
-        // Set onClickListener for Settings button to launch reader settings.
-        binding.settingsButton.setOnClickListener {
-            isEnabled = !isEnabled
-            mainViewModel.onSettingsButtonClicked(isEnabled)
-        }
 
         // Observe the isLoading LiveData object to show/hide the loading wheel
         mainViewModel.isLoading.observe(this) { isLoading ->
@@ -66,7 +63,6 @@ class MainActivity : AppCompatActivity() {
     private fun lineAnimationTheme() {
         val nightLine = binding.horizontalLineViewNight
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
         if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
             nightLine.visibility = View.VISIBLE
         } else {

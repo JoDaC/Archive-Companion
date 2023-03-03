@@ -78,6 +78,23 @@
             app:srcCompat="@android:drawable/arrow_up_float"
             android:onClick="@{() -> mainViewModel.onReaderButtonClicked()}"/>
 
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/paste_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="?android:colorPrimary"-->
+<!--            android:elevation="0dp"-->
+<!--            android:fontFamily="sans-serif"-->
+<!--            android:text="@{mainViewModel.isKeyboardVisible ? `Paste` : `Show Keyboard`}"-->
+<!--            android:onClick="@{() -> mainViewModel.onPasteButtonClicked()}"-->
+<!--            android:padding="18dp"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="?android:textColorPrimary"-->
+<!--            android:textSize="14sp"-->
+<!--            app:srcCompat="@android:drawable/arrow_up_float"-->
+<!--            tools:layout_editor_absoluteY="213dp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+
         <com.google.android.material.chip.Chip
             android:id="@+id/history_button"
             android:layout_width="130dp"
@@ -123,7 +140,7 @@
             android:onClick="@{() -> mainViewModel.introButtonClicked()}"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/settings_button"
+            android:id="@+id/paste_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -134,7 +151,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/go_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_preferences" />
+            app:srcCompat="?attr/actionModePasteDrawable"
+            android:onClick="@{() -> mainViewModel.onPasteButtonClicked()}"/>
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/horizontalLineViewNight"

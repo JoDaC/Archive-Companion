@@ -1,6 +1,8 @@
 package com.example.archivevn.viewmodel
 
 import android.app.Application
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -36,12 +38,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     val _archiveProgressLoading = MutableLiveData<Boolean>()
     private val _history = MutableLiveData<List<HistoryItem>>().apply {
         value = listOf(
-            HistoryItem("Biden forgets where he is mid press conference.", "https://archive.is/8RiWt", false),
-            HistoryItem("Discovered that Trump applies actual Cheetoh dust to his body this whole time, not sunless tanner.", "https://archive.is/8RiWt", false),
-            HistoryItem("War in the EU vs Russia.", "https://archive.is/8RiWt", false),
-            HistoryItem("WW3 has started and it sucks", "https://archive.is/8RiWt", true),
-            HistoryItem("For real though this war is very not chill and they should stop.", "https://archive.is/8RiWt", false),
-            HistoryItem("Seriously though, enough with WW3 most people are dead now and now it's basically gonna be Nuclear Holocaust which is bad vibes.", "https://archive.is/8RiWt", false)
+            HistoryItem("Your archived pages will appear here.", "https://archive.today", false),
         )
     }
     val isLoading: LiveData<Boolean>
@@ -98,27 +95,23 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
     }
 
     /**
-     * Handles the event when the "Settings" button is clicked. this is for testing puposes only.
+     * Handles the event when the "Paste" button is clicked.
      * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
-    fun onSettingsButtonClicked(isEnabled: Boolean) {
-        binding.urlEditText.isEnabled = isEnabled
-        if (binding.urlEditText.isEnabled) {
-            binding.urlEditText.hint = getApplication<Application>().getString(R.string.enter_a_url_to_archive)
-        } else {
-            binding.urlEditText.hint =
-                getApplication<Application>().getString(R.string.edit_text_page_archival_hint)
-            Toast.makeText(
-                getApplication(),
-                "Text entry disabled during archival.",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
+    fun onPasteButtonClicked() {
+        val clipboard =
+            getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = clipboard.primaryClip
 
-//        addHistoryItem("If you're looking at this your should hire me.", "https://archive.is/8RiWt", false)
-//        addHistoryItem("For real, though this code is not that bad", "https://archive.is/8RiWt", false)
-//        addHistoryItem("Look at those animations dude. those are sick. hire me for those alone", "https://archive.is/8RiWt", false)
+        if (clip != null && clip.itemCount > 0) {
+            val lastItem = clip.getItemAt(clip.itemCount - 1)
+            if (lastItem.text != null) {
+                val textToPaste = lastItem.text.toString()
+                binding.urlEditText.setText(textToPaste)
+            }
+        } else {
+            Toast.makeText(getApplication(), "Nothing to Paste", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -226,19 +219,18 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 }
                 "My url is alive and I want to archive its content" -> {
                     _isLoading.value = false
+                    binding.urlEditText.setText(url)
+                    binding.pasteButton.isEnabled = false
                     binding.urlEditText.isEnabled = false
-                    editTextHint()
                     _archiveProgressLoading.value = true
                     val archiveServiceIntent = Intent(getApplication(), ArchiveService::class.java)
                     startForegroundService(getApplication(), archiveServiceIntent)
                     val archivedResult = ArchiveService().archiveUrlInBackground(url).first
                     val articleTitle = ArchiveService().archiveUrlInBackground(url).second
-                    addHistoryItem(articleTitle!!, archivedResult, false)
-                    // This is bad and will get changed
-//                    ArchiveService().stopSelf()
+                    addHistoryItem(articleTitle!!, url, false)
                     _archiveProgressLoading.value = false
+                    binding.urlEditText.text.clear()
                     binding.urlEditText.isEnabled = true
-                    editTextHint()
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     showArchiveConfirmedDialog(archivedResult)
                 }
@@ -271,17 +263,6 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         val newItem = HistoryItem(title, url, isReaderMode)
         val currentList = _history.value ?: emptyList()
         _history.value = listOf(newItem) + currentList
-    }
-
-    private fun editTextHint() {
-        if (binding.urlEditText.isEnabled) {
-            binding.urlEditText.hint =
-                getApplication<Application>().getString(R.string.enter_a_url_to_archive)
-        } else {
-            binding.urlEditText.hint =
-                getApplication<Application>().getString(R.string.edit_text_page_archival_hint)
-
-        }
     }
 
     private fun showArchiveDialog(url: String) {

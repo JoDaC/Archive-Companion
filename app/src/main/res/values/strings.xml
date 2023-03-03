@@ -16,6 +16,7 @@
     <string name="enter_text_hint">Paste the URL here that you would like to search on Archive.vn.</string>
     <string name="go">Go</string>
     <string name="reader">Reader</string>
+    <string name="paste">Paste</string>
     <string name="textview">TextView</string>
     <string name="enter_text_here">Enter text here</string>
     <string name="welcome_to_the_reader">Welcome to the READER</string>

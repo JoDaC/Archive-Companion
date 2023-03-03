@@ -57,6 +57,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:+'
     implementation 'androidx.databinding:databinding-runtime:7.1.2'
     implementation 'com.codesgood:justifiedtextview:2.0.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
     def lottieVersion = "6.0.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'com.github.AppIntro:AppIntro:6.2.0'

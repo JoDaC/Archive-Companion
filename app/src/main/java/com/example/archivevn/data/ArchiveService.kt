@@ -42,6 +42,7 @@ class ArchiveService : Service() {
         val archivedResult = launchPageArchival(url)
         Log.i("Final URL of Archived page ", archivedResult)
         val articleTitle = loader.fetchExtractedTitleAndText(archivedResult).second
+        stopSelf()
         return Pair(archivedResult, articleTitle)
     }
 
