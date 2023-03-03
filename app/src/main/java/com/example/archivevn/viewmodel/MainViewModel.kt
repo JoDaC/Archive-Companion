@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import android.view.View
@@ -25,7 +26,12 @@ import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
+
+private const val PREFS_NAME = "HistoryPrefs"
+private const val HISTORY_KEY = "history"
 
 class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
@@ -41,6 +47,15 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
             HistoryItem("Your archived pages will appear here.", "https://archive.today", false),
         )
     }
+    private val sharedPreferences = application.getSharedPreferences(
+        "com.example.archivevn.prefs",
+        Context.MODE_PRIVATE
+    )
+//    private val _history = MutableLiveData<List<HistoryItem>>().apply {
+//        value = listOf(
+//            HistoryItem("Your archived pages will appear here.", "https://archive.today", false),
+//        )
+//    }
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
@@ -49,6 +64,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
 
     init {
         _isLoading.value = false
+        loadHistoryItemsFromPrefs()
     }
 
     /**
@@ -259,10 +275,41 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         }
     }
 
+//    fun loadHistoryItemsFromPrefs(sharedPreferences: SharedPreferences): List<HistoryItem> {
+//        val serializedList = sharedPreferences.getString(HISTORY_PREFS_KEY, null)
+//        return if (serializedList != null) {
+//            val type = object : TypeToken<List<HistoryItem>>() {}.type
+//            Gson().fromJson(serializedList, type)
+//        } else {
+//            emptyList()
+//        }
+//    }
+
+    private fun loadHistoryItemsFromPrefs() {
+        val serializedList = sharedPreferences.getString(HISTORY_KEY, null)
+        if (serializedList != null) {
+            val typeToken = object : TypeToken<List<HistoryItem>>() {}.type
+            _history.value = Gson().fromJson(serializedList, typeToken)
+        }
+    }
+
+//    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
+//        val newItem = HistoryItem(title, url, isReaderMode)
+//        val currentList = _history.value ?: emptyList()
+//        _history.value = listOf(newItem) + currentList
+//    }
+
     private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
         val newItem = HistoryItem(title, url, isReaderMode)
         val currentList = _history.value ?: emptyList()
-        _history.value = listOf(newItem) + currentList
+        val updatedList = listOf(newItem) + currentList
+        _history.value = updatedList
+
+        // Save updated list in SharedPreferences
+        val editor = sharedPreferences.edit()
+        val serializedList = Gson().toJson(updatedList)
+        editor.putString(HISTORY_KEY, serializedList)
+        editor.apply()
     }
 
     private fun showArchiveDialog(url: String) {
