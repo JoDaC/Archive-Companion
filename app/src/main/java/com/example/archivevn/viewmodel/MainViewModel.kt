@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 private const val PREFS_NAME = "HistoryPrefs"
 private const val HISTORY_KEY = "history"
 
-class MainViewModel(application: Application, private val binding: ActivityMainBinding) :
+class MainViewModel(application: Application, val binding: ActivityMainBinding) :
     AndroidViewModel(application) {
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
@@ -51,11 +51,8 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         "com.example.archivevn.prefs",
         Context.MODE_PRIVATE
     )
-//    private val _history = MutableLiveData<List<HistoryItem>>().apply {
-//        value = listOf(
-//            HistoryItem("Your archived pages will appear here.", "https://archive.today", false),
-//        )
-//    }
+    private var isHistoryFragmentVisible = false
+    private var isReaderFragmentCreated = false
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val archiveProgressLoading: LiveData<Boolean>
@@ -145,8 +142,7 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
                 Toast.LENGTH_SHORT
             )
                 .show()
-            // Test Article
-            launchUrlInReader("https://archive.is/8RiWt")
+            launchUrlInReader("https://archive.today")
         }
     }
 
@@ -155,17 +151,20 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
      * Launches a new HistoryFragment.
      */
     fun onHistoryButtonClicked() {
-        if (binding.fragmentContainerViewHistory.isVisible) {
-            fragmentManager.popBackStack()
-            binding.fragmentContainerViewHistory.visibility = View.GONE
-        } else {
+        isHistoryFragmentVisible = if (!isHistoryFragmentVisible) {
             val historyFragment = HistoryFragment(this)
             fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
                 .replace(R.id.fragmentContainerViewHistory, historyFragment)
                 .addToBackStack("HistoryFragment")
                 .commit()
-            binding.fragmentContainerViewHistory.visibility = View.VISIBLE
+            true
+        } else {
+            fragmentManager.popBackStack(
+                "HistoryFragment",
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+            false
         }
     }
 
@@ -180,23 +179,46 @@ class MainViewModel(application: Application, private val binding: ActivityMainB
         getApplication<Application>().startActivity(browserIntent)
     }
 
-    /**
-     * Launches a new ReaderFragment with the specified URL.
-     *
-     * @param url The URL to parse and display in the reader.
-     */
+//    /**
+//     * Launches a new ReaderFragment with the specified URL.
+//     *
+//     * @param url The URL to parse and display in the reader.
+//     */
+//    fun launchUrlInReader(url: String) {
+//        Log.i("Shared URL %", url)
+//        if (fragmentManager.backStackEntryCount > 0) {
+//            fragmentManager.popBackStack()
+//        }
+//        if (!isReaderFragmentCreated) {
+//            val readerFragment = ReaderFragment(this, url)
+//            fragmentManager.beginTransaction()
+//                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+//                .replace(R.id.fragmentContainerView, readerFragment)
+//                .addToBackStack("ReaderFragment")
+//                .commit()
+//            isReaderFragmentCreated = true
+//        } else {
+//            binding.fragmentContainerView.animate()
+//                .translationY(-binding.fragmentContainerView.height.toFloat())
+//                .setDuration(500)
+//                .withStartAction {
+//                    binding.fragmentContainerView.visibility = View.VISIBLE
+//                }
+//                .start()
+//        }
+//    }
+
     fun launchUrlInReader(url: String) {
         Log.i("Shared URL %", url)
-        val readerFragment = ReaderFragment.newInstance(url)
+        if (fragmentManager.backStackEntryCount > 0) {
+            fragmentManager.popBackStack()
+        }
+        val readerFragment = ReaderFragment(this, url)
         fragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
             .replace(R.id.fragmentContainerView, readerFragment)
             .addToBackStack("ReaderFragment")
             .commit()
-        if (binding.fragmentContainerViewHistory.isVisible) {
-            binding.fragmentContainerViewHistory.visibility = View.GONE
-        }
-        binding.fragmentContainerView.visibility = View.VISIBLE
     }
 
     /**

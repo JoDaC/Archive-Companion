@@ -17,7 +17,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="false"
-            app:lottie_speed="0.5"
+            app:lottie_speed="1.0"
             app:lottie_rawRes="@raw/search_animation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

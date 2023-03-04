@@ -13,15 +13,10 @@ import com.example.archivevn.view.adapters.HistoryAdapter
 import com.example.archivevn.viewmodel.MainViewModel
 
 
-class HistoryFragment(mainViewModel: MainViewModel) : Fragment() {
+class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var historyAdapter: HistoryAdapter
-    private var mainViewModel: MainViewModel
-
-    init {
-        this.mainViewModel = mainViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -35,6 +35,7 @@
 
         <activity
             android:name=".view.MainActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"

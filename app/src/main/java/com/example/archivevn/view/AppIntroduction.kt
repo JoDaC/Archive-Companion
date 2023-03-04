@@ -44,9 +44,9 @@ class AppIntroduction : AppIntro() {
                 imageDrawable = R.mipmap.black_a_transformed,
                 titleTypefaceFontRes = R.font.space_grotesk,
                 descriptionTypefaceFontRes = R.font.space_grotesk,
-                backgroundColorRes = androidx.appcompat.R.color.material_grey_600,
-                titleColorRes = R.color.white,
-                descriptionColorRes = R.color.white,
+                backgroundColorRes = R.color.white,
+                titleColorRes = R.color.black,
+                descriptionColorRes = R.color.black,
             )
         )
         addSlide(

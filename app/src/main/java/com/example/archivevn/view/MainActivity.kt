@@ -18,8 +18,6 @@ import com.example.archivevn.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private var isEnabled = true
-    private var visibility = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +74,6 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
-                    binding.fragmentContainerView.visibility = View.GONE
-                    binding.fragmentContainerViewHistory.visibility = View.GONE
                 } else if (mainViewModel._archiveProgressLoading.value == true) {
                     mainViewModel.showArchiveInProgressDialog()
                 } else {
