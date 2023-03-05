@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.onGoButtonClicked(url)
         }
 
+        mainViewModel.pasteText.observe(this) { text ->
+            if (!text.isNullOrBlank()) {
+                binding.urlEditText.setText(text)
+            }
+        }
+
         // Observe the isLoading LiveData object to show/hide the loading wheel
         mainViewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

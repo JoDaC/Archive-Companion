@@ -58,9 +58,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     val archiveProgressLoading: LiveData<Boolean>
         get() = _archiveProgressLoading
     val history: LiveData<List<HistoryItem>> = _history
-    private val _clipboardContent = MutableLiveData<String>()
-    val clipboardContent: LiveData<String>
-        get() = _clipboardContent
+    private val _pasteText = MutableLiveData<String?>()
+    val pasteText: MutableLiveData<String?>
+        get() = _pasteText
 
     init {
         _isLoading.value = false
@@ -109,27 +109,16 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         getApplication<Application>().startActivity(intent)
     }
 
-    fun setClipboardContent(content: String) {
-        _clipboardContent.value = content
-    }
 
     /**
-     * Handles the event when the "Paste" button is clicked.
-     * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
+     * Handles the clipboard management when the "Paste" button is clicked.
      */
     fun onPasteButtonClicked() {
-        val clipboard =
+        val clipboardManager =
             getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = clipboard.primaryClip
-
-        if (clip != null && clip.itemCount > 0) {
-            val lastItem = clip.getItemAt(clip.itemCount - 1)
-            if (lastItem.text != null) {
-                val textToPaste = lastItem.text.toString()
-                binding.urlEditText.setText(textToPaste)
-            }
-        } else {
-            Toast.makeText(getApplication(), "Nothing to Paste", Toast.LENGTH_SHORT).show()
+        val clipData = clipboardManager.primaryClip?.getItemAt(0)?.text?.toString()
+        if (!clipData.isNullOrBlank()) {
+            _pasteText.value = clipData
         }
     }
 
