@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initializeBackPressDispatcher()
 
-        binding.goButton.goButtonAnimation.setOnClickListener() {
+        binding.goButton.goButtonAnimation.setOnClickListener {
             val url = binding.urlEditText.text.toString()
             mainViewModel.onGoButtonClicked(url)
         }
@@ -41,6 +41,11 @@ class MainActivity : AppCompatActivity() {
             if (!text.isNullOrBlank()) {
                 binding.urlEditText.setText(text)
             }
+        }
+
+        binding.readerButton.setOnClickListener {
+            val url = binding.urlEditText.text.toString()
+            mainViewModel.onReaderButtonClicked(url)
         }
 
         // Observe the isLoading LiveData object to show/hide the loading wheel

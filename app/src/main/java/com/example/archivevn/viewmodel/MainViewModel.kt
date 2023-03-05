@@ -126,8 +126,7 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
      * Handles the event when the "Reader" button is clicked.
      * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
      */
-    fun onReaderButtonClicked() {
-        val url = binding.urlEditText.text.toString()
+    fun onReaderButtonClicked(url: String) {
         if (url.isNotEmpty()) {
             launchUrlInReader(url)
         } else {
