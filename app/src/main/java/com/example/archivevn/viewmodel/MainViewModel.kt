@@ -58,6 +58,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     val archiveProgressLoading: LiveData<Boolean>
         get() = _archiveProgressLoading
     val history: LiveData<List<HistoryItem>> = _history
+    private val _clipboardContent = MutableLiveData<String>()
+    val clipboardContent: LiveData<String>
+        get() = _clipboardContent
 
     init {
         _isLoading.value = false
@@ -85,8 +88,7 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
      * Handles the event when the "Go" button is clicked.
      * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
-    fun onGoButtonClicked() {
-        val url = binding.urlEditText.text.toString()
+    fun onGoButtonClicked(url: String) {
         if (url.isNotEmpty()) {
             launchUrlInBackground(url)
         } else {
@@ -105,6 +107,10 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         val intent = Intent(getApplication(), AppIntroduction::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(intent)
+    }
+
+    fun setClipboardContent(content: String) {
+        _clipboardContent.value = content
     }
 
     /**
