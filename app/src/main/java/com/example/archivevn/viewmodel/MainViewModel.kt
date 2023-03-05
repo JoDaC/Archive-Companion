@@ -4,13 +4,10 @@ import android.app.Application
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startForegroundService
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -24,7 +21,6 @@ import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
-import com.example.archivevn.view.HistoryFragment
 import com.example.archivevn.view.ReaderFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -61,6 +57,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     private val _pasteText = MutableLiveData<String?>()
     val pasteText: MutableLiveData<String?>
         get() = _pasteText
+    private val _historyFragmentVisible = MutableLiveData<Boolean>()
+    val historyFragmentVisible: MutableLiveData<Boolean>
+        get() = _historyFragmentVisible
 
     init {
         _isLoading.value = false
@@ -145,21 +144,7 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
      * Launches a new HistoryFragment.
      */
     fun onHistoryButtonClicked() {
-        isHistoryFragmentVisible = if (!isHistoryFragmentVisible) {
-            val historyFragment = HistoryFragment(this)
-            fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-                .replace(R.id.fragmentContainerViewHistory, historyFragment)
-                .addToBackStack("HistoryFragment")
-                .commit()
-            true
-        } else {
-            fragmentManager.popBackStack(
-                "HistoryFragment",
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
-            false
-        }
+        setHistoryFragmentVisible(!isHistoryFragmentVisible)
     }
 
     fun inHistoryInReaderModeClick(historyItem: String) {
@@ -172,35 +157,6 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(browserIntent)
     }
-
-//    /**
-//     * Launches a new ReaderFragment with the specified URL.
-//     *
-//     * @param url The URL to parse and display in the reader.
-//     */
-//    fun launchUrlInReader(url: String) {
-//        Log.i("Shared URL %", url)
-//        if (fragmentManager.backStackEntryCount > 0) {
-//            fragmentManager.popBackStack()
-//        }
-//        if (!isReaderFragmentCreated) {
-//            val readerFragment = ReaderFragment(this, url)
-//            fragmentManager.beginTransaction()
-//                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-//                .replace(R.id.fragmentContainerView, readerFragment)
-//                .addToBackStack("ReaderFragment")
-//                .commit()
-//            isReaderFragmentCreated = true
-//        } else {
-//            binding.fragmentContainerView.animate()
-//                .translationY(-binding.fragmentContainerView.height.toFloat())
-//                .setDuration(500)
-//                .withStartAction {
-//                    binding.fragmentContainerView.visibility = View.VISIBLE
-//                }
-//                .start()
-//        }
-//    }
 
     fun launchUrlInReader(url: String) {
         Log.i("Shared URL %", url)
@@ -289,6 +245,10 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
                 }
             }
         }
+    }
+
+    private fun setHistoryFragmentVisible(visible: Boolean) {
+        _historyFragmentVisible.value = visible
     }
 
 //    fun loadHistoryItemsFromPrefs(sharedPreferences: SharedPreferences): List<HistoryItem> {

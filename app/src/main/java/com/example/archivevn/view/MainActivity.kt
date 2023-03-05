@@ -1,19 +1,14 @@
 package com.example.archivevn.view
 
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.viewmodel.MainViewModel
@@ -46,6 +41,25 @@ class MainActivity : AppCompatActivity() {
         binding.readerButton.setOnClickListener {
             val url = binding.urlEditText.text.toString()
             mainViewModel.onReaderButtonClicked(url)
+        }
+
+        mainViewModel.historyFragmentVisible.observe(this) { visible ->
+            val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
+            if (visible && historyFragment == null) {
+                // Show the fragment
+                val newHistoryFragment = HistoryFragment(mainViewModel)
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+                    .add(R.id.fragmentContainerViewHistory, newHistoryFragment, "HistoryFragment")
+                    .addToBackStack("HistoryFragment")
+                    .commit()
+            } else if (visible && historyFragment != null) {
+                // Hide the fragment
+                supportFragmentManager.popBackStack(
+                    "HistoryFragment",
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+            }
         }
 
         // Observe the isLoading LiveData object to show/hide the loading wheel
