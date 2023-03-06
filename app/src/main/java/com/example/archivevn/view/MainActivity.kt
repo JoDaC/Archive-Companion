@@ -62,18 +62,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainViewModel.readerFragmentVisible.observe(this) { visiblePair ->
-            val editText = binding.urlEditText.text
             val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
-            if (editText.isNullOrEmpty() && historyFragment == null) {
-                Toast.makeText(
-                    this,
-                    "Please select an archived page to read",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            } else if (historyFragment != null){
+            val readerFragment = supportFragmentManager.findFragmentByTag("ReaderFragment")
+            if (historyFragment != null) {
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                }
                 launchReaderFragment(visiblePair.second)
-            } // NEED TO ADD CODE FOR LAUNCHING READER FROM ARCHIVE POINT
+            } else if (readerFragment != null) {
+                supportFragmentManager.beginTransaction().show(readerFragment).commit()
+            } else {
+                launchReaderFragment(visiblePair.second)
+            }
         }
 
 
@@ -108,11 +108,11 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun launchReaderFragment(url: String? = null) {
-        var defaultUrl = "https://archive.today"
-        if (url != null) {
-            defaultUrl = url
+        var defaultUrl = url
+        if (url.isNullOrEmpty()) {
+            defaultUrl = "https://archive.today"
         }
-        val newReaderFragment = ReaderFragment(mainViewModel, defaultUrl)
+        val newReaderFragment = ReaderFragment(mainViewModel, defaultUrl!!)
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
             .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
