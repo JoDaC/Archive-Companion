@@ -18,12 +18,11 @@ import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
 import com.example.archivevn.view.AppIntroduction
-import com.example.archivevn.view.ArchiveDialogFragment
+import com.example.archivevn.view.DialogHandler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
-private const val PREFS_NAME = "HistoryPrefs"
 private const val HISTORY_KEY = "history"
 
 class MainViewModel(application: Application) :
@@ -31,7 +30,6 @@ class MainViewModel(application: Application) :
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
-    private var dialogFragment: ArchiveDialogFragment = ArchiveDialogFragment(this)
     private val tag = "MainActivityTag"
     private val _isLoading = MutableLiveData<Boolean>()
     val _archiveProgressLoading = MutableLiveData<Boolean>()
@@ -172,6 +170,7 @@ class MainViewModel(application: Application) :
             archiveUrl = "https://archive.is/?url=$url"
         }
         val loader = OkHttpHandler(archiveUrl)
+        val dialogHandler = DialogHandler(this, fragmentManager)
         Log.i("URL to be sent to OkHttpHandler: ", archiveUrl)
         viewModelScope.launch {
             Log.i(tag, "Checking Page to see if URL archived or not %")
@@ -179,11 +178,11 @@ class MainViewModel(application: Application) :
             when (loader.loadUrl()) {
                 "No results" -> {
                     Log.i(tag, "Displaying showArchive Dialog")
-                    showArchiveDialog(url)
+                    dialogHandler.showArchiveDialog(url)
                 }
                 "Newest" -> {
                     Log.i(tag, "Displaying showLinkFoundDialog")
-                    showLinkFoundDialog(url)
+                    dialogHandler.showLinkFoundDialog(url)
                 }
                 "My url is alive and I want to archive its content" -> {
                     _isLoading.value = false
@@ -200,7 +199,7 @@ class MainViewModel(application: Application) :
                     _urlText.value = ""
                     _isUrlEditTextEnabled.value = true
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
-                    showArchiveConfirmedDialog(archivedResult)
+                    dialogHandler.showArchiveConfirmedDialog(archivedResult)
                 }
             }
             _isLoading.value = false
@@ -254,28 +253,5 @@ class MainViewModel(application: Application) :
         val serializedList = Gson().toJson(updatedList)
         editor.putString(HISTORY_KEY, serializedList)
         editor.apply()
-    }
-
-    private fun showArchiveDialog(url: String) {
-        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_1, url)
-        dialogFragment.isCancelable = false
-        dialogFragment.show(fragmentManager, "archive_dialog")
-    }
-
-    private fun showLinkFoundDialog(url: String) {
-        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_2, url)
-        dialogFragment.show(fragmentManager, "link_found_dialog")
-    }
-
-    private fun showArchiveConfirmedDialog(url: String) {
-        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_3, url)
-        dialogFragment.isCancelable = false
-        dialogFragment.show(fragmentManager, "archive_confirmed_dialog")
-    }
-
-    fun showArchiveInProgressDialog() {
-        dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_4)
-        dialogFragment.isCancelable = false
-        dialogFragment.show(fragmentManager, "archive_in_progress_dialog")
     }
 }

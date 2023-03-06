@@ -55,6 +55,17 @@ class MainActivity : AppCompatActivity() {
             binding.pasteButton.isEnabled = isEnabled
         }
 
+        // Observe the isLoading LiveData object to show/hide the loading wheel
+        mainViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        // Observe the archiveProgress LiveData object to the progress indicator
+        mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
+            binding.progressView.root.visibility =
+                if (archiveProgressLoading) View.VISIBLE else View.GONE
+        }
+
         // Observe the HistoryFragment LiveData object to show/hide the history fragment
         mainViewModel.historyFragmentVisible.observe(this) { visible ->
             val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
@@ -89,18 +100,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 launchReaderFragment(visiblePair.second)
             }
-        }
-
-
-        // Observe the isLoading LiveData object to show/hide the loading wheel
-        mainViewModel.isLoading.observe(this) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        // Observe the archiveProgress LiveData object to the progress indicator
-        mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
-            binding.progressView.root.visibility =
-                if (archiveProgressLoading) View.VISIBLE else View.GONE
         }
 
         // Set line animation depending on light/dark theme
@@ -148,11 +147,12 @@ class MainActivity : AppCompatActivity() {
     private fun initializeBackPressDispatcher() {
         val dispatcher = onBackPressedDispatcher
         dispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            val dialogHandler = DialogHandler(mainViewModel, supportFragmentManager)
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else if (mainViewModel._archiveProgressLoading.value == true) {
-                    mainViewModel.showArchiveInProgressDialog()
+                    dialogHandler.showArchiveInProgressDialog()
                 } else {
                     finish()
                 }
