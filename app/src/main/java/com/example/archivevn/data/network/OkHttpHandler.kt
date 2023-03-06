@@ -122,39 +122,4 @@ class OkHttpHandler(url: String) {
             resultString
         }
     }
-
-    /**
-     * Launches the page archival process using the specified URL and the archive.ph service.
-     *
-     * @param url The URL to archive.
-     * @return The URL of the archived page.
-     */
-    suspend fun launchPageArchival(url: String): String {
-        return withContext(Dispatchers.IO) {
-            val responseOne = client.newCall(request).execute()
-            val responseBody = responseOne.body()?.string()
-            val parsedBody = Jsoup.parse(responseBody!!)
-            val submitId = parsedBody.select("[name='submitId']").first()?.attr("value")
-            Log.i("submitId is ", submitId!!)
-            val encodedUrl = URLEncoder.encode(url, "UTF-8")
-            val fullRequestString = "https://archive.ph/submit/?submitid=$submitId&url=$encodedUrl"
-            Log.i("fullRequestString is ", fullRequestString)
-
-            val requestTwo = Request.Builder()
-                .url(fullRequestString)
-                .build()
-            var responseTwo = client.newCall(requestTwo).execute()
-            while (responseTwo.toString().contains("https://archive.ph/submit/?submitid=")) {
-                responseTwo = client.newCall(requestTwo).execute()
-                Log.i("big_ass_waffles", responseTwo.toString())
-                // Currently using a very large polling time to avoid captcha.
-                delay(30000)
-            }
-            val urlToTriggerArchival = responseTwo.request().url().toString()
-            Log.i("URL to trigger Archival ", urlToTriggerArchival)
-            responseOne.body()?.close()
-            responseTwo.body()?.close()
-            urlToTriggerArchival
-        }
-    }
 }

@@ -55,25 +55,10 @@ class NotificationHandler(private val context: Context) {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    fun showTestNotification() {
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val intent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentTitle(context.getString(R.string.test_notification_title))
-            .setContentText(context.getString(R.string.test_notification_message))
-            .setContentIntent(intent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, builder.build())
-            Log.i("NotificationTag", "notify() called")
-        }
-    }
-
     class NotificationChannel(private val context: Context) {
         private val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         fun createNotificationChannel() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val name = context.getString(R.string.channel_name)
@@ -85,10 +70,6 @@ class NotificationHandler(private val context: Context) {
                 notificationManager.createNotificationChannel(channel)
                 Log.d("NotificationTag", "Notification channel created")
             }
-        }
-
-        fun closeNotification() {
-            notificationManager.cancelAll()
         }
     }
 }

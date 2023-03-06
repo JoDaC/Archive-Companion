@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mainViewModel = MainViewModel(application, binding)
+        mainViewModel = MainViewModel(application)
         mainViewModel.initializeNotificationChannel()
         mainViewModel.setFragmentManager(supportFragmentManager)
         binding.mainViewModel = mainViewModel
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         if (url.isNullOrEmpty()) {
             defaultUrl = "https://archive.today"
         }
-        val newReaderFragment = ReaderFragment(mainViewModel, defaultUrl!!)
+        val newReaderFragment = ReaderFragment(defaultUrl!!)
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
             .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")

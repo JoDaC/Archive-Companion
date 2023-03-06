@@ -12,20 +12,15 @@ import android.view.WindowManager
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.databinding.FragmentReaderBinding
-import com.example.archivevn.viewmodel.MainViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-private const val PASSED_URL = ""
-
-class ReaderFragment(private val mainViewModel: MainViewModel, private val url: String) :
+class ReaderFragment(private val url: String) :
     Fragment() {
 
     private var immersiveModeEnabled = false
@@ -36,23 +31,15 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
     ): View {
         val binding: FragmentReaderBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reader, container, false)
-
-        // Find the minimize and close buttons in the layout
         val minimizeButton = binding.fragmentMinimizeButton
         val closeButton = binding.fragmentCloseButton
-
-        // Set click listeners for the buttons
         minimizeButton.setOnClickListener {
-            // Minimize the fragment
             minimizeFragment()
         }
         closeButton.setOnClickListener {
-            // Close the fragment
             closeFragment()
         }
-
         setLoadingAnimationHeight(binding)
-
 
         val loader = OkHttpHandler(url)
         MainScope().launch {
@@ -130,7 +117,12 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
         val readerFragment = parentFragmentManager.findFragmentByTag("ReaderFragment")
         if (readerFragment != null) {
             parentFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down)
+                .setCustomAnimations(
+                    R.anim.reader_slide_down,
+                    R.anim.reader_slide_down,
+                    R.anim.reader_slide_down,
+                    R.anim.reader_slide_down
+                )
                 .hide(readerFragment).commit()
         }
         immersiveModeEnabled = true

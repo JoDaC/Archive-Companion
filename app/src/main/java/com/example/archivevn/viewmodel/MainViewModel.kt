@@ -17,7 +17,6 @@ import com.example.archivevn.data.ArchiveService
 import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.data.notifications.NotificationHandler
-import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.view.AppIntroduction
 import com.example.archivevn.view.ArchiveDialogFragment
 import com.google.gson.Gson
@@ -27,7 +26,7 @@ import kotlinx.coroutines.launch
 private const val PREFS_NAME = "HistoryPrefs"
 private const val HISTORY_KEY = "history"
 
-class MainViewModel(application: Application, val binding: ActivityMainBinding) :
+class MainViewModel(application: Application) :
     AndroidViewModel(application) {
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
@@ -115,7 +114,6 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     fun introButtonClicked() {
         val prefs =
             getApplication<Application>().getSharedPreferences("MyPrefs", Application.MODE_PRIVATE)
-        val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
         val intent = Intent(getApplication(), AppIntroduction::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(intent)
@@ -274,6 +272,7 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         dialogFragment.isCancelable = false
         dialogFragment.show(fragmentManager, "archive_confirmed_dialog")
     }
+
     fun showArchiveInProgressDialog() {
         dialogFragment.setDialogType(ArchiveDialogFragment.DIALOG_TYPE_4)
         dialogFragment.isCancelable = false
