@@ -72,7 +72,7 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
                     }
                     .setNeutralButton("View in Reader") { _, _ ->
                         Log.i("linkToSendFragment", latestArchiveUrl)
-                        mainViewModel.launchUrlInReader(latestArchiveUrl)
+                        mainViewModel.setReaderFragmentVisible(true, latestArchiveUrl)
                     }
                 return builder.create()
             }
@@ -84,7 +84,7 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
                         launchUrlInBrowser(url!!)
                     }
                     .setNeutralButton("View in Reader") { _, _ ->
-                        mainViewModel.launchUrlInReader(url!!)
+                        mainViewModel.setReaderFragmentVisible(true, url!!)
                     }
                 return builder.create()
             }

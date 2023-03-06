@@ -61,73 +61,63 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        mainViewModel.readerFragmentVisible.observe(this) { visiblePair ->
-//            val editText = binding.urlEditText.text
-//            val visible = visiblePair.first
-//            if (visible && mainViewModel.historyFragmentVisible.value == true) {
-//                val newReaderFragment = ReaderFragment(mainViewModel, visiblePair.second!!)
-//                supportFragmentManager.beginTransaction()
-//                    .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-//                    .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
-//                    .addToBackStack("ReaderFragment")
-//                    .commit()
-//            } else if (!editText.isNullOrEmpty() && mainViewModel.historyFragmentVisible.value == false){
-//                Toast.makeText(
-//                    this,
-//                    "Please enter a URL to view in Reader",
-//                    Toast.LENGTH_SHORT
-//                )
-//                    .show()
-//            }
-//        }
-
         mainViewModel.readerFragmentVisible.observe(this) { visiblePair ->
             val editText = binding.urlEditText.text
-            val visible = visiblePair.first
-            if (visible && !editText.isNullOrEmpty()) {
-                val newReaderFragment = ReaderFragment(mainViewModel, visiblePair.second!!)
-                supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-                    .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
-                    .addToBackStack("ReaderFragment")
-                    .commit()
-            } else {
+            val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
+            if (editText.isNullOrEmpty() && historyFragment == null) {
                 Toast.makeText(
                     this,
-                    "Please enter a URL to view in Reader",
+                    "Please select an archived page to read",
                     Toast.LENGTH_SHORT
                 )
                     .show()
+            } else if (historyFragment != null){
+                launchReaderFragment(visiblePair.second)
+            } // NEED TO ADD CODE FOR LAUNCHING READER FROM ARCHIVE POINT
+        }
+
+
+
+            // Observe the isLoading LiveData object to show/hide the loading wheel
+            mainViewModel.isLoading.observe(this) { isLoading ->
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             }
+
+            // Observe the archiveProgress LiveData object to the progress indicator
+            mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
+                binding.progressView.root.visibility =
+                    if (archiveProgressLoading) View.VISIBLE else View.GONE
+            }
+
+            // Set line animation depending on light/dark theme
+            lineAnimationTheme()
+
+            // Handle app launch via intent on cold start.
+            val intent = intent
+            if (intent != null) {
+                mainViewModel.handleShareSheetUrlInBackground(intent)
+            }
+            // Launch App Intro carousel on first time launch.
+            appIntroductionCarousel()
         }
 
-        // Observe the isLoading LiveData object to show/hide the loading wheel
-        mainViewModel.isLoading.observe(this) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        // Observe the archiveProgress LiveData object to the progress indicator
-        mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
-            binding.progressView.root.visibility =
-                if (archiveProgressLoading) View.VISIBLE else View.GONE
-        }
-
-        // Set line animation depending on light/dark theme
-        lineAnimationTheme()
-
-        // Handle app launch via intent on cold start.
-        val intent = intent
-        if (intent != null) {
+        override fun onNewIntent(intent: Intent?) {
+            super.onNewIntent(intent)
+            Log.v("MainActivityTag", "onNewIntent")
             mainViewModel.handleShareSheetUrlInBackground(intent)
         }
-        // Launch App Intro carousel on first time launch.
-        appIntroductionCarousel()
-    }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        Log.v("MainActivityTag", "onNewIntent")
-        mainViewModel.handleShareSheetUrlInBackground(intent)
+    private fun launchReaderFragment(url: String? = null) {
+        var defaultUrl = "https://archive.today"
+        if (url != null) {
+            defaultUrl = url
+        }
+        val newReaderFragment = ReaderFragment(mainViewModel, defaultUrl)
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+            .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
+            .addToBackStack("ReaderFragment")
+            .commit()
     }
 
     private fun lineAnimationTheme() {
