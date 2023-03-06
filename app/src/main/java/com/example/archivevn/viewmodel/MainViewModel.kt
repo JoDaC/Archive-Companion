@@ -60,6 +60,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     private val _historyFragmentVisible = MutableLiveData<Boolean>()
     val historyFragmentVisible: MutableLiveData<Boolean>
         get() = _historyFragmentVisible
+    private val _readerFragmentVisible = MutableLiveData<Pair<Boolean, String?>>()
+    val readerFragmentVisible: LiveData<Pair<Boolean, String?>>
+        get() = _readerFragmentVisible
 
     init {
         _isLoading.value = false
@@ -121,30 +124,12 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         }
     }
 
-    /**
-     * Handles the event when the "Reader" button is clicked.
-     * Launches a new ReaderFragment by passing the specified URL to launchUrlInReader().
-     */
-    fun onReaderButtonClicked(url: String) {
-        if (url.isNotEmpty()) {
-            launchUrlInReader(url)
-        } else {
-            Toast.makeText(
-                getApplication(),
-                "Please enter a URL to view in Reader",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-            launchUrlInReader("https://archive.today")
-        }
-    }
-
-    /**
-     * Handles the event when the "History" button is clicked.
-     * Launches a new HistoryFragment.
-     */
     fun onHistoryButtonClicked() {
         setHistoryFragmentVisible(!isHistoryFragmentVisible)
+    }
+
+    fun onReaderButtonClicked(url: String? = null) {
+        setReaderFragmentVisible(true, url)
     }
 
     fun inHistoryInReaderModeClick(historyItem: String) {
@@ -251,15 +236,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
         _historyFragmentVisible.value = visible
     }
 
-//    fun loadHistoryItemsFromPrefs(sharedPreferences: SharedPreferences): List<HistoryItem> {
-//        val serializedList = sharedPreferences.getString(HISTORY_PREFS_KEY, null)
-//        return if (serializedList != null) {
-//            val type = object : TypeToken<List<HistoryItem>>() {}.type
-//            Gson().fromJson(serializedList, type)
-//        } else {
-//            emptyList()
-//        }
-//    }
+    private fun setReaderFragmentVisible(visible: Boolean, url: String? = null) {
+        _readerFragmentVisible.value = Pair(visible, url)
+    }
 
     private fun loadHistoryItemsFromPrefs() {
         val serializedList = sharedPreferences.getString(HISTORY_KEY, null)
@@ -268,12 +247,6 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
             _history.value = Gson().fromJson(serializedList, typeToken)
         }
     }
-
-//    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
-//        val newItem = HistoryItem(title, url, isReaderMode)
-//        val currentList = _history.value ?: emptyList()
-//        _history.value = listOf(newItem) + currentList
-//    }
 
     private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
         val newItem = HistoryItem(title, url, isReaderMode)

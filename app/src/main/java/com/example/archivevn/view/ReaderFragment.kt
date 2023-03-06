@@ -18,9 +18,9 @@ import androidx.fragment.app.Fragment
 import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.databinding.FragmentReaderBinding
+import com.example.archivevn.viewmodel.MainViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import com.example.archivevn.viewmodel.MainViewModel
 
 private const val PASSED_URL = ""
 
