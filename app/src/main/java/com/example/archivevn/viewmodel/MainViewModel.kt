@@ -62,6 +62,18 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
     val readerFragmentVisible: MutableLiveData<Pair<Boolean, String?>>
         get() = _readerFragmentVisible
 
+    private val _urlText = MutableLiveData<String>()
+    val urlText: LiveData<String>
+        get() = _urlText
+
+    private val _isPasteButtonEnabled = MutableLiveData<Boolean>()
+    val isPasteButtonEnabled: LiveData<Boolean>
+        get() = _isPasteButtonEnabled
+
+    private val _isUrlEditTextEnabled = MutableLiveData(true)
+    val isUrlEditTextEnabled: LiveData<Boolean>
+        get() = _isUrlEditTextEnabled
+
     init {
         _isLoading.value = false
         loadHistoryItemsFromPrefs()
@@ -177,9 +189,9 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
                 }
                 "My url is alive and I want to archive its content" -> {
                     _isLoading.value = false
-                    binding.urlEditText.setText(url)
-                    binding.pasteButton.isEnabled = false
-                    binding.urlEditText.isEnabled = false
+                    _urlText.value = url
+                    _isPasteButtonEnabled.value = false
+                    _isUrlEditTextEnabled.value = false
                     _archiveProgressLoading.value = true
                     val archiveServiceIntent = Intent(getApplication(), ArchiveService::class.java)
                     startForegroundService(getApplication(), archiveServiceIntent)
@@ -187,8 +199,8 @@ class MainViewModel(application: Application, val binding: ActivityMainBinding) 
                     val articleTitle = ArchiveService().archiveUrlInBackground(url).second
                     addHistoryItem(articleTitle!!, url, false)
                     _archiveProgressLoading.value = false
-                    binding.urlEditText.text.clear()
-                    binding.urlEditText.isEnabled = true
+                    _urlText.value = ""
+                    _isUrlEditTextEnabled.value = true
                     NotificationHandler(getApplication()).showArchivalCompleteNotification()
                     showArchiveConfirmedDialog(archivedResult)
                 }

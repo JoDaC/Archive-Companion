@@ -32,17 +32,30 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.onGoButtonClicked(url)
         }
 
+        binding.readerButton.setOnClickListener {
+            val url = binding.urlEditText.text.toString()
+            mainViewModel.onReaderButtonClicked(url)
+        }
+
         mainViewModel.pasteText.observe(this) { text ->
             if (!text.isNullOrBlank()) {
                 binding.urlEditText.setText(text)
             }
         }
 
-        binding.readerButton.setOnClickListener {
-            val url = binding.urlEditText.text.toString()
-            mainViewModel.onReaderButtonClicked(url)
+        mainViewModel.isUrlEditTextEnabled.observe(this) { isEnabled ->
+            binding.urlEditText.isEnabled = isEnabled
         }
 
+        mainViewModel.urlText.observe(this) { urlText ->
+            binding.urlEditText.setText(urlText)
+        }
+
+        mainViewModel.isPasteButtonEnabled.observe(this) { isEnabled ->
+            binding.pasteButton.isEnabled = isEnabled
+        }
+
+        // Observe the HistoryFragment LiveData object to show/hide the history fragment
         mainViewModel.historyFragmentVisible.observe(this) { visible ->
             val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
             if (visible && historyFragment == null) {
@@ -60,6 +73,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Observe the ReaderFragment LiveData object to show/hide the reader fragment wheel
         mainViewModel.readerFragmentVisible.observe(this) { visiblePair ->
             val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
             val readerFragment = supportFragmentManager.findFragmentByTag("ReaderFragment")
@@ -78,35 +92,34 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-            // Observe the isLoading LiveData object to show/hide the loading wheel
-            mainViewModel.isLoading.observe(this) { isLoading ->
-                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            }
-
-            // Observe the archiveProgress LiveData object to the progress indicator
-            mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
-                binding.progressView.root.visibility =
-                    if (archiveProgressLoading) View.VISIBLE else View.GONE
-            }
-
-            // Set line animation depending on light/dark theme
-            lineAnimationTheme()
-
-            // Handle app launch via intent on cold start.
-            val intent = intent
-            if (intent != null) {
-                mainViewModel.handleShareSheetUrlInBackground(intent)
-            }
-            // Launch App Intro carousel on first time launch.
-            appIntroductionCarousel()
+        // Observe the isLoading LiveData object to show/hide the loading wheel
+        mainViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        override fun onNewIntent(intent: Intent?) {
-            super.onNewIntent(intent)
-            Log.v("MainActivityTag", "onNewIntent")
+        // Observe the archiveProgress LiveData object to the progress indicator
+        mainViewModel.archiveProgressLoading.observe(this) { archiveProgressLoading ->
+            binding.progressView.root.visibility =
+                if (archiveProgressLoading) View.VISIBLE else View.GONE
+        }
+
+        // Set line animation depending on light/dark theme
+        lineAnimationTheme()
+
+        // Handle app launch via intent on cold start.
+        val intent = intent
+        if (intent != null) {
             mainViewModel.handleShareSheetUrlInBackground(intent)
         }
+        // Launch App Intro carousel on first time launch.
+        appIntroductionCarousel()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.v("MainActivityTag", "onNewIntent")
+        mainViewModel.handleShareSheetUrlInBackground(intent)
+    }
 
     private fun launchReaderFragment(url: String? = null) {
         var defaultUrl = url
@@ -131,35 +144,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun initializeBackPressDispatcher() {
-//        val dispatcher = onBackPressedDispatcher
-//        dispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                val readerFragment = supportFragmentManager.findFragmentByTag("ReaderFragment")
-//                val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
-//                // ADD MORE CODE AFTER isHidden
-//                if (supportFragmentManager.backStackEntryCount > 0 && !readerFragment!!.isHidden) {
-//                    Log.i("Condition one", "Hide fragment")
-//                    supportFragmentManager.beginTransaction()
-//                        .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-//                        .hide(readerFragment)
-//                        .commit()
-//                } else if (supportFragmentManager.backStackEntryCount > 0 && readerFragment!!.isHidden) {
-//                    Log.i("Condition two", "pop back stack twice")
-//                    supportFragmentManager.popBackStack()
-//                    supportFragmentManager.popBackStack()
-//                } else if (supportFragmentManager.backStackEntryCount > 0 && historyFragment != null && mainViewModel.historyFragmentVisible.value == true) {
-//                    Log.i("Condition three", "pop back stack once")
-//                    supportFragmentManager.popBackStack()
-//                } else if (mainViewModel._archiveProgressLoading.value == true) {
-//                    Log.i("Condition four", "show archive")
-//                    mainViewModel.showArchiveInProgressDialog()
-//                } else {
-//                    finish()
-//                }
-//            }
-//        })
-//    }
 
     private fun initializeBackPressDispatcher() {
         val dispatcher = onBackPressedDispatcher
