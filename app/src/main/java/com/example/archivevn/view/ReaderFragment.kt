@@ -28,6 +28,8 @@ private const val PASSED_URL = ""
 class ReaderFragment(private val mainViewModel: MainViewModel, private val url: String) :
     Fragment() {
 
+    private var immersiveModeEnabled = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,23 +83,31 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        // Setting Immersive mode onPause
+    override fun onDestroyView() {
+        super.onDestroyView()
         val window = requireActivity().window
         val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
-        windowInsetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Setting Immersive mode onResume
-        val window = requireActivity().window
-        val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
-        windowInsetsController.let {
-            it.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
-            it.systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && !immersiveModeEnabled) {
+            // Set immersive mode
+            val window = requireActivity().window
+            val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
+            windowInsetsController.let {
+                it.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+                it.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+            immersiveModeEnabled = true
+        } else if (hidden && immersiveModeEnabled) {
+            // Exit immersive mode
+            val window = requireActivity().window
+            val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
+            windowInsetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+            immersiveModeEnabled = false
         }
     }
 
@@ -123,6 +133,7 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
                 .setCustomAnimations(R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down)
                 .hide(readerFragment).commit()
         }
+        immersiveModeEnabled = true
     }
 
     private fun closeFragment() {
