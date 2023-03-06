@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
 import com.example.archivevn.databinding.FragmentReaderBinding
@@ -24,13 +25,15 @@ import kotlinx.coroutines.launch
 
 private const val PASSED_URL = ""
 
-class ReaderFragment(private val mainViewModel: MainViewModel, private val url: String) : Fragment() {
+class ReaderFragment(private val mainViewModel: MainViewModel, private val url: String) :
+    Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentReaderBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_reader, container, false)
+        val binding: FragmentReaderBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_reader, container, false)
 
         // Find the minimize and close buttons in the layout
         val minimizeButton = binding.fragmentMinimizeButton
@@ -83,8 +86,9 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
         // Setting Immersive mode onPause
         val window = requireActivity().window
         val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
-        windowInsetsController .show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        windowInsetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
     }
+
     override fun onResume() {
         super.onResume()
         // Setting Immersive mode onResume
@@ -96,10 +100,6 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
-
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//    }
 
     private fun setLoadingAnimationHeight(binding: FragmentReaderBinding) {
         val windowManager =
@@ -116,16 +116,13 @@ class ReaderFragment(private val mainViewModel: MainViewModel, private val url: 
     }
 
     private fun minimizeFragment() {
-//        parentFragmentManager.clearBackStack("HistoryFragment")
-        // Animate the closing of the fragmentContainerView
-       mainViewModel.binding.fragmentContainerView.animate()
-            .translationY(mainViewModel.binding.fragmentContainerView.height.toFloat())
-            .setDuration(500)
-            .withEndAction {
-                // Set the fragmentContainerView to GONE
-                mainViewModel.binding.fragmentContainerView.visibility = View.GONE
-            }
-            .start()
+        Log.d("ReaderFragment", "minimizeFragment() called")
+        val readerFragment = parentFragmentManager.findFragmentByTag("ReaderFragment")
+        if (readerFragment != null) {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down, R.anim.reader_slide_down)
+                .hide(readerFragment).commit()
+        }
     }
 
     private fun closeFragment() {

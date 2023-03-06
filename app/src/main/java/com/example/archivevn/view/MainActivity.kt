@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -70,7 +69,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 launchReaderFragment(visiblePair.second)
             } else if (readerFragment != null) {
-                supportFragmentManager.beginTransaction().show(readerFragment).commit()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+                    .show(readerFragment).commit()
             } else {
                 launchReaderFragment(visiblePair.second)
             }
@@ -129,6 +130,36 @@ class MainActivity : AppCompatActivity() {
             nightLine.visibility = View.GONE
         }
     }
+
+//    private fun initializeBackPressDispatcher() {
+//        val dispatcher = onBackPressedDispatcher
+//        dispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                val readerFragment = supportFragmentManager.findFragmentByTag("ReaderFragment")
+//                val historyFragment = supportFragmentManager.findFragmentByTag("HistoryFragment")
+//                // ADD MORE CODE AFTER isHidden
+//                if (supportFragmentManager.backStackEntryCount > 0 && !readerFragment!!.isHidden) {
+//                    Log.i("Condition one", "Hide fragment")
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+//                        .hide(readerFragment)
+//                        .commit()
+//                } else if (supportFragmentManager.backStackEntryCount > 0 && readerFragment!!.isHidden) {
+//                    Log.i("Condition two", "pop back stack twice")
+//                    supportFragmentManager.popBackStack()
+//                    supportFragmentManager.popBackStack()
+//                } else if (supportFragmentManager.backStackEntryCount > 0 && historyFragment != null && mainViewModel.historyFragmentVisible.value == true) {
+//                    Log.i("Condition three", "pop back stack once")
+//                    supportFragmentManager.popBackStack()
+//                } else if (mainViewModel._archiveProgressLoading.value == true) {
+//                    Log.i("Condition four", "show archive")
+//                    mainViewModel.showArchiveInProgressDialog()
+//                } else {
+//                    finish()
+//                }
+//            }
+//        })
+//    }
 
     private fun initializeBackPressDispatcher() {
         val dispatcher = onBackPressedDispatcher
