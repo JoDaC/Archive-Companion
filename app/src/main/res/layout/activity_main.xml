@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:autofillHints="@string/enter_text_hint"
+            android:enabled="@{mainViewModel.isUrlEditTextEnabled}"
             android:fontFamily="sans-serif-light"
             android:gravity="top|start"
             android:hint="@string/enter_a_url_to_archive"
@@ -56,8 +57,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:enabled="@{mainViewModel.isUrlEditTextEnabled}"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/reader_button"
@@ -74,7 +74,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/progress_bar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/url_edit_text"/>
+            app:layout_constraintTop_toBottomOf="@+id/url_edit_text" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/history_button"
@@ -84,6 +84,7 @@
             android:backgroundTint="?android:colorPrimary"
             android:elevation="0dp"
             android:fontFamily="sans-serif"
+            android:onClick="@{() -> mainViewModel.onHistoryButtonClicked()}"
             android:padding="18dp"
             android:text="@string/history"
             android:textAlignment="center"
@@ -92,8 +93,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progress_bar"
             app:layout_constraintTop_toBottomOf="@+id/url_edit_text"
-            app:srcCompat="@android:drawable/arrow_up_float"
-            android:onClick="@{() -> mainViewModel.onHistoryButtonClicked()}"/>
+            app:srcCompat="@android:drawable/arrow_up_float" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -113,12 +113,12 @@
             android:clickable="true"
             android:contentDescription="@string/launches_intro"
             android:focusable="true"
+            android:onClick="@{() -> mainViewModel.introButtonClicked()}"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/go_button"
-            app:srcCompat="@android:drawable/ic_menu_help"
-            android:onClick="@{() -> mainViewModel.introButtonClicked()}"/>
+            app:srcCompat="@android:drawable/ic_menu_help" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/paste_button"
@@ -128,12 +128,12 @@
             android:clickable="true"
             android:contentDescription="@string/settings"
             android:focusable="true"
+            android:onClick="@{() -> mainViewModel.onPasteButtonClicked()}"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/go_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="?attr/actionModePasteDrawable"
-            android:onClick="@{() -> mainViewModel.onPasteButtonClicked()}"/>
+            app:srcCompat="?attr/actionModePasteDrawable" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/horizontalLineViewNight"
@@ -158,6 +158,20 @@
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/line_for_day"
             app:lottie_speed="2.5" />
+
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/shareSheetAnimation"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_rawRes="@raw/share_animation"-->
+<!--            app:lottie_speed="1.0" />-->
 
         <include
             android:id="@+id/progress_view"
