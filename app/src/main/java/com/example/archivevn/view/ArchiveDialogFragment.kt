@@ -115,14 +115,9 @@ class ArchiveDialogFragment(mainViewModel: MainViewModel) : DialogFragment() {
      * archive.vn or archive.is if specified.
      *
      * @param url The URL to launch in the browser.
-     * @param urlToArchive A flag indicating whether to amend the url for archive.vn or archive.is.
      */
-    private fun launchUrlInBrowser(url: String, urlToArchive: Boolean? = null) {
+    private fun launchUrlInBrowser(url: String) {
         Log.i("Shared URL %", url)
-        var archiveUrl = "https://archive.vn/$url"
-        if (urlToArchive == true) {
-            archiveUrl = "https://archive.is/?$url"
-        }
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(browserIntent)
     }

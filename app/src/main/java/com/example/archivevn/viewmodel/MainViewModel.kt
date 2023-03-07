@@ -30,49 +30,51 @@ class MainViewModel(application: Application) :
 
     private lateinit var notificationChannel: NotificationHandler.NotificationChannel
     private lateinit var fragmentManager: FragmentManager
-    private val tag = "MainActivityTag"
-    private val _isLoading = MutableLiveData<Boolean>()
-    val _archiveProgressLoading = MutableLiveData<Boolean>()
-    private val _history = MutableLiveData<List<HistoryItem>>().apply {
-        value = listOf(
-            HistoryItem("Your archived pages will appear here.", "https://archive.today", false),
-        )
-    }
+    private var isHistoryFragmentVisible = false
+
+    private val tag = "MainViewModel"
+
     private val sharedPreferences = application.getSharedPreferences(
         "com.example.archivevn.prefs",
         Context.MODE_PRIVATE
     )
-    private var isHistoryFragmentVisible = false
-    private var isReaderFragmentCreated = false
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-    val archiveProgressLoading: LiveData<Boolean>
-        get() = _archiveProgressLoading
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _archiveProgressLoading = MutableLiveData<Boolean>()
+    val archiveProgressLoading: LiveData<Boolean> get() = _archiveProgressLoading
+
+    private val _history = MutableLiveData<List<HistoryItem>>().apply {
+        value = listOf(
+            HistoryItem(
+                "Your archived pages will appear here.",
+                "https://archive.today",
+                false
+            ),
+        )
+    }
     val history: LiveData<List<HistoryItem>> = _history
+
     private val _pasteText = MutableLiveData<String?>()
-    val pasteText: MutableLiveData<String?>
-        get() = _pasteText
+    val pasteText: MutableLiveData<String?> get() = _pasteText
+
     private val _historyFragmentVisible = MutableLiveData<Boolean>()
-    val historyFragmentVisible: MutableLiveData<Boolean>
-        get() = _historyFragmentVisible
+    val historyFragmentVisible: LiveData<Boolean> get() = _historyFragmentVisible
+
     private val _readerFragmentVisible = MutableLiveData<Pair<Boolean, String?>>()
-    val readerFragmentVisible: MutableLiveData<Pair<Boolean, String?>>
-        get() = _readerFragmentVisible
+    val readerFragmentVisible: LiveData<Pair<Boolean, String?>> get() = _readerFragmentVisible
 
     private val _urlText = MutableLiveData<String>()
-    val urlText: LiveData<String>
-        get() = _urlText
+    val urlText: LiveData<String> get() = _urlText
 
     private val _isPasteButtonEnabled = MutableLiveData<Boolean>()
-    val isPasteButtonEnabled: LiveData<Boolean>
-        get() = _isPasteButtonEnabled
+    val isPasteButtonEnabled: LiveData<Boolean> get() = _isPasteButtonEnabled
 
     private val _isUrlEditTextEnabled = MutableLiveData(true)
-    val isUrlEditTextEnabled: LiveData<Boolean>
-        get() = _isUrlEditTextEnabled
+    val isUrlEditTextEnabled: LiveData<Boolean> get() = _isUrlEditTextEnabled
 
     init {
-        _isLoading.value = false
         loadHistoryItemsFromPrefs()
     }
 
@@ -110,8 +112,6 @@ class MainViewModel(application: Application) :
      * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
     fun introButtonClicked() {
-        val prefs =
-            getApplication<Application>().getSharedPreferences("MyPrefs", Application.MODE_PRIVATE)
         val intent = Intent(getApplication(), AppIntroduction::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(intent)
@@ -226,12 +226,12 @@ class MainViewModel(application: Application) :
         }
     }
 
-    private fun setHistoryFragmentVisible(visible: Boolean) {
-        _historyFragmentVisible.value = visible
-    }
-
     fun setReaderFragmentVisible(visible: Boolean, url: String? = null) {
         _readerFragmentVisible.value = Pair(visible, url)
+    }
+
+    private fun setHistoryFragmentVisible(visible: Boolean) {
+        _historyFragmentVisible.value = visible
     }
 
     private fun loadHistoryItemsFromPrefs() {

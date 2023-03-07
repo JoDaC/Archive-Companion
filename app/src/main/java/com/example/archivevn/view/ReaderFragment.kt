@@ -1,6 +1,7 @@
 package com.example.archivevn.view
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -74,7 +75,7 @@ class ReaderFragment(private val url: String) :
         super.onDestroyView()
         val window = requireActivity().window
         val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
-        windowInsetsController?.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        windowInsetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

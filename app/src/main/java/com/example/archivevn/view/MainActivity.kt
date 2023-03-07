@@ -14,19 +14,35 @@ import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var dialogHandler: DialogHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainViewModel = MainViewModel(application)
+        dialogHandler = DialogHandler(mainViewModel, supportFragmentManager)
         mainViewModel.initializeNotificationChannel()
         mainViewModel.setFragmentManager(supportFragmentManager)
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
         initializeBackPressDispatcher()
 
+        setupViews()
+
+        setupObservers()
+
+        setupIntent()
+
+        setupFirstTimeLaunch()
+
+        // Set line animation depending on light/dark theme
+        lineAnimationTheme()
+    }
+
+    private fun setupViews() {
         binding.goButton.goButtonAnimation.setOnClickListener {
             val url = binding.urlEditText.text.toString()
             mainViewModel.onGoButtonClicked(url)
@@ -36,7 +52,9 @@ class MainActivity : AppCompatActivity() {
             val url = binding.urlEditText.text.toString()
             mainViewModel.onReaderButtonClicked(url)
         }
+    }
 
+    private fun setupObservers() {
         mainViewModel.pasteText.observe(this) { text ->
             if (!text.isNullOrBlank()) {
                 binding.urlEditText.setText(text)
@@ -101,23 +119,23 @@ class MainActivity : AppCompatActivity() {
                 launchReaderFragment(visiblePair.second)
             }
         }
-
-        // Set line animation depending on light/dark theme
-        lineAnimationTheme()
-
-        // Handle app launch via intent on cold start.
-        val intent = intent
-        if (intent != null) {
-            mainViewModel.handleShareSheetUrlInBackground(intent)
-        }
-        // Launch App Intro carousel on first time launch.
-        appIntroductionCarousel()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v("MainActivityTag", "onNewIntent")
         mainViewModel.handleShareSheetUrlInBackground(intent)
+    }
+
+    private fun setupIntent() {
+        val intent = intent
+        if (intent != null) {
+            // handle the intent
+            val url = intent.getStringExtra(Intent.EXTRA_TEXT)
+            if (!url.isNullOrEmpty()) {
+                mainViewModel.launchUrlInBackground(url)
+            }
+        }
     }
 
     private fun launchReaderFragment(url: String? = null) {
@@ -151,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
-                } else if (mainViewModel._archiveProgressLoading.value == true) {
+                } else if (mainViewModel.archiveProgressLoading.value == true) {
                     dialogHandler.showArchiveInProgressDialog()
                 } else {
                     finish()
@@ -160,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun appIntroductionCarousel() {
+    private fun setupFirstTimeLaunch() {
         val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
         if (isFirstLaunch) {
