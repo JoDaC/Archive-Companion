@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.archivevn.R
 import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.databinding.ItemHistoryBinding
 import com.example.archivevn.viewmodel.MainViewModel
+
 
 class HistoryAdapter(private val viewModel: MainViewModel) :
     ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(HistoryDiffCallback()) {
@@ -35,6 +38,32 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         holder.bind(historyItem, viewModel)
     }
 
+    inner class SwipeController : Callback() {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            return makeMovementFlags(0, LEFT or RIGHT)
+        }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        val swipeController = SwipeController()
+        val itemTouchhelper = ItemTouchHelper(swipeController)
+        itemTouchhelper.attachToRecyclerView(recyclerView)
+    }
+
     class ViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -42,12 +71,12 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             binding.historyItem = historyItem
             binding.historyTitleView.text = historyItem.title
             binding.urlTextView.text = historyItem.url
-            binding.launchInReader.setOnClickListener {
-                viewModel.inHistoryInReaderModeClick(historyItem.url)
-            }
-            binding.launchOnWeb.setOnClickListener {
-                viewModel.inHistoryBrowserClick(historyItem.url)
-            }
+//            binding.launchInReader.setOnClickListener {
+//                viewModel.inHistoryInReaderModeClick(historyItem.url)
+//            }
+//            binding.launchOnWeb.setOnClickListener {
+//                viewModel.inHistoryBrowserClick(historyItem.url)
+//            }
             binding.executePendingBindings()
         }
     }
