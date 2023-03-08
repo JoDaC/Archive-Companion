@@ -12,30 +12,56 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.archivevn.R
 import com.example.archivevn.data.HistoryItem
 import com.example.archivevn.databinding.ItemHistoryBinding
+import com.example.archivevn.databinding.ItemHistorySwipeBinding
 import com.example.archivevn.viewmodel.MainViewModel
 
+private const val ITEM = 1
+private const val SWIPE_MENU = 2
 
 class HistoryAdapter(private val viewModel: MainViewModel) :
-    ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(HistoryDiffCallback()) {
+    ListAdapter<HistoryItem, RecyclerView.ViewHolder>(HistoryDiffCallback()) {
+
+    private var swipePosition = -1
 
     private fun Int.dpToPx(context: Context): Int =
         (this * context.resources.displayMetrics.density).toInt()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding: ItemHistoryBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.item_history, parent, false)
-        return ViewHolder(binding)
+    override fun getItemViewType(position: Int): Int {
+        return if (position == swipePosition) {
+            SWIPE_MENU
+        } else {
+            ITEM
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return if (viewType == ITEM) {
+            val binding: ItemHistoryBinding =
+                DataBindingUtil.inflate(layoutInflater, R.layout.item_history, parent, false)
+            ItemViewHolder(binding)
+        } else {
+            val menuBinding: ItemHistorySwipeBinding =
+                DataBindingUtil.inflate(layoutInflater, R.layout.item_history_swipe, parent, false)
+            MenuViewHolder(menuBinding)
+        }
+
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val historyItem = getItem(position)
-        // For space between items
-        val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        layoutParams.bottomMargin =
-            1.dpToPx(holder.itemView.context) // set the desired spacing in pixels
-        holder.itemView.layoutParams = layoutParams
-        holder.bind(historyItem, viewModel)
+        when (holder) {
+            is ItemViewHolder -> {
+                // For space between items
+                val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
+                layoutParams.bottomMargin = 1.dpToPx(holder.itemView.context) // set the desired spacing in pixels
+                holder.itemView.layoutParams = layoutParams
+                holder.bind(historyItem)
+            }
+            is MenuViewHolder -> {
+                holder.bind(historyItem, viewModel)
+            }
+        }
     }
 
     inner class SwipeController : Callback() {
@@ -54,7 +80,14 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             return false
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            swipePosition = if (viewHolder.adapterPosition == swipePosition) {
+                -1
+            } else {
+                viewHolder.adapterPosition
+            }
+            notifyDataSetChanged()
+        }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -64,20 +97,28 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         itemTouchhelper.attachToRecyclerView(recyclerView)
     }
 
-    class ViewHolder(private val binding: ItemHistoryBinding) :
+    class ItemViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(historyItem: HistoryItem, viewModel: MainViewModel) {
+        fun bind(historyItem: HistoryItem) {
             binding.historyItem = historyItem
             binding.historyTitleView.text = historyItem.title
             binding.urlTextView.text = historyItem.url
-//            binding.launchInReader.setOnClickListener {
-//                viewModel.inHistoryInReaderModeClick(historyItem.url)
-//            }
-//            binding.launchOnWeb.setOnClickListener {
-//                viewModel.inHistoryBrowserClick(historyItem.url)
-//            }
             binding.executePendingBindings()
+        }
+    }
+
+    class MenuViewHolder(private val menuBinding: ItemHistorySwipeBinding) :
+        RecyclerView.ViewHolder(menuBinding.root) {
+
+        fun bind(historyItem: HistoryItem, viewModel: MainViewModel) {
+            menuBinding.launchInReader.setOnClickListener {
+                viewModel.inHistoryInReaderModeClick(historyItem.url)
+            }
+            menuBinding.launchOnWeb.setOnClickListener {
+                viewModel.inHistoryBrowserClick(historyItem.url)
+            }
+            menuBinding.executePendingBindings()
         }
     }
 
