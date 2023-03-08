@@ -6,6 +6,10 @@
     <solid android:color="?attr/menuHistoryBackground" />
 
     <!-- Set the radius for each corner -->
-    <corners android:radius="16dp" />
+    <corners android:radius="8dp" />
+
+    <!-- Set the stroke width to 0 to remove the outline -->
+    <stroke android:width="0dp" />
+
 
 </shape>

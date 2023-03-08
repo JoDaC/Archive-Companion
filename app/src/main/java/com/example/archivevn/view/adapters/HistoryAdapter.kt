@@ -1,8 +1,14 @@
 package com.example.archivevn.view.adapters
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -87,19 +93,9 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
                 viewHolder.adapterPosition
             }
             val view = viewHolder.itemView
-//            val menuView = (viewHolder as MenuViewHolder).menuBinding.root
             view.animate()
-//                .translationX(if (direction == LEFT) -view.width.toFloat() else view.width.toFloat())
-//                .alpha(0f)
-//                .setDuration(100L)
                 .withEndAction {
-                    view.alpha = 0f
                     view.translationX = if (direction == LEFT) view.width.toFloat() else -view.width.toFloat()
-                    view.animate()
-                        .translationX(0f)
-                        .alpha(1f)
-                        .setDuration(100L)
-                        .start()
                     notifyItemChanged(swipePosition)
                 }
                 .start()
