@@ -14,6 +14,7 @@
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Day</item>
         <item name="archiveProgressViewBackground">@color/light_blue</item>
         <item name="historyBackground">@color/white</item>
+        <item name="menuHistoryBackground">@color/very_light_blue</item>
         <item name="historyItemTextColor">@color/black</item>
         <item name="historyItemSubTextColor">@color/design_default_color_error</item>
         <item name="historyItemFabColor">@color/intro_grey</item>

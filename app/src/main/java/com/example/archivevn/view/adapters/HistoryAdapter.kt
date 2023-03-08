@@ -86,7 +86,23 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             } else {
                 viewHolder.adapterPosition
             }
-            notifyDataSetChanged()
+            val view = viewHolder.itemView
+//            val menuView = (viewHolder as MenuViewHolder).menuBinding.root
+            view.animate()
+//                .translationX(if (direction == LEFT) -view.width.toFloat() else view.width.toFloat())
+//                .alpha(0f)
+//                .setDuration(100L)
+                .withEndAction {
+                    view.alpha = 0f
+                    view.translationX = if (direction == LEFT) view.width.toFloat() else -view.width.toFloat()
+                    view.animate()
+                        .translationX(0f)
+                        .alpha(1f)
+                        .setDuration(100L)
+                        .start()
+                    notifyItemChanged(swipePosition)
+                }
+                .start()
         }
     }
 

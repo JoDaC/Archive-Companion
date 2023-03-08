@@ -2,6 +2,7 @@
 <resources>
     <attr name="archiveProgressViewBackground" format="reference|color" />
     <attr name="historyBackground" format="reference|color" />
+    <attr name="menuHistoryBackground" format="reference|color" />
     <attr name="historyItemTextColor" format="reference|color" />
     <attr name="historyItemSubTextColor" format="reference|color" />
     <attr name="historyItemFabColor" format="reference|color" />

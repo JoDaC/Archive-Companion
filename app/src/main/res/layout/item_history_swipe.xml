@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:minHeight="100dp"
         android:layout_margin="8dp"
-        android:background="@drawable/history_background"
+        android:background="@drawable/menu_history_background"
         android:padding="16dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
