@@ -1,14 +1,8 @@
 package com.example.archivevn.view.adapters
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnticipateInterpolator
-import android.view.animation.DecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -86,6 +80,10 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             return false
         }
 
+        override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+            return 0.1f
+        }
+
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             swipePosition = if (viewHolder.adapterPosition == swipePosition) {
                 -1
@@ -94,6 +92,10 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             }
             val view = viewHolder.itemView
             view.animate()
+                .withStartAction{
+                    view.translationX = if (direction == LEFT) view.width.toFloat() else -view.width.toFloat()
+                    notifyItemChanged(swipePosition)
+                }
                 .withEndAction {
                     view.translationX = if (direction == LEFT) view.width.toFloat() else -view.width.toFloat()
                     notifyItemChanged(swipePosition)
