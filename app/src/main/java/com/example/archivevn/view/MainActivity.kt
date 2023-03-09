@@ -34,11 +34,10 @@ class MainActivity : AppCompatActivity() {
 
         setupObservers()
 
-        setupIntent()
+        setupColdStartIntent()
 
-        setupFirstTimeLaunch()
+        setupFirstTimeLaunchIntro()
 
-        // Set line animation depending on light/dark theme
         lineAnimationTheme()
     }
 
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.handleShareSheetUrlInBackground(intent)
     }
 
-    private fun setupIntent() {
+    private fun setupColdStartIntent() {
         val intent = intent
         if (intent != null) {
             // handle the intent
@@ -178,7 +177,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupFirstTimeLaunch() {
+    private fun setupFirstTimeLaunchIntro() {
         val prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
         if (isFirstLaunch) {

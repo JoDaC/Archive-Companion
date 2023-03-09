@@ -100,10 +100,11 @@ class MainViewModel(application: Application) :
      * Launches a new browser Intent from the ArchiveDialogFragment with the specified URL.
      */
     fun onGoButtonClicked(url: String) {
-        if (url.isNotEmpty()) {
+        val regex = "^(http://|https://).*".toRegex()
+        if (url.isNotEmpty() && url.matches(regex)) {
             launchUrlInBackground(url)
         } else {
-            Toast.makeText(getApplication(), "Please enter a URL", Toast.LENGTH_SHORT).show()
+            Toast.makeText(getApplication(), "Please enter a valid URL", Toast.LENGTH_SHORT).show()
         }
     }
 
