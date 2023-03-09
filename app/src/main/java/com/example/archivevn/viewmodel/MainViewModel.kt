@@ -52,6 +52,16 @@ class MainViewModel(application: Application) :
                 "https://archive.today",
                 false
             ),
+            HistoryItem(
+                "Your archived pages will appear here.",
+                "https://archive.today",
+                false
+            ),
+            HistoryItem(
+                "Really long title here. This is to test the Recycler View Items. Also, this is a good opportunity to express how much I dislike working with Recycler Views. They are honestly the worst.",
+                "https://archive.today",
+                false
+            ),
         )
     }
     val history: LiveData<List<HistoryItem>> = _history

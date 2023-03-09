@@ -24,7 +24,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="CLOSE"
-                android:src="@drawable/ic_appintro_done"
+                android:src="@drawable/baseline_close_24"
                 app:backgroundTint="@color/white"
                 app:rippleColor="@color/intro_grey"
                 app:tint="@color/black" />
@@ -40,7 +40,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="MINIMIZE"
-                android:src="@drawable/ic_appintro_arrow"
+                android:src="@drawable/baseline_keyboard_arrow_down_24"
                 app:backgroundTint="@color/white"
                 app:rippleColor="@color/intro_grey"
                 app:tint="@color/black" />
