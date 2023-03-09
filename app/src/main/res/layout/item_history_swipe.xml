@@ -32,10 +32,26 @@
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/shareSheet"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/copyLink"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_mapmode" />
+            app:srcCompat="@drawable/baseline_open_in_browser_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/shareSheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/menuHistoryBackground"
+            android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="true"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?attr/actionModeShareDrawable" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/copyLink"
@@ -48,9 +64,9 @@
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/launchOnWeb"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/launchInReader"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="?attr/actionModeCopyDrawable" />
 
@@ -65,10 +81,9 @@
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/copyLink"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="?android:attr/actionModeFindDrawable" />
+            app:srcCompat="@drawable/baseline_pageview_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
