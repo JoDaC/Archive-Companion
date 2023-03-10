@@ -8,6 +8,8 @@ import net.dankito.readability4j.Readability4J
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import java.net.SocketTimeoutException
 import java.net.URLEncoder
 
@@ -82,7 +84,17 @@ class OkHttpHandler(url: String) {
                     val paragraphs = parsedBody.getElementsByTag("p")
                     val text = StringBuilder()
                     for (paragraph in paragraphs) {
-                        text.append(paragraph.text()).append("\n\n")
+                        // Loop through all the child nodes of the paragraph
+                        for (child in paragraph.childNodes()) {
+                            // If the child node is a hyperlink, append its text to the final text string
+                            if (child is Element && child.tagName() == "a") {
+                                text.append(child.text())
+                            } else if (child is TextNode) {
+                                text.append(child.text())
+                            }
+                        }
+                        // Append two line breaks after each paragraph
+                        text.append("\n\n")
                     }
                     articleText = text.toString()
                     break // Exit the loop if the request succeeds
