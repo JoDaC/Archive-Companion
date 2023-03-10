@@ -2,23 +2,71 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/readerFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarStyle="outsideInset"
-        android:background="@color/black"
-        android:scrollbars="vertical">
+        android:background="@color/black">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/reader_loading_animation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/white_book_loading" />
+
+                <TextView
+                    android:id="@+id/title_display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/space_grotesk"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="24dp"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    android:visibility="gone" />
+
+                <com.codesgood.views.JustifiedTextView
+                    android:id="@+id/text_display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_display"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/space_grotesk"
+                    android:paddingLeft="4dp"
+                    android:text="@string/welcome_to_the_reader"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fragment_close_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
@@ -33,10 +81,8 @@
                 android:id="@+id/fragment_minimize_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/fragment_close_button"
-                android:layout_alignParentEnd="true"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="MINIMIZE"
@@ -45,43 +91,6 @@
                 app:rippleColor="@color/intro_grey"
                 app:tint="@color/black" />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/reader_loading_animation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/white_book_loading" />
-
-            <TextView
-                android:id="@+id/title_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="@font/space_grotesk"
-                android:paddingBottom="24dp"
-                android:paddingLeft="4dp"
-                android:textColor="@color/white"
-                android:textSize="32sp"
-                android:visibility="gone" />
-
-            <com.codesgood.views.JustifiedTextView
-                android:id="@+id/text_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_display"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="@font/space_grotesk"
-                android:text="@string/welcome_to_the_reader"
-                android:paddingLeft="4dp"
-                android:textColor="@color/white"
-                android:textSize="21sp"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-    </ScrollView>
-
+        </LinearLayout>
+    </FrameLayout>
 </layout>

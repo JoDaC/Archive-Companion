@@ -10,12 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.example.archivevn.R
 import com.example.archivevn.data.network.OkHttpHandler
@@ -26,6 +30,8 @@ import kotlinx.coroutines.launch
 class ReaderFragment(private val url: String) :
     Fragment() {
 
+    private lateinit var fabLinearLayout: LinearLayout
+    private lateinit var scrollView: ScrollView
     private lateinit var actionBar: ActionBar
     private var immersiveModeEnabled = false
 
@@ -35,6 +41,11 @@ class ReaderFragment(private val url: String) :
     ): View {
         val binding: FragmentReaderBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reader, container, false)
+        fabLinearLayout = LinearLayout(requireContext())
+        scrollView = ScrollView(requireContext())
+        binding.readerFrameLayout.addView(fabLinearLayout)
+        binding.readerFrameLayout.addView(scrollView)
+
         val minimizeButton = binding.fragmentMinimizeButton
         val closeButton = binding.fragmentCloseButton
         minimizeButton.setOnClickListener {
