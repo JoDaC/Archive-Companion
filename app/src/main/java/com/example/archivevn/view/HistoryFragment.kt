@@ -2,6 +2,7 @@ package com.example.archivevn.view
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -35,8 +36,12 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.historyRecyclerView.adapter = historyAdapter
 
-        binding.historyFragmentBackGround.setBackgroundColor(Color.BLACK)
-        val backgroundColor = Color.BLACK
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val backgroundColor: Int = if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            Color.BLACK
+        } else {
+            Color.LTGRAY
+        }
         val backgroundDrawable = ColorDrawable(backgroundColor)
         backgroundDrawable.alpha = 0
         binding.historyFragmentBackGround.background = backgroundDrawable
