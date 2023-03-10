@@ -3,6 +3,8 @@ package com.example.archivevn.view
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -37,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         setupColdStartIntent()
 
         setupFirstTimeLaunchIntro()
+
+        establishHiddenActionBar()
 
         lineAnimationTheme()
     }
@@ -158,6 +162,21 @@ class MainActivity : AppCompatActivity() {
         } else {
             nightLine.visibility = View.GONE
         }
+    }
+
+    private fun establishHiddenActionBar() {
+
+        // Set the custom layout for the action bar
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setCustomView(R.layout.custom_action_bar)
+        supportActionBar?.elevation = 0F;
+
+        val actionBar = supportActionBar
+        // Delay hiding the action bar after 3 seconds
+        Handler(Looper.getMainLooper()).postDelayed({
+            actionBar?.hide()
+        }, 3000)
     }
 
 
