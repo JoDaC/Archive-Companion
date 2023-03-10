@@ -1,6 +1,12 @@
 package com.example.archivevn.view
 
+import android.animation.Animator
+import android.animation.ValueAnimator
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +34,33 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         historyAdapter = HistoryAdapter(mainViewModel)
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.historyRecyclerView.adapter = historyAdapter
+
+        binding.historyFragmentBackGround.setBackgroundColor(Color.BLACK)
+        val backgroundColor = Color.BLACK
+        val backgroundDrawable = ColorDrawable(backgroundColor)
+        backgroundDrawable.alpha = 0
+        binding.historyFragmentBackGround.background = backgroundDrawable
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            // Fade in the opacity of the background drawable
+            val fadeAnim = ValueAnimator.ofInt(0, 255)
+            fadeAnim.duration = 1000
+            fadeAnim.addUpdateListener { valueAnimator ->
+                val alpha = valueAnimator.animatedValue as Int
+                backgroundDrawable.alpha = alpha
+                binding.historyFragmentBackGround.background = backgroundDrawable
+            }
+            fadeAnim.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.historyFragmentBackGround.background.alpha = 255
+                }
+
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+            fadeAnim.start()
+        }, 500)
 
         // Observe the history LiveData in the MainViewModel and submit the list to the adapter
         mainViewModel.history.observe(viewLifecycleOwner) { history ->
