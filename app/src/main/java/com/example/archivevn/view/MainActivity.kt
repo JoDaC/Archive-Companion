@@ -2,18 +2,23 @@ package com.example.archivevn.view
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.viewmodel.MainViewModel
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +46,8 @@ class MainActivity : AppCompatActivity() {
         setupFirstTimeLaunchIntro()
 
         establishHiddenActionBar()
+
+        keyboardListener()
 
         lineAnimationTheme()
     }
@@ -177,6 +184,19 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             actionBar?.hide()
         }, 3000)
+    }
+
+    private fun keyboardListener() {
+        KeyboardVisibilityEvent.setEventListener(this
+        ) { isOpen ->
+            val layoutParams = binding.urlEditText.layoutParams as ConstraintLayout.LayoutParams
+            if (isOpen) {
+                layoutParams.matchConstraintPercentHeight = 1.0f
+            } else {
+                layoutParams.matchConstraintPercentHeight = 0.7f
+            }
+            binding.urlEditText.layoutParams = layoutParams
+        }
     }
 
 

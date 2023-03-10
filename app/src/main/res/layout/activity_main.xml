@@ -44,7 +44,7 @@
         <EditText
             android:id="@+id/url_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="550dp"
+            android:layout_height="0dp"
             android:autofillHints="@string/enter_text_hint"
             android:enabled="@{mainViewModel.isUrlEditTextEnabled}"
             android:fontFamily="sans-serif-light"
@@ -55,6 +55,7 @@
             android:textColor="?android:textColorPrimary"
             android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.7"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
