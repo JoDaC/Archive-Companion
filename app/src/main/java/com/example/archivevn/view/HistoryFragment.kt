@@ -24,6 +24,7 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var historyAdapter: HistoryAdapter
+    private var originalStatusBarColor: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +37,8 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.historyRecyclerView.adapter = historyAdapter
 
+        val window = activity?.window
+        originalStatusBarColor = window?.statusBarColor
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val backgroundColor: Int = if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
             Color.BLACK
@@ -45,6 +48,14 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         val backgroundDrawable = ColorDrawable(backgroundColor)
         backgroundDrawable.alpha = 0
         binding.historyFragmentBackGround.background = backgroundDrawable
+
+        val statusFadeAnim =
+            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.TRANSPARENT, backgroundColor)
+        statusFadeAnim.duration = 1800
+        statusFadeAnim.addUpdateListener { valueAnimator ->
+            window?.statusBarColor = valueAnimator.animatedValue as Int
+        }
+        statusFadeAnim.start()
 
         Handler(Looper.getMainLooper()).postDelayed({
             // Fade in the opacity of the background drawable
@@ -72,5 +83,17 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
             historyAdapter.submitList(history)
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        val window = activity?.window
+        val statusFadeAnim =
+            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.BLACK, originalStatusBarColor!!)
+        statusFadeAnim.duration = 300
+        statusFadeAnim.addUpdateListener { valueAnimator ->
+            window?.statusBarColor = valueAnimator.animatedValue as Int
+        }
+        statusFadeAnim.start()
+        super.onDestroyView()
     }
 }
