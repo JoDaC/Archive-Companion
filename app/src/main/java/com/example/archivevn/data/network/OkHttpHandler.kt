@@ -52,12 +52,12 @@ class OkHttpHandler(url: String) {
      * @param url The URL to fetch the content from.
      * @return A Triple object containing the article text, extracted title, and a list of image URLs.
      */
-    suspend fun fetchExtractedTitleAndText(url: String): Triple<String?, String?, List<String>> {
+    suspend fun fetchExtractedTitleAndText(url: String): Triple<String?, String?, String?> {
         return withContext(Dispatchers.Default) {
             var retryCount = 0
             var extractedText: String?
             var extractedTitle: String? = null
-            var images: List<String> = emptyList()
+            var extractedSubtitle: String? = null
             var articleHtml: String?
             var articleText: String? = null
             while (retryCount < 2) {
@@ -72,7 +72,12 @@ class OkHttpHandler(url: String) {
                     Log.i("ExtractedText", extractedText!!)
                     Log.i("articleHtml", articleHtml!!)
                     extractedTitle = article.title
+                    extractedSubtitle = article.excerpt
+                    if (extractedSubtitle.isNullOrBlank()) {
+                        Log.i("ExtractedSubTitle", "Article contains no subtitle excerpt.")
+                    }
                     Log.i("ExtractedTitle", extractedTitle!!)
+                    Log.i("ExtractedSubTitle", extractedSubtitle!!)
                     val parsedBody = Jsoup.parse(articleHtml)
                     val paragraphs = parsedBody.getElementsByTag("p")
                     val text = StringBuilder()
@@ -80,8 +85,6 @@ class OkHttpHandler(url: String) {
                         text.append(paragraph.text()).append("\n\n")
                     }
                     articleText = text.toString()
-                    images = parsedBody.getElementsByTag("img").map { it.attr("src") }
-                    Log.i("HTML images", images.toString())
                     break // Exit the loop if the request succeeds
                 } catch (e: SocketTimeoutException) {
                     // If the request times out, retry.
@@ -90,7 +93,7 @@ class OkHttpHandler(url: String) {
                     continue
                 }
             }
-            Triple(articleText, extractedTitle, images)
+            Triple(articleText, extractedTitle, extractedSubtitle)
         }
     }
 

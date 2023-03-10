@@ -50,17 +50,17 @@ class MainViewModel(application: Application) :
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
-                false
+                "Subtitle"
             ),
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
-                false
+                "Subtitle"
             ),
             HistoryItem(
                 "Really long title here. This is to test the Recycler View Items. Also, this is a good opportunity to express how much I dislike working with Recycler Views. They are honestly the worst.",
                 "https://archive.today",
-                false
+                "Subtitle"
             ),
         )
     }
@@ -205,7 +205,8 @@ class MainViewModel(application: Application) :
                     startForegroundService(getApplication(), archiveServiceIntent)
                     val archivedResult = ArchiveService().archiveUrlInBackground(url).first
                     val articleTitle = ArchiveService().archiveUrlInBackground(url).second
-                    addHistoryItem(articleTitle!!, url, false)
+                    val articleSubtitle = ArchiveService().archiveUrlInBackground(url).third
+                    addHistoryItem(articleTitle!!, url, articleSubtitle!!, false)
                     _archiveProgressLoading.value = false
                     _urlText.value = ""
                     _isUrlEditTextEnabled.value = true
@@ -253,8 +254,8 @@ class MainViewModel(application: Application) :
         }
     }
 
-    private fun addHistoryItem(title: String, url: String, isReaderMode: Boolean) {
-        val newItem = HistoryItem(title, url, isReaderMode)
+    private fun addHistoryItem(title: String, url: String, subtitle: String, isReaderMode: Boolean) {
+        val newItem = HistoryItem(title, url, subtitle, isReaderMode)
         val currentList = _history.value ?: emptyList()
         val updatedList = listOf(newItem) + currentList
         _history.value = updatedList

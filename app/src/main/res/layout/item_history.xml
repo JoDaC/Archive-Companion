@@ -14,7 +14,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
         android:layout_margin="8dp"
         android:background="@drawable/history_background"
         android:padding="16dp">
@@ -34,11 +33,17 @@
             android:id="@+id/urlTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
             android:text="url"
-            android:textSize="10sp"
             android:textColor="?attr/historyItemSubTextColor"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/subtitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/urlTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/historyTitleView" />
     </androidx.constraintlayout.widget.ConstraintLayout>

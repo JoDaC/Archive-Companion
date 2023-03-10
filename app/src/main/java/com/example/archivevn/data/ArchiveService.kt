@@ -37,13 +37,14 @@ class ArchiveService : Service() {
         stopSelf()
     }
 
-    suspend fun archiveUrlInBackground(url: String): Pair<String, String?> {
+    suspend fun archiveUrlInBackground(url: String): Triple<String, String?, String?> {
         val loader = OkHttpHandler(url)
         val archivedResult = launchPageArchival(url)
         Log.i("Final URL of Archived page ", archivedResult)
         val articleTitle = loader.fetchExtractedTitleAndText(archivedResult).second
+        val articleSubtitle = loader.fetchExtractedTitleAndText(archivedResult).third
         stopSelf()
-        return Pair(archivedResult, articleTitle)
+        return Triple(archivedResult, articleTitle, articleSubtitle)
     }
 
     /**
