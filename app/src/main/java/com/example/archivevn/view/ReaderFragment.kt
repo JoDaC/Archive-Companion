@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 class ReaderFragment(private val url: String) :
     Fragment() {
 
+    private lateinit var actionBar: ActionBar
     private var immersiveModeEnabled = false
 
     override fun onCreateView(
@@ -41,6 +44,8 @@ class ReaderFragment(private val url: String) :
             closeFragment()
         }
         setLoadingAnimationHeight(binding)
+        // Set up the action bar
+        actionBar = (requireActivity() as AppCompatActivity).supportActionBar!!
 
         val loader = OkHttpHandler(url)
         MainScope().launch {
@@ -62,6 +67,7 @@ class ReaderFragment(private val url: String) :
     // Setting Immersive mode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        hideActionBar()
         val window = requireActivity().window
         val windowInsetsController = WindowCompat.getInsetsController(window, view)
         windowInsetsController.let {
@@ -73,6 +79,7 @@ class ReaderFragment(private val url: String) :
 
     override fun onDestroyView() {
         super.onDestroyView()
+        showActionBar()
         val window = requireActivity().window
         val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
         windowInsetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
@@ -81,6 +88,7 @@ class ReaderFragment(private val url: String) :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden && !immersiveModeEnabled) {
+            hideActionBar()
             // Set immersive mode
             val window = requireActivity().window
             val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
@@ -91,6 +99,7 @@ class ReaderFragment(private val url: String) :
             }
             immersiveModeEnabled = true
         } else if (hidden && immersiveModeEnabled) {
+            showActionBar()
             // Exit immersive mode
             val window = requireActivity().window
             val windowInsetsController = WindowCompat.getInsetsController(window, requireView())
@@ -111,6 +120,14 @@ class ReaderFragment(private val url: String) :
                 .toInt()
         val paddingDp = (height - px) / 2
         binding.readerLoadingAnimation.setPadding(0, paddingDp, 0, 0)
+    }
+
+    private fun hideActionBar() {
+        actionBar.hide()
+    }
+
+    private fun showActionBar() {
+        actionBar.show()
     }
 
     private fun minimizeFragment() {

@@ -2,13 +2,9 @@ package com.example.archivevn.view
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +15,6 @@ import com.example.archivevn.R
 import com.example.archivevn.databinding.ActivityMainBinding
 import com.example.archivevn.viewmodel.MainViewModel
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -184,10 +179,12 @@ class MainActivity : AppCompatActivity() {
     private fun establishHiddenActionBar() {
 
         // Set the custom layout for the action bar
-        supportActionBar?.setDisplayShowCustomEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setCustomView(R.layout.custom_action_bar)
-        supportActionBar?.elevation = 0F
+        supportActionBar?.apply {
+            setDisplayShowCustomEnabled(true)
+            setDisplayShowTitleEnabled(false)
+            setCustomView(R.layout.custom_action_bar)
+            elevation = 0F
+        }
     }
 
     private fun toggleActionBar() {
