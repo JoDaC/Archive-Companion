@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -152,13 +153,22 @@ class MainActivity : AppCompatActivity() {
         var defaultUrl = url
         if (url.isNullOrEmpty()) {
             defaultUrl = "https://archive.today"
+            val newReaderFragment = ReaderFragment(defaultUrl)
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+                .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
+                .addToBackStack("ReaderFragment")
+                .commit()
+        } else if (url.isNotEmpty() && !url.matches("^(http://|https://).*".toRegex())) {
+            Toast.makeText(this, "Please enter a valid URL", Toast.LENGTH_SHORT).show()
+        } else {
+            val newReaderFragment = ReaderFragment(defaultUrl!!)
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
+                .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
+                .addToBackStack("ReaderFragment")
+                .commit()
         }
-        val newReaderFragment = ReaderFragment(defaultUrl!!)
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.reader_slide_up, 0, 0, R.anim.reader_slide_down)
-            .add(R.id.fragmentContainerView, newReaderFragment, "ReaderFragment")
-            .addToBackStack("ReaderFragment")
-            .commit()
     }
 
     private fun lineAnimationTheme() {
@@ -177,13 +187,16 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setCustomView(R.layout.custom_action_bar)
-        supportActionBar?.elevation = 0F;
+        supportActionBar?.elevation = 0F
+    }
 
+    private fun toggleActionBar() {
         val actionBar = supportActionBar
-        // Delay hiding the action bar after 3 seconds
-        Handler(Looper.getMainLooper()).postDelayed({
-            actionBar?.hide()
-        }, 3000)
+        if (actionBar?.isShowing == true) {
+            actionBar.hide()
+        } else {
+            actionBar?.show()
+        }
     }
 
     private fun keyboardListener() {
@@ -192,8 +205,10 @@ class MainActivity : AppCompatActivity() {
             val layoutParams = binding.urlEditText.layoutParams as ConstraintLayout.LayoutParams
             if (isOpen) {
                 layoutParams.matchConstraintPercentHeight = 1.0f
+                toggleActionBar()
             } else {
                 layoutParams.matchConstraintPercentHeight = 0.7f
+                toggleActionBar()
             }
             binding.urlEditText.layoutParams = layoutParams
         }
