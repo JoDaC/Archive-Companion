@@ -59,6 +59,8 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
                 holder.bind(historyItem)
             }
             is MenuViewHolder -> {
+                val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
+                layoutParams.bottomMargin = 1.dpToPx(holder.itemView.context)
                 holder.bind(historyItem, viewModel)
             }
         }
@@ -142,6 +144,7 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         fun bind(historyItem: HistoryItem) {
             binding.historyItem = historyItem
             binding.historyTitleView.text = historyItem.title
+            binding.subtitleTextView.text = historyItem.subtitle
             binding.urlTextView.text = historyItem.url
             binding.executePendingBindings()
         }

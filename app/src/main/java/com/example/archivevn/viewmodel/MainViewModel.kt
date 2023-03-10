@@ -50,17 +50,20 @@ class MainViewModel(application: Application) :
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
-                "Subtitle"
+                "Subtitle",
+                false
             ),
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
-                "Subtitle"
+                "Subtitle",
+                false
             ),
             HistoryItem(
                 "Really long title here. This is to test the Recycler View Items. Also, this is a good opportunity to express how much I dislike working with Recycler Views. They are honestly the worst.",
                 "https://archive.today",
-                "Subtitle"
+                "Where real journalism goes to die",
+                false
             ),
         )
     }
