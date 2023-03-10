@@ -50,18 +50,21 @@ class MainViewModel(application: Application) :
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
+                "https://domain.com",
                 "Subtitle",
                 false
             ),
             HistoryItem(
                 "Your archived pages will appear here.",
                 "https://archive.today",
+                "https://domain.com",
                 "Subtitle",
                 false
             ),
             HistoryItem(
                 "Really long title here. This is to test the Recycler View Items. Also, this is a good opportunity to express how much I dislike working with Recycler Views. They are honestly the worst.",
                 "https://archive.today",
+                "https://domain.com",
                 "Where real journalism goes to die",
                 false
             ),
@@ -209,7 +212,7 @@ class MainViewModel(application: Application) :
                     val archivedResult = ArchiveService().archiveUrlInBackground(url).first
                     val articleTitle = ArchiveService().archiveUrlInBackground(url).second
                     val articleSubtitle = ArchiveService().archiveUrlInBackground(url).third
-                    addHistoryItem(articleTitle!!, url, articleSubtitle!!, false)
+                    addHistoryItem(articleTitle!!, url, archivedResult, articleSubtitle!!, false)
                     _archiveProgressLoading.value = false
                     _urlText.value = ""
                     _isUrlEditTextEnabled.value = true
@@ -257,8 +260,8 @@ class MainViewModel(application: Application) :
         }
     }
 
-    private fun addHistoryItem(title: String, url: String, subtitle: String, isReaderMode: Boolean) {
-        val newItem = HistoryItem(title, url, subtitle, isReaderMode)
+    private fun addHistoryItem(title: String, url: String, archivedUrl: String, subtitle: String, isReaderMode: Boolean) {
+        val newItem = HistoryItem(title, url, archivedUrl, subtitle, isReaderMode)
         val currentList = _history.value ?: emptyList()
         val updatedList = listOf(newItem) + currentList
         _history.value = updatedList

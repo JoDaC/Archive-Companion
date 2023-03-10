@@ -66,31 +66,6 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
         }
     }
 
-//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        val historyItem = getItem(position)
-//        when (holder.itemViewType) {
-//            R.layout.item_history -> {
-//                val itemHolder = holder as ItemViewHolder
-//                val layoutParams = itemHolder.itemView.layoutParams as RecyclerView.LayoutParams
-//                layoutParams.bottomMargin = 1.dpToPx(itemHolder.itemView.context)
-//                itemHolder.itemView.layoutParams = layoutParams
-//                itemHolder.bind(historyItem)
-//            }
-//            R.layout.item_history_swipe -> {
-//                val menuHolder = holder as MenuViewHolder
-//                val height = getHeightFromItemViewHolder(menuHolder)
-//                menuHolder.itemView.layoutParams.height = height
-//                menuHolder.bind(historyItem, viewModel)
-//            }
-//            else -> throw IllegalArgumentException("Invalid view type")
-//        }
-//    }
-//
-//    private fun getHeightFromItemViewHolder(holder: ItemViewHolder): Int {
-//        val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
-//        return layoutParams.height
-//    }
-
     inner class SwipeController : Callback() {
         override fun getMovementFlags(
             recyclerView: RecyclerView,
@@ -146,6 +121,7 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             binding.historyTitleView.text = historyItem.title
             binding.subtitleTextView.text = historyItem.subtitle
             binding.urlTextView.text = historyItem.url
+            binding.archivedUrlTextView.text = historyItem.archivedUrl
             binding.executePendingBindings()
         }
     }
