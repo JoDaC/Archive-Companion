@@ -82,7 +82,7 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
             })
             fadeAnim.start()
         }, 500)
-        hideActionBar()
+//        hideActionBar()
 
         // Observe the history LiveData in the MainViewModel and submit the list to the adapter
         mainViewModel.history.observe(viewLifecycleOwner) { history ->
@@ -100,7 +100,7 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
             window?.statusBarColor = valueAnimator.animatedValue as Int
         }
         statusFadeAnim.start()
-        showActionBar()
+//        showActionBar()
         super.onDestroyView()
     }
 
