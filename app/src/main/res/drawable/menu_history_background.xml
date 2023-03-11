@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Set the background color for the shape -->
-    <solid android:color="?attr/menuHistoryBackground" />
+<!--    <solid android:color="?attr/menuHistoryBackground" />-->
 
     <!-- Set the radius for each corner -->
     <corners android:radius="8dp" />
