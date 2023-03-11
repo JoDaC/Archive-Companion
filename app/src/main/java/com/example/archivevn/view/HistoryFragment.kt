@@ -1,6 +1,7 @@
 package com.example.archivevn.view
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.res.Configuration
 import android.graphics.Color
@@ -11,6 +12,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +50,14 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         val backgroundDrawable = ColorDrawable(backgroundColor)
         backgroundDrawable.alpha = 0
         binding.historyFragmentBackGround.background = backgroundDrawable
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        val colorFadeAnim = ValueAnimator.ofArgb(backgroundColor)
+        colorFadeAnim.duration = 3000
+        colorFadeAnim.addUpdateListener { valueAnimator ->
+            actionBar?.setBackgroundDrawable(ColorDrawable(valueAnimator.animatedValue as Int))
+        }
+        colorFadeAnim.start()
 
         val statusFadeAnim =
             ValueAnimator.ofArgb(window?.statusBarColor ?: Color.TRANSPARENT, backgroundColor)
@@ -87,13 +97,21 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
 
     override fun onDestroyView() {
         val window = activity?.window
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar ?: return
+        val actionBarFadeAnim = ValueAnimator.ofInt(255, 0)
+        actionBarFadeAnim.duration = 200
+        actionBarFadeAnim.addUpdateListener {
+            actionBar.setBackgroundDrawable(ColorDrawable(originalStatusBarColor!!))
+        }
         val statusFadeAnim =
             ValueAnimator.ofArgb(window?.statusBarColor ?: Color.BLACK, originalStatusBarColor!!)
         statusFadeAnim.duration = 300
         statusFadeAnim.addUpdateListener { valueAnimator ->
             window?.statusBarColor = valueAnimator.animatedValue as Int
         }
-        statusFadeAnim.start()
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(actionBarFadeAnim, statusFadeAnim)
+        animatorSet.start()
         super.onDestroyView()
     }
 }
