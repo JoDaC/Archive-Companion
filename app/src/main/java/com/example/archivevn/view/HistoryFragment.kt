@@ -46,21 +46,20 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         originalStatusBarColor = window?.statusBarColor
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val backgroundColor: Int = if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            Color.BLACK
+            resources.getColor(R.color.dark_theme_grey, null)
         } else {
-            Color.LTGRAY
-        }
+            resources.getColor(R.color.light_theme_grey, null) }
         val backgroundDrawable = ColorDrawable(backgroundColor)
         backgroundDrawable.alpha = 0
         binding.historyFragmentBackGround.background = backgroundDrawable
 
-        val statusFadeAnim =
-            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.TRANSPARENT, backgroundColor)
-        statusFadeAnim.duration = 1800
-        statusFadeAnim.addUpdateListener { valueAnimator ->
-            window?.statusBarColor = valueAnimator.animatedValue as Int
-        }
-        statusFadeAnim.start()
+//        val statusFadeAnim =
+//            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.TRANSPARENT, backgroundColor)
+//        statusFadeAnim.duration = 1800
+//        statusFadeAnim.addUpdateListener { valueAnimator ->
+//            window?.statusBarColor = valueAnimator.animatedValue as Int
+//        }
+//        statusFadeAnim.start()
 
         Handler(Looper.getMainLooper()).postDelayed({
             // Fade in the opacity of the background drawable
@@ -91,18 +90,18 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        val window = activity?.window
-        val statusFadeAnim =
-            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.BLACK, originalStatusBarColor!!)
-        statusFadeAnim.duration = 300
-        statusFadeAnim.addUpdateListener { valueAnimator ->
-            window?.statusBarColor = valueAnimator.animatedValue as Int
-        }
-        statusFadeAnim.start()
-//        showActionBar()
-        super.onDestroyView()
-    }
+//    override fun onDestroyView() {
+//        val window = activity?.window
+//        val statusFadeAnim =
+//            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.BLACK, originalStatusBarColor!!)
+//        statusFadeAnim.duration = 300
+//        statusFadeAnim.addUpdateListener { valueAnimator ->
+//            window?.statusBarColor = valueAnimator.animatedValue as Int
+//        }
+//        statusFadeAnim.start()
+////        showActionBar()
+//        super.onDestroyView()
+//    }
 
     private fun hideActionBar() {
         actionBar.hide()

@@ -13,7 +13,7 @@
         <item name="android:statusBarColor">@color/ultra_almost_black</item>
         <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton.Night</item>
         <item name="archiveProgressViewBackground">@color/dark_blue</item>
-        <item name="historyBackground">@color/off_black</item>
+        <item name="historyBackground">@color/material_grey_850</item>
         <item name="actionBarStyle">@color/ultra_almost_black</item>
         <item name="background">@color/ultra_almost_black</item>
         <item name="menuHistoryBackground">@color/ultra_almost_black</item>
