@@ -53,14 +53,6 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         backgroundDrawable.alpha = 0
         binding.historyFragmentBackGround.background = backgroundDrawable
 
-//        val statusFadeAnim =
-//            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.TRANSPARENT, backgroundColor)
-//        statusFadeAnim.duration = 1800
-//        statusFadeAnim.addUpdateListener { valueAnimator ->
-//            window?.statusBarColor = valueAnimator.animatedValue as Int
-//        }
-//        statusFadeAnim.start()
-
         Handler(Looper.getMainLooper()).postDelayed({
             // Fade in the opacity of the background drawable
             val fadeAnim = ValueAnimator.ofInt(0, 255)
@@ -81,7 +73,6 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
             })
             fadeAnim.start()
         }, 500)
-//        hideActionBar()
 
         // Observe the history LiveData in the MainViewModel and submit the list to the adapter
         mainViewModel.history.observe(viewLifecycleOwner) { history ->
@@ -89,19 +80,6 @@ class HistoryFragment(private val mainViewModel: MainViewModel) : Fragment() {
         }
         return binding.root
     }
-
-//    override fun onDestroyView() {
-//        val window = activity?.window
-//        val statusFadeAnim =
-//            ValueAnimator.ofArgb(window?.statusBarColor ?: Color.BLACK, originalStatusBarColor!!)
-//        statusFadeAnim.duration = 300
-//        statusFadeAnim.addUpdateListener { valueAnimator ->
-//            window?.statusBarColor = valueAnimator.animatedValue as Int
-//        }
-//        statusFadeAnim.start()
-////        showActionBar()
-//        super.onDestroyView()
-//    }
 
     private fun hideActionBar() {
         actionBar.hide()
