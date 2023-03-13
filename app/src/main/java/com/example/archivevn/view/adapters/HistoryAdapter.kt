@@ -136,6 +136,12 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
             menuBinding.launchOnWeb.setOnClickListener {
                 viewModel.inHistoryBrowserClick(historyItem.url)
             }
+            menuBinding.copyLink.setOnClickListener {
+                viewModel.inHistoryCopyLink(historyItem.url)
+            }
+            menuBinding.shareSheet.setOnClickListener {
+                viewModel.inHistoryShareLink(historyItem.url)
+            }
             menuBinding.executePendingBindings()
         }
     }

@@ -1,6 +1,7 @@
 package com.example.archivevn.viewmodel
 
 import android.app.Application
+import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
@@ -164,6 +165,25 @@ class MainViewModel(application: Application) :
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(historyItem))
         browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         getApplication<Application>().startActivity(browserIntent)
+    }
+
+    fun inHistoryCopyLink(historyItem: String) {
+        Log.i("Link copied", historyItem)
+        val clipboardManager = getApplication<Application>()
+            .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("url", historyItem)
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
+    fun inHistoryShareLink(historyItem: String) {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, historyItem)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        getApplication<Application>().startActivity(shareIntent)
     }
 
     /**
