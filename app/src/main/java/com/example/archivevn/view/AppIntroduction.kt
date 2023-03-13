@@ -44,7 +44,7 @@ class AppIntroduction : AppIntro() {
                 imageDrawable = R.mipmap.black_a_transformed,
                 titleTypefaceFontRes = R.font.space_grotesk,
                 descriptionTypefaceFontRes = R.font.space_grotesk,
-                backgroundColorRes = R.color.white,
+                backgroundColorRes = R.color.intro_grey,
                 titleColorRes = R.color.black,
                 descriptionColorRes = R.color.black,
             )

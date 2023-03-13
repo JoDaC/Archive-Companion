@@ -50,11 +50,11 @@ class HistoryAdapter(private val viewModel: MainViewModel) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val historyItem = getItem(position)
+        // For space between items
         when (holder) {
             is ItemViewHolder -> {
-                // For space between items
                 val layoutParams = holder.itemView.layoutParams as RecyclerView.LayoutParams
-                layoutParams.bottomMargin = 1.dpToPx(holder.itemView.context) // set the desired spacing in pixels
+                layoutParams.bottomMargin = 1.dpToPx(holder.itemView.context)
                 holder.itemView.layoutParams = layoutParams
                 holder.bind(historyItem)
             }

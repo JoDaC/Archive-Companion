@@ -177,7 +177,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun establishHiddenActionBar() {
-
         // Set the custom layout for the action bar
         supportActionBar?.apply {
             setDisplayShowCustomEnabled(true)
