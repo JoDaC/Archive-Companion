@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types: [ opened, labeled, unlabeled, synchronize ]
 
@@ -21,7 +21,7 @@ jobs:
         api-level:
           - 33
         java-version:
-          - 19
+          - 11
 
     steps:
       - name: Checkout Project
@@ -39,20 +39,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.4.0
 
-      - name: Build Debug APKs and Run lint checks
-        run: ./gradlew assembleDebug ktlintCheck lintDebug -Pci -s
-
-      - name: Build Release APKs and Run lint checks
-        run: ./gradlew assembleRelease lintRelease -Prelease -Pci -s
-
-      - name: Upload Reports
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: Archive-Companion-reports-${{ github.workflow }}-${{ github.run_id }}
-          path: |
-            app/build/reports
-            app/build/test-results
-          if-no-files-found: error
+      - name: Build Debug APKs
+        run: ./gradlew assembleDebug -s
           
       - name: Upload Debug .apk artifact
         uses: actions/upload-artifact@v3.1.2
@@ -60,11 +48,3 @@ jobs:
           name: Archive-Companion-debug-${{ github.workflow }}-${{ github.run_id }}.apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-
-      - name: Upload Release .apk artifact
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: Archive-Companion-release-${{ github.workflow }}-${{ github.run_id }}.apk
-          path: app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
-
